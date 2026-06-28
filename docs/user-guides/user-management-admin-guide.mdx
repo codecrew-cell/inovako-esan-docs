@@ -1,0 +1,56 @@
+---
+title: "User Management Admin Guide"
+description: "Kullanici ekleme, rol degistirme, aktif/pasif yapma ve silme islemleri."
+---
+
+# User Management Admin Guide
+
+User Management ekrani sadece admin kullanicilar icindir. Buradan lokal kullanici kayitlari, roller ve aktiflik durumu yonetilir.
+
+## Yetki
+
+| Route | Guard |
+| --- | --- |
+| `/user-management` | `admin` |
+
+Mutating endpoint'ler `X-Username` header'i ile gelen kullanicinin admin olup olmadigini kontrol eder.
+
+## Roller
+
+| Rol | Tipik kullanici |
+| --- | --- |
+| `admin` | Kullanici ve sistem yonetimi yapan yetkili. |
+| `supervisor` | Operasyon ayarlari ve kontrol surecini yoneten kullanici. |
+| `engineer` | Run, Validate, Training Lab ve Data akislari uzerinde calisan kullanici. |
+
+## Islem listesi
+
+| Islem | Endpoint | Not |
+| --- | --- | --- |
+| Kullanici listele | `GET /users` | Tum lokal kullanicilari listeler. |
+| Kullanici ekle | `POST /users` | Username, rol ve aktiflik bilgisi kaydeder. |
+| Rol degistir | `PATCH /users/{username}/role` | Admin kontrolu gerekir. |
+| Aktif/pasif yap | `PATCH /users/{username}/active` | Pasif kullanici login akisini gecmemelidir. |
+| Kullanici sil | `DELETE /users/{username}` | Geri alinmasi manuel dosya restore gerektirir. |
+
+## Operasyon kurallari
+
+- Admin sayisini gereksiz artirmayin.
+- Pasif yapma islemi, silmeye gore daha guvenli ilk adimdir.
+- Rol degisikligi sonrasi kullanicinin tarayici oturumu yenilenmelidir.
+- Public dokumanda gercek kullanici listesi veya mail adresi paylasilmaz.
+
+## Hata durumlari
+
+| Belirti | Muhtemel neden | Cozum |
+| --- | --- | --- |
+| 403/unauthorized | `X-Username` admin degil | Aktif admin hesabiyla giris yapin. |
+| Kullanici gorunmuyor | `users.json` okunamiyor veya backend farkli dizinde | Backend calisma dizinini kontrol edin. |
+| Rol degisti ama menu degismedi | Frontend session state eski | Logout/login veya sayfa yenileme yapin. |
+
+## Screenshot beklenenleri
+
+- Kullanici tablosu.
+- Rol degistirme kontrolu.
+- Aktif/pasif toggle.
+- Kullanici ekleme formu.

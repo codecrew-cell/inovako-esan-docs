@@ -1,0 +1,61 @@
+---
+title: "Settings and Users API"
+description: "Ayar ve kullanici yonetimi endpointleri."
+---
+
+# Settings and Users API
+
+Bu sayfa Settings ve User Management ekranlarinin kullandigi operasyonel API'leri ozetler.
+
+## Settings API
+
+Prefix yoktur; endpointler root altinda `/settings` olarak sunulur.
+
+| Method | Path | Aciklama |
+| --- | --- | --- |
+| `GET` | `/settings` | Aktif ayarlari getirir. |
+| `POST` | `/settings` | Ayarlari kaydeder. |
+
+## Settings response alanlari
+
+| Grup | Ornek alanlar |
+| --- | --- |
+| Model | `varsayilan_ana_model`, `varsayilan_takoz_modeli`, `varsayilan_cls_modeli`, `confidence`, `iou`, `batch_size` |
+| Dosya | Export directory, upload limit, allowed extensions, folder regex |
+| Goruntu | CLAHE, noise reduction, downscale, rotation correction, edge trim |
+| Renk | `colors_count`, `main_colors_number`, `inference_colors` |
+| AutoML | Epoch, learning rate, augmentation, train/validation split, early stopping |
+| Lithology | Class color, opacity, region threshold, zoom ve sliding window |
+| Validate | Box colors, default visibility, image variant, box thickness |
+
+## Related model list endpoints
+
+Settings ekranindaki dropdown'lar su endpointlerden beslenir.
+
+| Method | Path | Aciklama |
+| --- | --- | --- |
+| `GET` | `/checkMainModelNames` | Ana model listesini dondurur. |
+| `GET` | `/checkClsModelNames` | Classification model listesini dondurur. |
+| `GET` | `/checkTakozModelNames` | Takoz model listesini dondurur. |
+
+## User Management API
+
+Prefix:
+
+```text
+/users
+```
+
+| Method | Path | Header | Aciklama |
+| --- | --- | --- | --- |
+| `GET` | `/users` | `X-Username` | Kullanici listesini getirir. |
+| `POST` | `/users` | `X-Username` | Yeni kullanici ekler. Admin gerekir. |
+| `PATCH` | `/users/{username}/role` | `X-Username` | Kullanici rolunu degistirir. Admin gerekir. |
+| `PATCH` | `/users/{username}/active` | `X-Username` | Kullanici aktiflik durumunu degistirir. Admin gerekir. |
+| `DELETE` | `/users/{username}` | `X-Username` | Kullanici kaydini siler. Admin gerekir. |
+
+## Guvenlik notlari
+
+- `users.json` public repo veya public dokumanda paylasilmamalidir.
+- Mutating endpointlerde admin kontrolu vardir, ancak production icin daha guclu auth/token yapisi onerilir.
+- Settings kaydi model ve renk davranisini degistirebildigi icin sadece yetkili roller kullanmalidir.

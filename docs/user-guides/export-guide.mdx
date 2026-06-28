@@ -1,0 +1,75 @@
+---
+title: "Export Guide"
+description: "Jeoteknik, mineral ve litoloji ciktisini dosya ve gorsel olarak disari alma."
+---
+
+# Export Guide
+
+Export ekrani, Validate, Mineral Validate ve Lithology akislari sonrasinda uretilen verileri raporlanabilir gorsel ve tablo ciktisina donusturur. Kullanici tarafindan paylasilan nihai dosyalar bu ekrandan alinir.
+
+## On kosullar
+
+- Run tamamlanmis olmali.
+- Validate degisiklikleri kaydedilmis olmali.
+- Mineral manevralari uretilmis olmali.
+- Litoloji kullanilacaksa Lithology editor ciktisi kaydedilmis olmali.
+
+## Ana ciktilar
+
+| Cikti | Kaynak | Kontrol |
+| --- | --- | --- |
+| Manevra gorselleri | `ManueverBlocks` statik klasoru | Kuyu id ve derinlik araliklari dogru mu. |
+| Tum dosyalar birlesik gorsel | Backend export klasoru | Goruntu sirasi ve satirlar tutarli mi. |
+| CLS birlesik gorsel | Siniflandirma ciktisi | Sinif renkleri beklenen mi. |
+| Color change gorseli | Renk analizi | Renk gecisleri mantikli mi. |
+| ZIP indirme | Frontend JSZip | Tum beklenen dosyalar pakette var mi. |
+
+## Akis
+
+```mermaid
+flowchart TD
+    A[Export ac] --> B[/get_mineral_maneuvers]
+    B --> C{Veri var mi}
+    C -->|Hayir| D[/mineral_from_changes ile yeniden uret]
+    C -->|Evet| E[Manevra gorsellerini getir]
+    D --> E
+    E --> F[Preview kontrolu]
+    F --> G[Save maneuvers]
+    G --> H[ZIP indir]
+```
+
+## Endpointler
+
+| Endpoint | Amac |
+| --- | --- |
+| `GET /get_mineral_maneuvers/{session_id}` | Export icin mineral manevra verisini okur. |
+| `POST /mineral_from_changes/{session_id}` | Eksik mineral manevrasini yeniden uretir. |
+| `POST /getManueverImageNames` | Indirilecek manevra gorsellerini listeler. |
+| `GET /download/{hole_id}/{file}` | Tekil gorsel dosyasini indirir. |
+| `GET /save_maneuvers/{session_id}` | Manevra ciktisini kalici olarak kaydeder. |
+| `/ManueverBlocks/...` | Birlesik export gorsellerini statik olarak sunar. |
+| `GET /litho/image` | Litoloji kaynak gorselini preview icin sunar. |
+
+## Kullanici kontrol listesi
+
+1. Hole id dogru mu kontrol edin.
+2. Manevra baslangic/bitis degerlerini kontrol edin.
+3. Geoteknik, mineral ve litoloji ciktisinin ayni session'a ait oldugundan emin olun.
+4. Birlesik gorsellerde satir sirasi bozulmamis mi kontrol edin.
+5. ZIP indirdikten sonra dosya adlari ve dosya sayisini kontrol edin.
+
+## Kalite kapisi
+
+Export ekrani rapor uretim noktasi oldugu icin, burada gorulen hata genelde onceki adimdan gelir.
+
+1. Export verisi bos ise Mineral Validate'e donun.
+2. Derinlik araligi yanlis ise Validate tablosuna donun.
+3. Litoloji rengi/bolgesi yanlis ise Lithology editorune donun.
+4. Dosya uretilmiyorsa backend `ManueverBlocks` ve log klasorlerini kontrol edin.
+
+## Screenshot beklenenleri
+
+- Export ana tablo.
+- Preview modal/gorsel alanlari.
+- ZIP indirme aksiyonu.
+- Renk degisimi ve manevra renkleri.

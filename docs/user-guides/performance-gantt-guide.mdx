@@ -1,0 +1,52 @@
+---
+title: "Performance / Gantt Guide"
+description: "Run isleminin model, OCR ve worker surelerini Gantt ekraninda izleme."
+---
+
+# Performance / Gantt Guide
+
+Performance ekrani son run isleminin zaman dagilimini ve isleme adimlarini Gantt mantiginda gosterir. Amac yavaslayan model, OCR veya dosya isleme adimini hizli tespit etmektir.
+
+## Yetki
+
+| Route | Guard |
+| --- | --- |
+| `/performance` | `canRun` |
+
+## Veri kaynagi
+
+| Endpoint | Amac |
+| --- | --- |
+| `GET /gantt/latest` | En son session icin Gantt verisini getirir. |
+| `GET /gantt/{session_id}` | Belirli session icin Gantt verisini getirir. |
+
+Backend tarafinda timing verisi isleme sirasinda yazilir ve model/worker bazli sureleri icerir.
+
+## Kullanici akisi
+
+1. Run ekraninda bir islem tamamlayin.
+2. Performance ekranini acin.
+3. Latest Gantt verisinin geldigini kontrol edin.
+4. `Models` veya diger detay filtreleriyle yavas adimi bulun.
+5. Sorun model bazliysa Settings/model dosyasini, OCR bazliysa backend loglarini kontrol edin.
+
+## Yorumlama
+
+| Belirti | Anlam |
+| --- | --- |
+| Tek model adimi asiri uzun | GPU/CPU, model dosyasi veya TensorRT fallback kontrol edilmeli. |
+| OCR adimlari uzun | Goruntu kalitesi, satir sayisi veya OCR worker performansi incelenmeli. |
+| Ilk batch uzun, sonraki batch normal | Model warm-up veya cache etkisi olabilir. |
+| Tum batch'ler yavas | Donanim, batch size veya disk I/O problemi olabilir. |
+
+## Operasyon notlari
+
+- Gantt ekrani hata ayiklama aracidir; kullanici raporu yerine performans analizi icindir.
+- Release oncesi ayni test dataset ile sure karsilastirmasi yapilmalidir.
+- Settings `batch_size`, model tipi ve `PREFER_TRT` davranisi performansi etkileyebilir.
+
+## Screenshot beklenenleri
+
+- Latest Gantt timeline.
+- Model/detail filtreleri.
+- Uzun suren adimin detay gorunumu.

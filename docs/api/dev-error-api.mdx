@@ -1,0 +1,47 @@
+---
+title: "Developer Error API"
+description: "Frontend/backend hata takibi ve issue gruplama endpointleri."
+---
+
+# Developer Error API
+
+Developer Error API, frontend ve backend hatalarinin merkezi olarak izlenmesi icin kullanilir. Error Tracking ekrani bu endpointleri kullanir.
+
+## Frontend error ingestion
+
+| Method | Path | Aciklama |
+| --- | --- | --- |
+| `POST` | `/errors/frontend` | Frontend tarafindan yakalanan hata payload'unu `errors.db` icine kaydeder. |
+
+## Developer endpoints
+
+| Method | Path | Aciklama |
+| --- | --- | --- |
+| `GET` | `/dev/errors` | Hata listesini filtrelerle getirir. |
+| `GET` | `/dev/errors/{error_id}` | Tekil hata detayini getirir. |
+| `DELETE` | `/dev/errors` | Tum hata kayitlarini temizler. |
+| `GET` | `/dev/issues` | Fingerprint bazli gruplanmis issue listesini getirir. |
+| `PATCH` | `/dev/errors/{error_id}/status` | Hata status bilgisini gunceller. |
+| `GET` | `/dev/session-stats` | Son 30 gun session/hata istatistigini getirir. |
+
+## Query parametreleri
+
+`GET /dev/errors` icin desteklenen filtreler:
+
+| Parametre | Aciklama |
+| --- | --- |
+| `source` | Frontend/backend gibi kaynak filtresi. |
+| `level` | Error seviyesi. |
+| `limit` | Sayfa boyutu. Varsayilan frontend tarafinda 50 kullanilir. |
+| `offset` | Pagination offset degeri. |
+| `fingerprint` | Ayni hata ailesini filtrelemek icin. |
+| `since` | Belirli tarihten sonraki kayitlari almak icin. |
+| `search` | Metin aramasi icin. |
+
+## Storage
+
+Hatalar `errors.db` icinde tutulur. `log/error_tracker.py` tablo olusturma, migration, capture, listeleme, status ve temizlik islemlerini yonetir.
+
+## Yetki
+
+Developer endpointleri `X-Username` header'i ile gelen kullanicinin developer/admin yetkisini kontrol eder. Ekran tarafinda `/error-tracking` route'u developer guard'i arkasindadir.

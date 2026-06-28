@@ -1,0 +1,60 @@
+---
+title: "Mineral Validate Guide"
+description: "Mineral dogrulama, mineral manevralari ve export oncesi kalite kontrol."
+---
+
+# Mineral Validate Guide
+
+Mineral Validate, Validate ekraninda duzeltilen detection verilerinden mineral tablosu ve mineral manevralari ureten ara kalite ekranidir. Export ekraninin mineral ciktisi bu adima baglidir.
+
+## On kosullar
+
+- Run tamamlanmis olmali.
+- Validate ekraninda kritik OCR ve detection hatalari duzeltilmis olmali.
+- Session id Redux state icinde mevcut olmali.
+- Kullanici `canMineralValidate` guard'ini gecmeli.
+
+## Akis
+
+```mermaid
+flowchart TD
+    A[Validate tamamlandi] --> B[Mineral Validate ac]
+    B --> C[/mineral_from_changes]
+    C --> D[/get_mineral_maneuvers]
+    D --> E[Mineral tablo ve bloklarini kontrol et]
+    E --> F[/maneuversPhoto]
+    F --> G[Export'a gec]
+```
+
+## Endpointler
+
+| Endpoint | Amac |
+| --- | --- |
+| `POST /mineral_from_changes/{session_id}` | Changes verisinden mineral tablosu ve mineral manevralari uretir. |
+| `GET /get_maneuvers/{session_id}` | Geoteknik manevra verisini referans olarak okur. |
+| `GET /get_mineral_maneuvers/{session_id}` | Uretilen mineral manevra bloklarini getirir. |
+| `GET /maneuversPhoto/{session_id}` | Export oncesi gorsel bloklari olusturur. |
+| `GET /getColorChange/{hole_id}` | Renk degisimi bilgisini export oncesi gunceller. |
+
+## Kontrol listesi
+
+| Kontrol | Neden onemli |
+| --- | --- |
+| Mineral satirlari bos degil | Export mineral tablosu bos kalmaz. |
+| Derinlik araliklari tutarli | Manevra bloklari yanlis birlesmez. |
+| Validate degisiklikleri yansimis | Kullanici duzeltmeleri kaybolmaz. |
+| Hole id dogru | Indirilen export dosyalari dogru kuyuya ait olur. |
+
+## Sik hatalar
+
+| Belirti | Muhtemel neden | Cozum |
+| --- | --- | --- |
+| Mineral manevrasi bos | Validate degisiklikleri kaydedilmemis veya `mineral_from_changes` hata almis | Validate'a geri donup kaydet, sonra tekrar uret. |
+| Export eksik veri gosteriyor | Mineral manevrasi yenilenmemis | Mineral Validate'te yeniden build et. |
+| Renk degisimi gelmiyor | `getColorChange` session/hole id uyumsuz | Hole id ve session id kontrol edilmeli. |
+
+## Screenshot beklenenleri
+
+- Mineral tablo gorunumu.
+- Mineral manevra bloklari.
+- Export'a gecmeden once basarili durum.

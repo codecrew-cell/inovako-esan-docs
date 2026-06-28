@@ -1,0 +1,76 @@
+---
+title: "Validate Guide"
+description: "Detection kutulari, manevra tablosu, OCR hatalari ve kaydetme akisi."
+---
+
+# Validate Guide
+
+Validate ekrani Run sonucunda uretilen detection ve OCR verilerinin insan tarafindan kontrol edildigi ana kalite kapisidir. Bu ekrandaki duzeltmeler Mineral Validate, Lithology ve Export ciktisini dogrudan etkiler.
+
+## Kullanici amaci
+
+| Amac | Aciklama |
+| --- | --- |
+| Detection kontrolu | Kutu konumlari, siniflari ve goruntu varyantlari incelenir. |
+| Kutu duzeltme | Eksik kutu eklenir, hatali kutu silinir veya sinifi degistirilir. |
+| Manevra tablosu duzeltme | OCR kaynakli baslangic/bitis derinlikleri duzeltilir. |
+| Toplu kaydetme | Session bazli degisiklikler backend'e yazilir. |
+| Sonraki adima gecis | Mineral Validate veya Export oncesi veri tutarliligi saglanir. |
+
+## Ana ekran bolumleri
+
+| Bolum | Gorev |
+| --- | --- |
+| Image viewer | Aktif karot goruntusunu ve detection kutularini gosterir. |
+| Maneuver table | Derinlik araliklari ve self-edit uyarilarini listeler. |
+| Header navigation | Onceki/sonraki goruntu ve sayfa gecislerini yonetir. |
+| Canvas tools | Kutu secme, duzenleme, silme ve goruntu tipi secimi saglar. |
+
+## Akis
+
+```mermaid
+flowchart TD
+    A[Validate acilir] --> B[/maneuvers_from_changes]
+    B --> C[/get_maneuvers]
+    C --> D[Frame ve detection goruntusu yuklenir]
+    D --> E[Kutu/tablo kontrolu]
+    E --> F{Hata var mi}
+    F -->|Evet| G[Duzelt ve kaydet]
+    F -->|Hayir| H[Mineral/Lithology/Export icin hazir]
+```
+
+## Kritik endpointler
+
+| Endpoint | Ne zaman kullanilir |
+| --- | --- |
+| `GET /maneuvers_from_changes/{session_id}` | Changes tablosundan manevra uretmek icin. |
+| `GET /maneuversPhoto/{session_id}` | Manevra gorsellerini olusturmak icin. |
+| `GET /get_maneuvers/{session_id}` | Manevra tablosunu okumak icin. |
+| `GET /getColorChange/{hole_id}` | Renk degisimi bilgisini almak icin. |
+| `GET /frame/{session_id}` | Aktif goruntu frame'ini yuklemek icin. |
+| `POST /save_bulk_changes/{session_id}` | Kullanici degisikliklerini toplu kaydetmek icin. |
+
+## Engelleyici kontroller
+
+Validate ekraninda `selfEdit` degerleri kullanilarak OCR/manvera hatalari isaretlenir. Esit veya ters derinlikler export oncesi duzeltilmelidir.
+
+| Kontrol | Beklenen durum |
+| --- | --- |
+| Manevra baslangici | Bitis degerinden kucuk olmali. |
+| Bos manevra tablosu | Run veya changes verisi kontrol edilmeli. |
+| Kutu-row uyumu | Detection kutulari ilgili karot satiri icinde kalmali. |
+| Takip eden ekranlar | Mineral ve export icin session verisi kaydedilmis olmali. |
+
+## Kaydetme standardi
+
+- Toplu kaydetme yapmadan sayfadan ayrilmayin.
+- Birden fazla kutu/table degisikligi yapildiysa tek save ile backend'e gonderin.
+- Kayit sonrasi manevra tablosunu tekrar kontrol edin.
+- Export oncesi minimum bir goruntu ve bir manevra satiri manuel incelenmelidir.
+
+## Screenshot beklenenleri
+
+- Detection kutularinin gorundugu ana canvas.
+- Hata/uyari iceren manevra tablosu.
+- Kutu duzenleme veya sinif degistirme akisi.
+- Basarili kaydetme sonrasi durum.

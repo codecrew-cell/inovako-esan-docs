@@ -1,0 +1,71 @@
+---
+title: "Settings Admin Guide"
+description: "Model, dosya, goruntu isleme, renk analizi, AutoML ve Validate ayarlari."
+---
+
+# Settings Admin Guide
+
+Settings ekrani admin ve supervisor rollerinin sistem davranisini kod degistirmeden yonetmesini saglar. Bu ekrandaki degerler Run, Validate, Lithology, AutoML ve Training Lab akisini etkiler.
+
+## Yetki
+
+| Route | Guard |
+| --- | --- |
+| `/settings` | `admin` veya `supervisor` |
+
+## Ayar gruplari
+
+| Grup | Amac |
+| --- | --- |
+| Model Management | Ana YOLO, takoz ve classification model secimleri. |
+| Files & Folders | Export klasoru, dosya uzantilari, upload limitleri ve klasor validasyonu. |
+| Image Processing | CLAHE, noise reduction, downscale, rotation correction ve edge trim. |
+| Color Analysis | Renk mesafesi, segment yuksekligi, smoothing, gap ve palette renkleri. |
+| AutoML / Training Lab | Epoch, learning rate, augmentation, train/val split, early stopping ve checkpoint. |
+| Lithology | Litoloji sinif renkleri, opacity, minimum bolge alani, zoom ve sliding window. |
+| Validate / Canvas | Detection kutu renkleri, default class visibility ve canvas parametreleri. |
+
+## Backend davranisi
+
+Settings API'si `Api/settings_service/router.py` icinde `/settings` prefix'i ile sunulur.
+
+| Endpoint | Amac |
+| --- | --- |
+| `GET /settings` | Aktif ayarlari ve default degerleri getirir. |
+| `POST /settings` | Draft ayarlari kaydeder. |
+
+Kayit sirasinda bazi ayarlar `colorChangeParams.json` ile senkronize edilir. Bu nedenle renk/segmentasyon parametreleri degistiginde backend tarafindaki renk analizi davranisi da degisir.
+
+## Model secimi standardi
+
+| Ayar | Etki alani |
+| --- | --- |
+| `varsayilan_ana_model` | Run ekranindaki ana detection modeli. |
+| `varsayilan_takoz_modeli` | Takoz/spacer tespiti. |
+| `varsayilan_cls_modeli` | Siniflandirma ve AutoML sonrasi secim. |
+| `confidence` | Dusuk skorlu detection'larin filtrelenmesi. |
+| `iou` | Overlap eden detection'larin NMS toleransi. |
+| `batch_size` | Ayni anda islenecek goruntu sayisi. |
+
+## Degisiklik yapmadan once
+
+- Aktif model dosyasinin disk uzerinde var oldugunu kontrol edin.
+- Confidence/IoU degisikligini test dataset uzerinde deneyin.
+- Renk paleti degisikliginden sonra Export renk ciktisini kontrol edin.
+- Training parametresi degisiyorsa eski modelle yeni model performansini ayri kaydedin.
+
+## Rollback
+
+Settings ekraninda yanlis deger kaydedilirse:
+
+1. Son calisan model ve parametreleri geri secin.
+2. Sayfayi kaydedin.
+3. Backend gerekirse yeniden baslatilsin.
+4. Run + Validate smoke testi yapilsin.
+
+## Screenshot beklenenleri
+
+- Model Management bolumu.
+- Validate / Canvas renk ayarlari.
+- Lithology renk ayarlari.
+- AutoML / Training Lab parametreleri.

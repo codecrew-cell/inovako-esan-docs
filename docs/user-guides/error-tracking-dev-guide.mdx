@@ -1,0 +1,68 @@
+---
+title: "Error Tracking Developer Guide"
+description: "Frontend/backend hatalarini izleme, issue gruplama ve session bazli inceleme."
+---
+
+# Error Tracking Developer Guide
+
+Error Tracking ekrani developer rolundeki kullanicilar icin operasyonel hata takibi saglar. Backend exception'lari ve frontend tarafindan bildirilen hatalar `errors.db` icinde tutulur.
+
+## Yetki
+
+| Route | Guard |
+| --- | --- |
+| `/error-tracking` | `developer` yetkisi olan kullanici |
+
+Backend tarafinda developer kontrolu `Api/dev_error_mixin.py` icindeki `_check_developer` davranisina baglidir.
+
+## Veri kaynagi
+
+| Kaynak | Dosya / endpoint |
+| --- | --- |
+| Error DB | `errors.db` |
+| Backend capture | `log/error_tracker.py` |
+| Frontend capture | `POST /errors/frontend` |
+| Developer API | `/dev/errors`, `/dev/issues`, `/dev/session-stats` |
+
+## Ekran akisi
+
+```mermaid
+flowchart TD
+    A[Hata olusur] --> B{Kaynak}
+    B -->|Backend| C[error_tracker.capture]
+    B -->|Frontend| D[POST /errors/frontend]
+    C --> E[errors.db]
+    D --> E
+    E --> F[Error Tracking ekraninda filtrele]
+    F --> G[Issue/fingerprint analizi]
+```
+
+## Endpointler
+
+| Endpoint | Amac |
+| --- | --- |
+| `GET /dev/errors` | Hatalari source, level, fingerprint, since ve search filtreleriyle listeler. |
+| `GET /dev/errors/{error_id}` | Tekil hata detayini getirir. |
+| `DELETE /dev/errors` | Hata listesini temizler. |
+| `GET /dev/issues` | Fingerprint bazli gruplanmis issue listesini verir. |
+| `PATCH /dev/errors/{error_id}/status` | Hata durumunu gunceller. |
+| `GET /dev/session-stats` | Son 30 gun icin session/hata istatistiklerini getirir. |
+
+## Inceleme standardi
+
+1. Once `Issues` gorunumunde tekrarlayan fingerprint'leri kontrol edin.
+2. Sonra tekil error detayinda endpoint, stack trace, username ve session id alanlarini inceleyin.
+3. Backend hatasinda ilgili FastAPI endpointini bulun.
+4. Frontend hatasinda route ve component bilgisini kontrol edin.
+5. Cozulduyse status guncelleyin veya listeyi release sonrasi temizleyin.
+
+## Saklama politikasi
+
+`log/error_tracker.py` eski hatalari otomatik temizleyebilir. Varsayilan davranista 30 gunden eski hatalar silinir. Kritik hatalar release notuna veya issue tracker'a tasinmalidir.
+
+## Screenshot beklenenleri
+
+- Error listesi.
+- Issue/fingerprint gruplari.
+- Hata detay modali.
+- Session stats alani.
