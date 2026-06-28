@@ -20,6 +20,15 @@
         ]
       },
       {
+        "group": "Klavuzlar",
+        "icon": "book-marked",
+        "pages": [
+          "docs/guides/developer-handoff",
+          "docs/guides/operator-guide",
+          "docs/guides/maintenance-checklist"
+        ]
+      },
+      {
         "group": "Mimari",
         "icon": "blocks",
         "pages": [
@@ -43,8 +52,26 @@
         "icon": "square-terminal",
         "pages": [
           "docs/api/backend-api",
+          "docs/api/request-response-examples",
           "docs/api/lithology-api",
+          "docs/api/training-lab-api",
           "docs/api/data-platform-api"
+        ]
+      },
+      {
+        "group": "Veri ve DB",
+        "icon": "database",
+        "pages": [
+          "docs/data/database-schema",
+          "docs/data/storage-and-files"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "icon": "cloud-upload",
+        "pages": [
+          "docs/deployment/deployment-guide",
+          "docs/deployment/mintlify-publishing"
         ]
       },
       {
@@ -53,6 +80,7 @@
         "pages": [
           "docs/operations/configuration",
           "docs/operations/troubleshooting",
+          "docs/operations/release-process",
           "docs/operations/mintlify"
         ]
       },

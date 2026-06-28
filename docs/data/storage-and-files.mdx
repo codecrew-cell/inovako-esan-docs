@@ -1,0 +1,89 @@
+---
+title: "Storage and Files"
+description: "Goruntu, model, cache, export ve metadata dosyalarinin nerede tutuldugu."
+---
+
+# Storage and Files
+
+Uygulama buyuk binary verileri SQLite icine koymaz. Goruntu, model, tile, crop ve export dosyalari dosya sisteminde tutulur; DB sadece metadata ve iliskileri saklar.
+
+## Ana klasorler
+
+| Yol | Icerik |
+| --- | --- |
+| `uploaded_data/` | Kullanicinin yukledigi kuyu goruntuleri |
+| `Model/Model Files/` | Ana YOLO, takoz, satir ve ilgili model dosyalari |
+| `LithologyAnalysis/karot_inference_pack/models/` | Litoloji XGBoost/model ve encoder dosyalari |
+| `LithologyAnalysis/training_lab_cache/` | Training Lab session, feature, tile ve recovery cache |
+| `storage/` | Data Platform raw/processed/crops/tiles/annotations dosyalari |
+| `data_metadata/` | Export edilmis metadata JSON dosyalari |
+| `data_versioning/metadata/` | Dataset, composition ve tile metadata snapshot'lari |
+| `ManueverBlocks/` | Export/manuever gorsel bloklari |
+| `exports/` | Uygulama export ciktilari |
+
+## Model dosyasi secimi
+
+Bazi moduller `PREFER_TRT=1` iken `.engine` dosyasini `.pt` dosyasindan once dener.
+
+```text
+Model/Model Files/yolo_coreRow_pose_best_v2.engine
+Model/Model Files/yolo_coreRow_pose_best_v2.pt
+```
+
+Secim mantigi:
+
+1. `PREFER_TRT=1` ise once `.engine` aranir.
+2. Bulunamazsa `.pt` denenir.
+3. Ortam degiskeni kapaliysa once `.pt` tercih edilebilir.
+
+## Data Platform storage
+
+Data Platform relative path mantigi kullanir. Bu, projeyi farkli makineye tasirken metadata'nin daha dayanikli kalmasini saglar.
+
+```text
+storage/
+  raw/
+  processed/
+  crops/
+  tiles/
+  annotations/
+```
+
+## Training Lab cache
+
+| Klasor | Amac |
+| --- | --- |
+| `features/` | Embedding, registry ve training history |
+| `sessions/` | Oturum bazli gecici veri |
+| `tiles/` | Tile goruntuleri |
+| `row_crops/` | Satir crop ciktilari |
+| `strips/` | Litoloji strip ciktilari |
+| `test_uploads/` | Test goruntu yuklemeleri |
+| `trash/` | Silinen/arsivlenen egitim varliklari |
+
+## Dosya temizleme politikasi
+
+| Dosya turu | Ne zaman temizlenir |
+| --- | --- |
+| `training_lab_cache/sessions` | Yarim kalan recovery ihtiyaci yoksa |
+| `test_uploads` | Test tamamlaninca |
+| `exports` | Kullanici exportlarini yedekledikten sonra |
+| `storage/raw` | Normalde silinmez; dataset snapshot lineage icin kalir |
+| `data_metadata` | Metadata audit gerekmiyorsa archive edilir |
+
+## Git'e eklenmemesi gerekenler
+
+```text
+uploaded_data/
+Database/*.db
+Database/*.db-wal
+Database/*.db-shm
+data_versioning/*.db
+storage/
+LithologyAnalysis/training_lab_cache/
+Model/Model Files/*.pt
+Model/Model Files/*.engine
+exports/
+```
+
+Dokumantasyon reposu sadece `.mdx`, `docs.json`, README ve statik dokuman varliklarini icermelidir.

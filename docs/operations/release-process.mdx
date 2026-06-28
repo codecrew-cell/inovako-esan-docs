@@ -1,0 +1,93 @@
+---
+title: "Release Process"
+description: "Kod, model, veri ve dokumantasyon degisiklikleri icin release sureci."
+---
+
+# Release Process
+
+Release sureci sadece kod deploy etmek degildir. Bu uygulamada model dosyalari, DB semasi, data metadata ve dokumantasyon birlikte dusunulmelidir.
+
+## Release tipleri
+
+| Tip | Ornek | Ek kontrol |
+| --- | --- | --- |
+| Frontend-only | UI/stil degisikligi | `npm run build` |
+| Backend API | Endpoint veya schema degisikligi | Frontend client uyumu |
+| Model update | Yeni `.pt`, `.engine`, litoloji `.json` | Smoke inference |
+| DB migration | Yeni kolon/tablo | Idempotent migration |
+| Documentation | Mintlify sayfa guncellemesi | `mint broken-links` |
+
+## Standart release adimlari
+
+1. Degisiklikleri lokal test et.
+2. DB migration varsa eski DB ile startup dene.
+3. Frontend build al.
+4. Kucuk veri setiyle smoke test yap.
+5. Dokumantasyonu guncelle.
+6. Commit mesajini release amacina gore yaz.
+7. GitHub push sonrasi Mintlify deploy durumunu kontrol et.
+
+## Commit mesajlari
+
+| Degisiklik | Ornek mesaj |
+| --- | --- |
+| Dokumantasyon | `Update API documentation` |
+| Bug fix | `Fix lithology session loading error` |
+| Model config | `Update default model configuration` |
+| DB migration | `Add lineage metadata fields` |
+
+## Release notu sablonu
+
+```md
+## Release YYYY-MM-DD
+
+### Changed
+- 
+
+### Fixed
+- 
+
+### Migration
+- 
+
+### Validation
+- Backend startup: pass/fail
+- Frontend build: pass/fail
+- Smoke test: pass/fail
+- Docs check: pass/fail
+```
+
+## Model release notu
+
+Model degisikliginde su bilgiler kaydedilmeli:
+
+| Alan | Aciklama |
+| --- | --- |
+| Model name | Dosya stem'i |
+| Model path | Runtime path |
+| Training dataset | Data Platform snapshot id veya klasor |
+| Metrics | mAP, precision, recall veya ilgili litoloji metrikleri |
+| Rollback model | Onceki model dosyasi |
+
+## Dokumantasyon release
+
+Dokumantasyon repo'su:
+
+```text
+codecrew-cell/inovako-esan-docs
+```
+
+Release oncesi:
+
+```powershell
+cd documentation
+mint broken-links
+```
+
+Basariliysa:
+
+```powershell
+git add .
+git commit -m "Update technical documentation"
+git push
+```

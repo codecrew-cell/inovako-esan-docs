@@ -1,0 +1,65 @@
+---
+title: "Training Lab API"
+description: "/traininglab endpoint gruplari ve egitim pipeline sozlesmesi."
+---
+
+# Training Lab API
+
+Training Lab API, litoloji model egitim surecini destekler. Router prefix'i:
+
+```text
+/traininglab
+```
+
+Ana dosya:
+
+```text
+LithologyAnalysis/training_lab_api.py
+```
+
+## Endpoint gruplari
+
+| Grup | Endpoint'ler | Amac |
+| --- | --- | --- |
+| Dataset | `POST /dataset-info`, `POST /upload-folder` | Klasor veya dataset hazirlama |
+| Embedding | `POST /compute-embeddings`, `GET /embedding-progress`, `POST /cancel-embeddings` | Tile/crop feature uretimi |
+| UMAP ve cluster | `POST /compute-umap`, `POST /recluster`, `POST /update-cluster-names` | Gorsel kumeleme ve sinif isimleri |
+| Label yonetimi | `POST /update-labels`, `POST /rename-class`, `POST /exclude-samples`, `POST /finalize-assignments` | Ornek etiketlerinin temizlenmesi |
+| Model | `GET /models`, `POST /save-model`, `POST /rename-model`, `POST /delete-model` | Kalici litoloji model yonetimi |
+| Test | `POST /upload-test-image`, `POST /test-sample`, `GET /image` | Model test ve gorsel servis |
+| Export | `GET /download-model`, `GET /download-encoder`, `GET /training-history.csv` | Model ve tarihce ciktilari |
+| Stream | `GET /train-stream` | Egitim olay akisi |
+| Recovery | `GET/POST/DELETE /recovery` | Yarim kalan isleri kurtarma |
+
+## Cache ve registry dosyalari
+
+| Dosya / klasor | Amac |
+| --- | --- |
+| `training_lab_cache/features/model_registry.json` | Kalici model metadata kaydi |
+| `training_lab_cache/features/training_history.json` | Egitim tarihcesi |
+| `training_lab_cache/features/cluster_metadata.json` | Cluster ve label metadata |
+| `training_lab_cache/tiles` | Uretilen tile goruntuleri |
+| `training_lab_cache/row_crops` | Satir crop ciktilari |
+| `karot_inference_pack/models` | Kaydedilen litoloji modelleri |
+
+## Model kaydetme davranisi
+
+Training Lab'de model kaydedildiginde:
+
+1. Model dosyasi `LithologyAnalysis/karot_inference_pack/models` altina yazilir.
+2. Encoder dosyasi ayni model adiyla iliskili tutulur.
+3. `model_registry.json` icine egitim metadata'si yazilir.
+4. Data Platform entegrasyonu varsa `/data/models/register` ile lineage kaydi olusur.
+
+## Litoloji editor ile iliski
+
+Litoloji editor `/litho/models` endpoint'iyle Training Lab model klasorunu okur. Editor sinif listesi encoder dosyasindan uretilir. Registry'deki trim ayarlari editor inference tarafinda kullanilabilir.
+
+## Operasyon notlari
+
+| Durum | Kontrol |
+| --- | --- |
+| Model listesi bos | `karot_inference_pack/models` altinda `.json` model var mi |
+| Sinif listesi bos | Encoder dosyasi veya `label_encoder.pkl` var mi |
+| Training yarida kaldi | `/traininglab/recovery` endpoint'i kontrol edilmeli |
+| Test goruntusu gelmiyor | `/traininglab/image?path=...` dosya yolu cozumleniyor mu |

@@ -1,0 +1,145 @@
+---
+title: "Database Schema"
+description: "Ana uygulama ve Data Platform SQLite tablo semalari."
+---
+
+# Database Schema
+
+Projede iki ana SQLite katmani bulunur.
+
+| DB | Yol | Sorumluluk |
+| --- | --- | --- |
+| Ana uygulama DB | `Database/Database.db` | Detection, Changes, Maneuvers, Minerals |
+| Data Platform DB | `data_versioning/data_versioning.db` | Dataset, snapshot, artifact, composition, lineage |
+
+## Ana uygulama DB
+
+Kaynak dosya:
+
+```text
+Database/database.py
+```
+
+### Detection / Changes / MiddlePoint
+
+Bu tablolar ayni detection semasini kullanir. `Detection` ham model ciktisi, `Changes` kullanici tarafindan duzenlenmis aktif veri, `MiddlePoint` ise ara geometri kullanimi icindir.
+
+| Kolon | Tip | Aciklama |
+| --- | --- | --- |
+| `image_id` | INTEGER PK | Otomatik id |
+| `session_id` | TEXT | Islem oturumu |
+| `filename` | TEXT | Kaynak goruntu adi |
+| `class_name` | TEXT | Detection sinifi |
+| `x`, `y` | INTEGER | Kutu sol/ust koordinati |
+| `width`, `height` | INTEGER | Kutu boyutu |
+| `confidence` | REAL | Model guven skoru |
+| `ocr_text` | TEXT | OCR sonucu |
+| `position_in_row` | INTEGER | Satir icindeki sira |
+| `row_number` | INTEGER | Satir numarasi |
+| `row_width` | INTEGER | Satir genisligi |
+| `is_row_start`, `is_row_middle`, `is_row_end` | BOOLEAN | Satir pozisyon bayraklari |
+| `removed_rows_exist` | BOOLEAN | Satir silme bilgisi |
+| `is_small_image` | BOOLEAN | Kucuk goruntu bayragi |
+
+### Maneuvers / ManeuversStatic
+
+Manevra hesaplama ciktilarini tutar.
+
+| Kolon | Aciklama |
+| --- | --- |
+| `Hole_ID` | Kuyu adi |
+| `session_id` | Oturum id |
+| `Depth_From`, `Depth_To` | Derinlik araligi |
+| `Interval_Length` | Aralik uzunlugu |
+| `Recovery_Interval`, `Recovery_pct` | Recovery metrikleri |
+| `RQD_Interval`, `RQD_pct` | RQD metrikleri |
+| `Solid_Recovery_Interval`, `Solid_Recovery_pct` | Solid recovery metrikleri |
+| `Fracture_Count` | Kirik sayisi |
+| `Broken_Core_Interval` | Broken core araligi |
+| `Fault_Zone_Interval` | Fault zone araligi |
+| `Core_Diameter` | Karot capi |
+| `Logged_Date`, `Logged_By` | Log metadata |
+| `selfEdit` | Kullanici duzenleme bilgisi |
+
+### Minerals
+
+Mineral dogrulama ciktilarini tutar.
+
+| Kolon | Aciklama |
+| --- | --- |
+| `uniqueId` | UI tarafindaki benzersiz mineral id |
+| `session_id` | Oturum id |
+| `filename` | Kaynak goruntu |
+| `class_name` | Ana mineral sinifi |
+| `secondary_class_name`, `third_class_name` | Alternatif siniflar |
+| `x`, `y`, `width`, `height` | Kutu koordinatlari |
+| `position_in_row`, `row_number`, `row_width` | Satir konumu |
+| `ocr_text` | OCR/derinlik metni |
+
+### MineralsManeuvers
+
+Mineral veya litoloji manevra bloklarini export icin tutar.
+
+| Kolon | Aciklama |
+| --- | --- |
+| `mineralBlockStart`, `mineralBlockEnd` | Derinlik araligi |
+| `colorChangeClass` | Ana sinif |
+| `secondaryColorChangeClass`, `thirdColorChangeClass` | Alternatif siniflar |
+| `color1rgb`, `color2rgb`, `color3rgb` | Renk ozetleri |
+| `color1tonu`, `color2tonu`, `color3tonu` | Ton bilgisi |
+
+## Data Platform DB
+
+Kaynak dosya:
+
+```text
+Api/data_service/db.py
+```
+
+### Temel tablolar
+
+| Tablo | Sorumluluk |
+| --- | --- |
+| `users` | Kullanici kayitlari |
+| `images` | Hash bazli goruntu metadata'si |
+| `dataset_snapshots` | Dataset versiyonlari ve durumlari |
+| `snapshot_images` | Snapshot -> image baglantisi |
+| `artifacts` | Tile, crop, processed image ve feature dosyalari |
+| `annotations` | Snapshot bazli annotation dosyalari |
+
+### Composition ve lineage
+
+| Tablo | Sorumluluk |
+| --- | --- |
+| `compositions` | Coklu kuyu/dataset calisma setleri |
+| `composition_wells` | Composition -> well_name iliskisi |
+| `composition_history` | Composition degisim audit trail |
+| `composition_dataset_snapshots` | Commit anindaki dataset snapshot mapping'i |
+| `models` | Egitilen modeller ve metrikleri |
+
+### Training cache
+
+| Tablo | Sorumluluk |
+| --- | --- |
+| `training_feature_cache` | Sample/tile feature cache |
+| `training_sample_labels` | Sample label kayitlari |
+| `training_class_registry` | Sinif sirasi ve renk registry'si |
+
+## Indexler
+
+Ana DB session/file/row/position alanlarinda indexler kullanir. Data Platform DB tarafinda composition history, feature cache ve class registry icin ek indexler vardir.
+
+## Migration yaklasimi
+
+`Api/data_service/db.py` migration'lari `ALTER TABLE ... ADD COLUMN` ile idempotent dener. Kolon varsa exception yutulur. Yeni kolon eklenecekse ayni yaklasim korunmalidir.
+
+```python
+try:
+    conn.execute("ALTER TABLE models ADD COLUMN new_metric REAL")
+except Exception:
+    pass
+```
+
+## Veri guvenligi notu
+
+SQLite dosyalari uygulamanin runtime verisini tasir. Release, demo veya musteri paylasimi yaparken DB dosyalarindaki gercek kuyu/veri kayitlari kontrol edilmelidir.

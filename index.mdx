@@ -5,7 +5,20 @@ description: "Karot goruntu analizi, litoloji, model egitimi ve veri platformu i
 
 # INOVAKO ESAN Teknik Dokumantasyon
 
-Bu dokumantasyon, `ESANLAST-main` uygulamasinin teknik calisma seklini tek yerde toplar. Hedef kitle; projeyi gelistiren, kuran, devralan veya uretim ortaminda destekleyen teknik ekiplerdir.
+Bu site, `ESANLAST-main` uygulamasinin teknik calisma seklini, ana is akislari ve operasyon notlarini tek yerde toplar. Dokumantasyon; yeni gelistirici, teknik lider, operator ve projeyi devralacak ekip icin hazirlanmistir.
+
+## Dokuman seviyesi
+
+| Alan | Durum |
+| --- | --- |
+| Mimari genel bakis | Hazir |
+| Backend ve frontend runtime | Hazir |
+| Jeoteknik, litoloji, training lab, data platform akislari | Hazir |
+| API endpoint gruplari ve ornek payloadlar | Hazir |
+| SQLite tablo semalari | Hazir |
+| Kurulum, deployment ve release sureci | Hazir |
+| Ekran goruntulu son kullanici kilavuzu | Sonraki adim |
+| Otomatik OpenAPI reference | Sonraki adim |
 
 ## Kapsam
 
@@ -44,25 +57,24 @@ cd ESANLAST-main\React
 npm run dev
 ```
 
-Uygulama varsayilan olarak su adresleri kullanir:
-
 | Servis | Adres |
 | --- | --- |
 | Frontend | `http://localhost:5173` |
 | Backend | `http://localhost:8000` |
-| Mintlify dokumantasyon | `http://localhost:3000` |
+| Dokumantasyon | Mintlify public domain veya `mint dev` |
 
-## Dokumantasyonu lokal calistirma
+## Dokumantasyon yayinlama
 
-Mintlify CLI gereklidir.
+Bu site GitHub reposundan otomatik deploy edilir:
 
-```powershell
-npm i -g mint
-mint dev
+```text
+https://github.com/codecrew-cell/inovako-esan-docs
 ```
 
-Alternatif olarak proje kokunden:
+Local degisiklikten sonra:
 
 ```powershell
-npm run docs:dev
+git add .
+git commit -m "Update documentation"
+git push
 ```

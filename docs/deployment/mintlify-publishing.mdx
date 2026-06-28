@@ -1,0 +1,86 @@
+---
+title: "Mintlify Publishing"
+description: "Dokumantasyon sitesini GitHub ve Mintlify ile yayinlama ve guncelleme."
+---
+
+# Mintlify Publishing
+
+Bu dokumantasyon ayri GitHub reposundan yayinlanir.
+
+```text
+https://github.com/codecrew-cell/inovako-esan-docs
+```
+
+## Repo yapisi
+
+```text
+docs.json
+index.mdx
+docs/
+  api/
+  architecture/
+  data/
+  deployment/
+  getting-started/
+  guides/
+  operations/
+  workflows/
+```
+
+`docs.json` repo kokundedir. Mintlify ayarlarinda subdirectory kapali kalmalidir.
+
+## Mintlify ayarlari
+
+| Alan | Deger |
+| --- | --- |
+| GitHub organization | `codecrew-cell` |
+| Repository | `inovako-esan-docs` |
+| Branch | `main` |
+| Docs directory | `/` |
+| Visibility | `Public` |
+
+## Guncelleme akisi
+
+```powershell
+cd ESANLAST-main\documentation
+git status
+git add .
+git commit -m "Update documentation"
+git push
+```
+
+Push sonrasi Mintlify otomatik deploy baslatir. Dashboard'da Activity bolumunde `Successful` gorulmelidir.
+
+## Local kontrol
+
+```powershell
+cd ESANLAST-main\documentation
+mint broken-links
+mint dev
+```
+
+Windows PowerShell policy sorunu varsa `.cmd` kullanin:
+
+```powershell
+mint.cmd broken-links
+mint.cmd dev
+```
+
+## Public link
+
+Mintlify dashboard'da domain su formdadir:
+
+```text
+https://geocoredocumentation.mintlify.site
+```
+
+Domain degistirilirse bu sayfadaki link de guncellenmelidir.
+
+## Sorun giderme
+
+| Belirti | Cozum |
+| --- | --- |
+| Repo `docs` gorunuyor | Repository ayarindan `inovako-esan-docs` secilmeli |
+| Docs repo inaccessible | GitHub App repository access kontrol edilmeli |
+| Build failed | Activity detayindan hata acilmali, local `mint broken-links` calistirilmali |
+| Turkce karakter bozuluyor | `docs.json` ve nav basliklari ASCII tutulmali |

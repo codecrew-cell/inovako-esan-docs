@@ -1,0 +1,74 @@
+---
+title: "Developer Handoff"
+description: "Projeyi devralacak gelistirici icin kritik teknik bilgi ve ilk kontrol listesi."
+---
+
+# Developer Handoff
+
+Bu sayfa projeyi yeni devralan gelistiricinin ilk 1-2 gunde bilmesi gereken teknik bilgileri ozetler.
+
+## Sistem ozeti
+
+INOVAKO ESAN; karot goruntu yukleme, YOLO/OCR tabanli analiz, manuel dogrulama, litoloji siniflandirma, model egitimi ve veri versiyonlama islevlerini tek uygulamada toplar.
+
+| Katman | Teknoloji | Ana konum |
+| --- | --- | --- |
+| Backend API | FastAPI | `Api/api.py` |
+| Frontend | React + Vite | `React/` |
+| Model runtime | PyTorch, YOLO, OpenCV | `Model/`, `LithologyAnalysis/` |
+| Ana DB | SQLite | `Database/Database.db` |
+| Data platform DB | SQLite | `data_versioning/data_versioning.db` |
+| Dokumantasyon | Mintlify | `documentation/` |
+
+## Ilk calistirma
+
+```powershell
+cd ESANLAST-main
+python run_backend.py
+```
+
+```powershell
+cd ESANLAST-main\React
+npm install
+npm run dev
+```
+
+## Ilk okunacak dosyalar
+
+| Oncelik | Dosya | Neden onemli |
+| --- | --- | --- |
+| 1 | `main.py` | Full dev runtime nasil basliyor |
+| 2 | `run_backend.py` | Backend-only runtime |
+| 3 | `Api/api.py` | Route kayitlari, worker setup, CORS, static mounts |
+| 4 | `React/src/app/router/AppRoutes.jsx` | Frontend sayfa haritasi ve access guard'lar |
+| 5 | `karot_analiz/litho_api.py` | Litoloji editor backend akisi |
+| 6 | `LithologyAnalysis/training_lab_api.py` | Training Lab API ve cache yapisi |
+| 7 | `Api/data_service/router.py` | Data Platform API ve lineage |
+
+## Riskli alanlar
+
+| Alan | Risk | Not |
+| --- | --- | --- |
+| Model dosyalari | Eksik `.pt` veya `.engine` dosyasi backend startup'i bozabilir | `Model/Model Files` kontrol edilmeli |
+| GPU/CUDA | Yanlis PyTorch build yavas veya hatali inference uretir | Startup logunda `CUDA available` kontrol edilmeli |
+| SQLite lock | Paralel islemlerde busy hatasi gorulebilir | Kod WAL ve `busy_timeout` kullaniyor |
+| Session state | Bazi analiz verileri bellekte tutuluyor | Backend restart sonrasi taze session kaybolabilir |
+| Encoding | Windows ortaminda Turkce karakterler MDX/JSON tarafinda bozulabilir | Dokumantasyon ASCII tutulur |
+
+## Kod degisikligi yaparken
+
+1. Ilgili domain dosyasini bulun: API, React page, Redux slice veya model helper.
+2. API degisiyorsa frontend client methodunu da guncelleyin.
+3. DB semasi degisiyorsa migration kodunu idempotent yazin.
+4. Buyuk goruntu/model dosyalarini Git'e eklemeyin.
+5. `documentation/` altindaki ilgili sayfayi guncelleyin.
+
+## Definition of Done
+
+| Kontrol | Beklenen sonuc |
+| --- | --- |
+| Backend basliyor | `uvicorn` 8000 portunda calisiyor |
+| Frontend basliyor | Vite 5173 portunda calisiyor |
+| Dokumantasyon link kontrolu | `mint broken-links` basarili |
+| Ana akis manuel smoke test | upload -> process -> validate -> export akisi hata vermiyor |
+| GitHub deploy | Mintlify latest update successful |

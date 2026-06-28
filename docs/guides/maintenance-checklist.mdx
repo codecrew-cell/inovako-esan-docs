@@ -1,0 +1,47 @@
+---
+title: "Maintenance Checklist"
+description: "Model, veri, dokumantasyon ve deployment bakimi icin kontrol listesi."
+---
+
+# Maintenance Checklist
+
+## Haftalik kontroller
+
+| Kontrol | Komut / yer | Beklenen sonuc |
+| --- | --- | --- |
+| Backend loglari | `log/` | Kritik traceback yok |
+| Data DB boyutu | `data_versioning/` | Anormal buyume yok |
+| Ana DB boyutu | `Database/Database.db` | Session temizligi beklenen durumda |
+| Training cache | `LithologyAnalysis/training_lab_cache` | Eski gecici dosyalar kontrol edildi |
+| Dokumantasyon build | `mint broken-links` | Broken link yok |
+
+## Model dosyasi degistirirken
+
+1. Yeni modeli `Model/Model Files` veya litoloji icin `LithologyAnalysis/karot_inference_pack/models` altina koyun.
+2. Eski model dosyasini hemen silmeyin; once rollback icin saklayin.
+3. Settings ekraninda varsayilan model adini dogrulayin.
+4. Kucuk bir kuyu klasoruyle smoke test yapin.
+5. Model metriklerini dokumantasyona veya registry'ye ekleyin.
+
+## Data Platform bakimi
+
+| Alan | Not |
+| --- | --- |
+| Snapshot | `READY` snapshot immutable kabul edilir |
+| Archive | Soft delete once tercih edilir |
+| Permanent delete | Sadece bagimliliklar kontrol edildikten sonra uygulanir |
+| Metadata export | Release oncesi `POST /data/metadata/export` calistirilabilir |
+
+## Release oncesi minimum test
+
+```powershell
+cd ESANLAST-main\documentation
+mint broken-links
+```
+
+```powershell
+cd ESANLAST-main\React
+npm run build
+```
+
+Backend icin tam model yukleme ortami yoksa en azindan import/startup testi yapilir. GPU bulunan makinede tam inference smoke test gereklidir.
