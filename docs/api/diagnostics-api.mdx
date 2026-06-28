@@ -1,0 +1,75 @@
+﻿---
+title: "Diagnostics ve Monitoring API"
+description: "Dashboard KPI, session kaydi, timing stats, Gantt ve operasyonel gozlem endpointleri."
+---
+
+## Genel bakis
+
+Diagnostics endpointleri uygulamanin kullanici deneyimini, islem surelerini ve sistem sagligini takip etmek icin kullanilir. Bu endpointler operator ekranlari, hata izleme ve performans Gantt gorunumu icin destek verisi saglar.
+
+## Dashboard stats
+
+```http
+GET /dashboard/stats
+```
+
+Ana dashboard KPI degerlerini dondurur. Frontend bu endpoint cevap vermezse varsayilan bos metriklerle calismaya devam eder.
+
+Beklenen alanlar:
+
+| Alan | Aciklama |
+| --- | --- |
+| `total_core_length` | Islenmis toplam karot uzunlugu. |
+| `recovery_rate` | Kurtarim orani. |
+| `class_counts` | Sinif bazli sayimlar. |
+| `fault_zones` | Fay/ozel bolge sayisi. |
+| `active_models` | Aktif model sayisi. |
+| `system_status` | Sistem servis durumu. |
+| `recent_scans` | Son analiz kayitlari. |
+| `timeline_items` | UI zaman cizelgesi kayitlari. |
+
+## Session baslatma
+
+```http
+POST /sessions/start
+```
+
+Request:
+
+```json
+{
+  "session_uuid": "uuid",
+  "username": "operator"
+}
+```
+
+Bu kayit, hata loglari ve performans verileriyle kullanici oturumunu eslestirmek icin kullanilir.
+
+## Timing stats
+
+```http
+GET /timing_stats/latest
+GET /timing_stats/{session_id}
+```
+
+Analiz pipeline adimlarinin surelerini raporlar. Operator tarafinda performans darbogazlarini bulmak icin, gelistirici tarafinda ise regresyon takibi icin kullanilir.
+
+## Gantt endpointleri
+
+```http
+GET /gantt/latest
+GET /gantt/{session_id}
+```
+
+Gantt ekrani, session bazli islem adimlarini zaman cizelgesi olarak gosterir. Uzun calisan analizlerde hangi adimin ne kadar surdugunu anlamak icin kullanilir.
+
+## Ne zaman kullanilir?
+
+| Durum | Bakilacak endpoint |
+| --- | --- |
+| Dashboard bos gorunuyor | `/dashboard/stats` |
+| Kullanici oturumu performans ekraninda yok | `/sessions/start` kaydi |
+| Analiz yavas | `/timing_stats/latest` veya session bazli timing |
+| Pipeline adim sirasi incelenecek | `/gantt/{session_id}` |
+| Hata bir oturuma baglanacak | `login_session_id` ve Dev Error endpointleri |
+

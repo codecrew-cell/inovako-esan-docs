@@ -1,0 +1,64 @@
+﻿---
+title: "Cikti Dosyalari Referansi"
+description: "Analiz, validasyon, Training Lab ve Data Versioning tarafinda uretilen ana dosya ve klasorlerin referansi."
+---
+
+## Amac
+
+Bu referans, sistemin disk uzerinde urettigi dosya ve klasorleri operator, gelistirici ve devops ekipleri icin tek yerde toplar. Isimler deployment'a gore degisebilir, ancak asagidaki yapi uygulama kodundaki ana cikti kaliplarini temsil eder.
+
+## Karot analiz ciktilari
+
+| Dosya veya klasor | Aciklama |
+| --- | --- |
+| `uploaded_data/` | Kullanici tarafindan yuklenen ham gorsel veya klasorlerin calisma alani. |
+| `ManueverBlocks/` | Tespit edilen manevra bloklari ve segment ciktilari. |
+| `ManueverBlocks/div/` | Bolunmus veya ara islem segmentleri. |
+| `TUM_DOSYALAR_BIRLESTIRILMIS.jpg` | Birlestirilmis ana karot gorseli. |
+| `CLS-TUM_DOSYALAR_BIRLESTIRILMIS.jpg` | Siniflandirma overlay veya model ciktisi iceren birlestirilmis gorsel. |
+| `TUM_DOSYALAR_BIRLESTIRILMIS_COLOR.jpg` | Renk/metrik isaretlemeli ana cikti. |
+| `combinedAll.jpg` | Birden fazla gorselin birlestirilmis preview ciktisi. |
+
+## Validasyon ciktilari
+
+| Cikti | Aciklama |
+| --- | --- |
+| Maneuver changes | Kullanici kutu duzenlemeleri, silme ve ekleme islemleri. |
+| Bulk changes | Birden fazla manevra veya mineral degisikliginin toplu kaydi. |
+| Mineral validation state | Mineral renk/sinif degisimlerinin kayit durumu. |
+| Download package | Kullanici export ekranindan indirilen final paket. |
+
+## Training Lab ciktilari
+
+| Cikti | Aciklama |
+| --- | --- |
+| Row crops | Uzun karot satirlarindan uretilen kirpimlar. |
+| Tiles | Training Lab embedding ve model egitimi icin uretilen kare veya pencere bazli tile gorselleri. |
+| Embedding cache | Client session'a bagli feature vektorleri ve UMAP girdileri. |
+| Class package zip | Export edilen sinif etiketi ve ornek paketleri. |
+| Model artifact | Egitilen model dosyasi. |
+| Encoder artifact | Modelin feature encoder dosyasi. |
+| Training history CSV | Egitim gecmisi raporu. |
+
+## Data Versioning ciktilari
+
+| Cikti | Aciklama |
+| --- | --- |
+| Dataset snapshot | Ham veya temizlenmis veri versiyonu. |
+| Artifact kaydi | Tile, model veya ek dosya metadata kaydi. |
+| Composition snapshot | Birden fazla well/dataset baglaminin committed versiyonu. |
+| Tile snapshot | Composition veya Training Lab tarafinda uretilen tile seti versiyonu. |
+| Metadata export | Dataset veya model lineage bilgisinin disari aktarilmis paketi. |
+
+## Dosya bulma ipuclari
+
+- Kullaniciya verilen download paketleri backend `/download` veya ilgili Training Lab download endpointlerinden gelir.
+- Gorsel servisleri genelde dosyayi dogrudan vermek yerine path parametresi ile backend uzerinden servis eder.
+- Production ortaminda dosya yolu dokumandaki ornekten farkli olabilir; esas referans backend configuration ve storage dizinidir.
+
+## Temizlik ve saklama
+
+- Ham yuklemeler ve ara cache dosyalari duzenli olarak arsivlenmeli veya temizlenmelidir.
+- Model artifactleri silinmeden once Data Versioning lineage kontrol edilmelidir.
+- Raporlanmis final export paketleri proje arsiv standardina gore saklanmalidir.
+

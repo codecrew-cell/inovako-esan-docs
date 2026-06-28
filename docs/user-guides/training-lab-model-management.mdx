@@ -1,0 +1,51 @@
+﻿---
+title: "Training Lab Model Yonetimi"
+description: "Training Lab icinde model kaydetme, yeniden adlandirma, silme, indirme ve egitim gecmisi izleme rehberi."
+---
+
+## Amac
+
+Training Lab sadece sinif duzenleme ekrani degildir; ayni zamanda egitilen modellerin kaydedildigi, indirildigi, yeniden adlandirildigi ve veri versiyonlariyla iliskilendirildigi model yonetim alanidir.
+
+## Model yasam dongusu
+
+1. **Feature space hazirlanir:** Dataset, composition veya tile snapshot kaynak olarak secilir.
+2. **Siniflar temizlenir:** Cluster adlari, lasso secimleri, exclude islemleri ve merge kararlari uygulanir.
+3. **Atamalar finalize edilir:** `/traininglab/finalize-assignments` veya ilgili UI aksiyonu ile aktif etiket seti olusturulur.
+4. **Egitim baslatilir:** `/traininglab/train-stream` SSE akisi egitim ilerlemesini canli verir.
+5. **Model kaydedilir:** `/traininglab/save-model` model artifact kaydini olusturur.
+6. **Lineage baglanir:** Model, kullanilan snapshot veya composition bilgisiyle Data Versioning tarafina kaydedilir.
+
+## Model islemleri
+
+| Islem | Endpoint | Aciklama |
+| --- | --- | --- |
+| Model listeleme | `GET /traininglab/models` | Kayitli modelleri ve metadata bilgisini listeler. |
+| Yeniden adlandirma | `POST /traininglab/rename-model` | Model gorunen adini degistirir. |
+| Silme | `POST /traininglab/delete-model` | Model kaydini kaldirir veya kullanilamaz hale getirir. |
+| Kaydetme | `POST /traininglab/save-model` | Son egitilen modeli kalici kayda alir. |
+| Model indirme | `GET /traininglab/download-model` | Model dosyasini indirir. |
+| Encoder indirme | `GET /traininglab/download-encoder` | Feature encoder dosyasini indirir. |
+| Gecmis | `GET /traininglab/training-history` | Egitim gecmisi listesini verir. |
+| CSV gecmis | `GET /traininglab/training-history.csv` | Egitim gecmisini raporlama icin CSV verir. |
+
+## Kayit oncesi kalite kontrol
+
+- Cluster isimleri varsayilan `Cluster 0`, `Cluster 1` gibi kalmamalidir.
+- Exclude edilen siniflar ve ornekler son kez kontrol edilmelidir.
+- Merge islemleri sonrasi sinif sayisi beklenen hedef sinif setiyle uyumlu olmalidir.
+- Tile snapshot secimi dogru version olmalidir; draft tile aktifse Data Cleanout tarafinda ana tile kaydi netlestirilmelidir.
+- Model adinda proje, veri versiyonu ve tarih bilgisi bulunmasi onerilir.
+
+## Lineage icin iyi uygulama
+
+Model kaydi yapmadan once aktif kaynak bilgilerini kontrol edin:
+
+| Kaynak | Kontrol |
+| --- | --- |
+| Folder | Dataset Key girilmis ve dataset snapshot kaydi tamamlanmis olmali. |
+| Composition | Composition committed durumda olmali. |
+| Tiles | Dogru tile snapshot version secilmeli. |
+
+Bu bilgiler eksikse model dosyasi uretilse bile ileride hangi veriyle egitildigini izlemek zorlasir.
+

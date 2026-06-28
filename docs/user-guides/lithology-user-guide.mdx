@@ -1,0 +1,51 @@
+---
+title: "Lithology Editor Kullanici Kilavuzu"
+description: "Litoloji modeli secme, kuyu veya session yukleme, bolge duzenleme ve manevra kaydetme akisi."
+---
+
+## Amac
+
+Lithology Editor, kuyu gorsellerinde litoloji bolgelerini model destegiyle incelemek ve duzenlemek icin kullanilir. Sistem hem entegre API router uzerinden `/litho/*` endpointlerini hem de gelistirme icin standalone editor servisindeki `/api/*` endpointlerini destekler.
+
+## Temel is akisi
+
+1. **Model secimi:** Kullanilabilir modeller `/litho/models` ile listelenir.
+2. **Veri yukleme:** Kuyu klasoru `/litho/load-well` veya mevcut analiz oturumu `/litho/load-session` ile yuklenir.
+3. **Manevra uretimi:** Secilen model ve girdi gorselleri ile `/litho/build-maneuvers` calistirilir.
+4. **Gorsel inceleme:** Gorseller `/litho/image` uzerinden goruntulenir.
+5. **Kayit:** Kullanici duzenlemeleri `/litho/save` ile kaydedilir.
+
+## Ekranda beklenen kontroller
+
+| Kontrol | Kullanimi |
+| --- | --- |
+| Model listesi | Litoloji tahmini icin kullanilacak modeli secer. |
+| Well/session yukleme | Yeni kuyu verisi veya daha once uretilmis session yukler. |
+| Region editor | Litoloji araliklarini, siniflarini ve renklerini duzenler. |
+| Save | Duzenlenen litoloji manevralarini backend'e kaydeder. |
+| Image preview | Birlestirilmis karot gorselini ve duzenlenen bolgeleri kontrol eder. |
+
+## Entegre ve standalone servis farki
+
+| Mod | Endpoint kok dizini | Ne zaman kullanilir |
+| --- | --- | --- |
+| Entegre uygulama | `/litho` | Normal frontend akisi ve ana backend ile calisma. |
+| Standalone editor | `/api` | Lithology editor'u tek basina test etmek veya izole gelistirme yapmak. |
+
+## Kullanici icin kontrol listesi
+
+- Dogru model secildiginden emin olun.
+- Yuklenen kuyu/session beklenen proje verisine ait olmali.
+- Otomatik uretilen litoloji bolgeleri kaydetmeden once gorsel olarak kontrol edilmeli.
+- Sinif renkleri ve isimleri final rapor standardiyla uyumlu olmali.
+- Kayit sonrasi export veya rapor ekraninda sonucun gorundugu dogrulanmali.
+
+## Sik sorunlar
+
+| Sorun | Kontrol |
+| --- | --- |
+| Model listesi bos | Model dosyalari ve backend model dizini kontrol edilmeli. |
+| Gorsel acilmiyor | `/litho/image` icin path parametresi ve dosya erisimi kontrol edilmeli. |
+| Save basarisiz | Payload icindeki bolge koordinatlari ve sinif adlari dogrulanmali. |
+| Session yuklenmiyor | `session_id` degeri ve ilgili cikti klasoru var mi kontrol edilmeli. |
+

@@ -1,0 +1,55 @@
+---
+title: "Legacy Root API"
+description: "Ana FastAPI dosyasinda kalan geriye donuk uyumluluk endpointleri ve kullanim amaclari."
+---
+
+## Genel bakis
+
+Platformda yeni servis routerlari yaninda tarihsel olarak ana `Api/api.py` icinde kalan endpointler de vardir. Bu endpointlerin bir kismi aktif ekranlar tarafindan kullanilir, bir kismi ise geriye donuk uyumluluk veya gelistirme araci olarak tutulur.
+
+## Dosya ve klasor yukleme
+
+| Endpoint | Metod | Amac |
+| --- | --- | --- |
+| `/upload_image/` | `POST` | Tekil gorsel yukleme veya test gorseli alma. |
+| `/upload_folder/` | `POST` | Klasor yukleme akisi icin legacy endpoint. |
+| `/process_uploaded_folder/` | `POST` | Yuklenmis klasoru analiz pipeline'a sokar. |
+| `/get_images` | `GET` | Yuklenen gorselleri listeler. |
+| `/frame` | `GET` | Tek frame/gorsel servis eder. |
+
+## Analiz ve yeniden analiz
+
+| Endpoint | Metod | Amac |
+| --- | --- | --- |
+| `/process_images/` | `POST` | Ana karot analiz pipeline'ini calistirir. |
+| `/progress/` | `GET` | Analiz progress bilgisini verir. |
+| `/reanalyze_image/` | `POST` | Secili gorsel veya bolge icin yeniden analiz calistirir. |
+| `/get_session_index` | `GET` | Aktif veya son session index bilgisini verir. |
+| `/clear_maneuver_table` | `POST` | Manevra tablosunu temizler. |
+
+## Ayar endpointleri
+
+| Endpoint | Metod | Amac |
+| --- | --- | --- |
+| `/loadSettings` | `GET` | Legacy ayarlari okur. |
+| `/saveSettings` | `POST` | Legacy ayarlari kaydeder. |
+
+<Note>
+Yeni ayar ekrani icin `/settings` router dokumani tercih edilmelidir. Legacy endpointler eski UI akislari veya geriye donuk uyumluluk icin korunur.
+</Note>
+
+## Model ve sinif yardimcilari
+
+| Endpoint | Amac |
+| --- | --- |
+| `/deleteClsModel` | Siniflandirma modelini siler. |
+| `/changeClsModelDescriptions` | Model aciklamasini gunceller. |
+| `/saveClsModelName/{isim}` | Model adi kaydeder. |
+| `/test_classification` | Siniflandirma modelini test eder. |
+| `/get_minerals` | Mineral sinif bilgilerini verir. |
+| `/mineralValidate` | Mineral validasyon akisini destekler. |
+
+## Bakim notu
+
+Bu endpointler tamamen kaldirilmadan once frontend `rg` ile taranmali, ekran baglantilari dogrulanmali ve API Reference/OpenAPI ciktisi guncellenmelidir. Aktif ekran kullaniyorsa endpoint "legacy" olsa bile operasyonel dokumanda tutulmalidir.
+

@@ -1,0 +1,49 @@
+﻿---
+title: "Dashboard ve Giris Kilavuzu"
+description: "Kullanici girisi, oturum baslatma ve ana dashboard KPI alanlarinin kullanici acisindan aciklamasi."
+---
+
+## Amac
+
+Dashboard, kullanicinin sisteme girdikten sonra platform durumunu ve son analiz ozetlerini tek ekranda gormesi icin tasarlanmistir. Giris ekrani kullanici adini dogrular, yeni bir tarayici oturumu baslatir ve kullaniciyi analiz akisi icin Run ekranina yonlendirir.
+
+## Giris akisi
+
+1. Kullanici adinizi girin.
+2. Sistem `GET /ldap_auth/{username}` istegi ile kullaniciyi dogrular.
+3. Dogrulama basariliysa tarayici icin yeni bir `login_session_id` uretilir.
+4. Sistem `POST /sessions/start` ile backend tarafinda oturumu kaydeder.
+5. Uygulama Run ekranina gecer ve eski analiz cache durumlarini temizler.
+
+<Note>
+Giris sirasinda uygulama `sessionStorage` icinde `login_username` ve `login_session_id` degerlerini saklar. Bu degerler performans loglari, Gantt gorunumu, hata izleme ve oturum kurtarma akislariyla iliskilidir.
+</Note>
+
+## Dashboard kartlari
+
+Dashboard Start ekraninda `GET /dashboard/stats` verisi kullanilir. Backend cevap veremezse ekran guvenli varsayilan degerlerle acilir.
+
+| Alan | Ne anlatir |
+| --- | --- |
+| `total_core_length` | Islenmis toplam karot uzunlugu. |
+| `recovery_rate` | Kurtarim yuzdesi. |
+| `class_counts` | Litoloji veya sinif sayimlari. |
+| `fault_zones` | Tespit edilen fay/ozel bolge sayisi. |
+| `active_models` | Kullanilabilir aktif model sayisi. |
+| `ai_confidence` | Son analizlerden uretilen genel guven metrigi. |
+| `system_status` | Sistem servislerinin ozet durumu. |
+| `recent_scans` | Son tarama/analiz kayitlari. |
+| `timeline_items` | Son operasyon hareketleri. |
+| `map_sites` | Lokasyon kartlari ve saha harita verisi. |
+
+## Konum bilgisi
+
+Tarayici izin verirse Dashboard, kullanicinin yaklasik konumunu gostermek icin browser geolocation bilgisini kullanir. Adres metni icin OpenStreetMap Nominatim reverse geocoding cagirilir. Konum izni verilmezse ekran `N/A` veya varsayilan lokasyonla calisir.
+
+## Operasyon notlari
+
+- Giris butonuna tekrar tekrar basilmasi engellenir; aktif istek varsa yeni istek baslatilmaz.
+- Giris sirasinda onceki Redux analiz state'i ve arayuz cache kayitlari temizlenir.
+- `BASE_URL` tanimli degilse frontend varsayilan olarak `http://localhost:8002` adresini kullanir.
+- Dashboard verileri karar destek amaclidir; kesin proje kaydi icin ilgili analiz ekranindaki ciktilar ve export dosyalari esas alinmalidir.
+

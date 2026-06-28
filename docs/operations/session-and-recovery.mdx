@@ -1,0 +1,60 @@
+---
+title: "Oturum ve Kurtarma Operasyonlari"
+description: "Login session, client session, Training Lab recovery state ve beklenmeyen kapanma sonrasi toparlama akislari."
+---
+
+## Oturum kavramlari
+
+Uygulamada iki farkli oturum katmani vardir:
+
+| Katman | Saklandigi yer | Amac |
+| --- | --- | --- |
+| `login_session_id` | `sessionStorage` | Kullanici girisi, hata izleme, performans ve Gantt korelasyonu. |
+| `client_id` | Client session utility | Training Lab embedding, UMAP ve model egitim islemlerini kullanici tarayicisina baglar. |
+
+## Giris kaydi
+
+Basarili giristen sonra frontend `POST /sessions/start` istegi gonderir:
+
+```json
+{
+  "session_uuid": "browser-generated-uuid",
+  "username": "operator"
+}
+```
+
+Bu kayit performans ve hata ekranlarinda session bazli filtreleme yapilmasini saglar.
+
+## Training Lab recovery state
+
+Training Lab uzun suren embedding, tile yukleme ve egitim islemleri yaptigi icin frontend kapanmasi veya sayfa yenilenmesi durumunda recovery kaydi kullanir.
+
+| Endpoint | Gorev |
+| --- | --- |
+| `GET /traininglab/recovery` | Aktif client icin kurtarilabilir durum var mi kontrol eder. |
+| `POST /traininglab/recovery` | Son kullanici adimi, kaynak secimi ve calisma durumunu kaydeder. |
+| `DELETE /traininglab/recovery` | Basariyla tamamlanan veya iptal edilen recovery durumunu temizler. |
+| `POST /traininglab/client-disconnect` | Tarayici ayrildiginda backend tarafina bildirim yapar. |
+
+## Uzun islerde davranis
+
+- Embedding islemi basladiginda `GET /traininglab/embedding-progress` periyodik olarak sorgulanir.
+- Kullanici sayfaya geri donerse frontend once calisan embedding var mi kontrol eder.
+- Backend `running=true` donerse ekran mevcut ise tekrar baglanir.
+- Iptal islemi `POST /traininglab/cancel-embeddings` ile yapilir.
+
+## Operasyon senaryolari
+
+| Senaryo | Beklenen hareket |
+| --- | --- |
+| Tarayici yenilendi | Recovery state okunur, aktif is varsa progress tekrar baglanir. |
+| Backend yeniden basladi | Frontend progress istegi hata alir; kullanici islemi yeniden baslatmalidir. |
+| Kullanici kapatti | `client-disconnect` cagrisi backend tarafinda temizlik icin kullanilir. |
+| Yarim kalan draft tile | Composition ekraninda draft tile uyarisi gorunur; Data Cleanout ile kayit tamamlanir. |
+
+## Temizlik kurallari
+
+- Basariyla kaydedilen analizlerden sonra recovery state temizlenmelidir.
+- Iptal edilen embedding islerinde kullaniciya net durum mesaji gosterilmelidir.
+- SessionStorage temizlenirse aktif Training Lab baglamlari da kaybolur; bu nedenle model kaydi oncesi aktif snapshot/composition bilgisi kontrol edilmelidir.
+

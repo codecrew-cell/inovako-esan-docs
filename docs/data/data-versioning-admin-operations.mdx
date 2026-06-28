@@ -1,0 +1,77 @@
+---
+title: "Data Versioning Admin Operasyonlari"
+description: "Snapshot, dataset, artifact, composition ve tile snapshot silme, geri alma ve lineage kontrol islemleri."
+---
+
+## Amac
+
+Data Versioning, platformdaki veri lineage bilgisinin merkezidir. Bu sayfadaki operasyonlar veri kaybina veya model lineage kopmasina yol acabilecegi icin yalnizca yetkili kullanicilar tarafindan uygulanmalidir.
+
+## Silme tipleri
+
+| Islem | Etki |
+| --- | --- |
+| Soft delete | Kayit gizlenir veya pasif hale gelir; geri alma mumkundur. |
+| Restore | Soft delete yapilmis kaydi tekrar aktif eder. |
+| Permanent delete | Kaydi kalici olarak siler; geri donus yoktur. |
+| Cascade artifact delete | Artifact ile bagli alt kayitlari da etkileyebilir. |
+
+## Dataset ve snapshot islemleri
+
+| Endpoint | Aciklama |
+| --- | --- |
+| `DELETE /data/snapshots/{snapshot_id}` | Snapshot icin soft delete uygular. |
+| `POST /data/snapshots/{snapshot_id}/restore` | Silinmis snapshot'i geri alir. |
+| `GET /data/datasets/{dataset_key}/dependencies` | Dataset silinmeden once bagli snapshot/model/composition bilgilerini verir. |
+| `DELETE /data/datasets/{dataset_key}` | Dataset icin soft delete uygular. |
+| `DELETE /data/datasets/{dataset_key}/permanent` | Dataset'i kalici siler. |
+| `DELETE /data/snapshots/{snapshot_id}/images/{image_id}` | Snapshot icinden tek gorsel kaydini siler. |
+| `POST /data/snapshots/{snapshot_id}/create-clean-snapshot` | Temizlenmis yeni snapshot uretir. |
+
+## Artifact islemleri
+
+| Endpoint | Aciklama |
+| --- | --- |
+| `POST /data/snapshots/{snapshot_id}/artifacts` | Tile, model veya yan dosya artifact kaydi ekler. |
+| `DELETE /data/snapshots/{snapshot_id}/artifacts/{artifact_id}` | Artifact kaydini siler. |
+| `DELETE /data/snapshots/{snapshot_id}/artifacts/{artifact_id}/cascade` | Artifact ve bagli kayitlar icin genisletilmis silme uygular. |
+
+## Composition ve tile snapshot islemleri
+
+| Endpoint | Aciklama |
+| --- | --- |
+| `POST /data/compositions` | Yeni composition olusturur. |
+| `POST /data/compositions/{composition_id}/lock` | Composition uzerinde calisma kilidi alir. |
+| `POST /data/compositions/{composition_id}/commit` | Composition'i committed duruma getirir. |
+| `DELETE /data/compositions/{composition_id}` | Composition icin soft delete uygular. |
+| `POST /data/compositions/{composition_id}/restore` | Silinmis composition'i geri alir. |
+| `DELETE /data/compositions/{composition_id}/permanent` | Composition'i kalici siler. |
+| `GET /data/compositions/{composition_id}/tile-snapshots` | Composition'a ait tile snapshot versiyonlarini listeler. |
+| `POST /data/compositions/{composition_id}/save-main-tile` | Aktif draft tile'i ana tile snapshot olarak kaydeder. |
+| `DELETE /data/tile-snapshots/{snapshot_id}` | Tile snapshot'i siler. |
+
+## Lineage ve metadata
+
+| Endpoint | Kullanim |
+| --- | --- |
+| `GET /data/lineage` | Kayitli model lineage listesini verir. |
+| `GET /data/snapshots/{snapshot_id}/lineage` | Tek snapshot icin upstream/downstream iliskileri verir. |
+| `GET /data/snapshots/{snapshot_id}/tile-chain` | Tile snapshot zincirini izler. |
+| `GET /data/snapshots/{snapshot_id}/models-using` | Snapshot'i kullanan modelleri listeler. |
+| `GET /data/models/{model_id}/full-lineage` | Modelin tam veri gecmisini verir. |
+| `POST /data/models/{model_id}/export-metadata` | Model metadata paketini export eder. |
+| `POST /data/metadata/export` | Genel metadata export paketi uretir. |
+| `POST /data/metadata/export/{dataset_key}` | Dataset bazli metadata export paketi uretir. |
+
+## Silmeden once kontrol listesi
+
+- Dataset dependency raporu incelendi mi?
+- Snapshot'i kullanan model var mi?
+- Composition committed mi yoksa draft calisma devam ediyor mu?
+- Tile snapshot Cleanout veya Training Lab tarafinda aktif mi?
+- Export veya backup ihtiyaci var mi?
+
+<Warning>
+Kalici silme islemleri dokumantasyon, model lineage ve audit izlerini etkileyebilir. Once soft delete ve dependency kontrolu uygulanmalidir.
+</Warning>
+
