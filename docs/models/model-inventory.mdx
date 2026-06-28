@@ -1,0 +1,67 @@
+---
+title: "Model Inventory"
+description: "Uygulamadaki model dosyalari, gorevleri ve runtime secim mantigi."
+---
+
+# Model Inventory
+
+Bu sayfa uygulamadaki model ailelerini ve nerede kullanildiklarini listeler.
+
+## Model aileleri
+
+| Model | Gorev | Tipik konum | Kullanan modul |
+| --- | --- | --- | --- |
+| Main geotechnical YOLO | Karot/mineral/geoteknik nesne tespiti | `Model/Model Files/ahsap_geotechnical_seg_esan_best_v0.pt` veya `.engine` | `Api/api.py`, processing mixin |
+| Takoz YOLO | Takoz bolgesi tespiti | `Model/Model Files/yolo_takoz_seg_best_v4.pt` veya `.engine` | OCR/takoz pipeline |
+| Row pose YOLO | Karot kutusu satir geometrisi | `Model/Model Files/yolo_coreRow_pose_best_v2.pt` veya `.engine` | row geometry, lithology inference |
+| Lithology classifier | Litoloji sinifi tahmini | `LithologyAnalysis/karot_inference_pack/models/*.json` | `/litho`, Training Lab |
+| Label encoder | Litoloji sinif isimleri | `*_encoder.pkl` veya `label_encoder.pkl` | `/litho/models`, editor class list |
+| OCR engine | Takoz/derinlik metni | Paddle VLM OCR wrapper | `Model/paddle_vlm_ocr.py` |
+
+## Secim mantigi
+
+Bazi runtime'lar su sirayi kullanir:
+
+1. `PREFER_TRT=1` ise `.engine` dosyasi aranir.
+2. `.engine` yoksa `.pt` dosyasina dusulur.
+3. Model stem'i settings veya default sabitlerden gelir.
+
+## Model metadata
+
+Training Lab modelleri icin metadata su dosyada aranir:
+
+```text
+LithologyAnalysis/training_lab_cache/features/model_registry.json
+```
+
+Bu registry su bilgiler icin kullanilir:
+
+| Alan | Amac |
+| --- | --- |
+| `extraction.trim_y_ratio` | Litoloji editor inference trim ayari |
+| `source_temp_model` | Gecici modelden kalici modele baglanti |
+| model metrics | Training tarihcesi ve kalite takibi |
+
+## Model release kaydi
+
+Her yeni model icin asagidaki tablo doldurulmalidir.
+
+| Alan | Deger |
+| --- | --- |
+| Model name |  |
+| File path |  |
+| Model type | YOLO / TensorRT / XGBoost / encoder |
+| Training dataset |  |
+| Metrics |  |
+| Owner |  |
+| Rollback file |  |
+| Release date |  |
+
+## Operasyon riskleri
+
+| Risk | Etki | Azaltma |
+| --- | --- | --- |
+| `.engine` farkli GPU'da uyumsuz | Backend load veya inference hatasi | `.pt` fallback saklanmali |
+| Encoder eksik | Litoloji sinif listesi bos | `label_encoder.pkl` fallback kontrol edilmeli |
+| Model stem yanlis | Runtime dosya bulamaz | Settings ve dosya adi birlikte guncellenmeli |
+| Eski model silindi | Rollback yok | Eski dosyalar release archive'a alinmali |

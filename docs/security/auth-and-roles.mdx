@@ -1,0 +1,76 @@
+---
+title: "Auth and Roles"
+description: "LDAP, users.json, roller ve frontend guard yapisi."
+---
+
+# Auth and Roles
+
+## Kimlik dogrulama
+
+Login akisi `/ldap_auth/{user}` endpoint'i ile baslar. Backend once `users.json` icindeki lokal kullanici kaydina bakar. Kullanici bulunamazsa LDAP aramasi denenir.
+
+```mermaid
+flowchart TB
+    A[Username] --> B[/ldap_auth/{user}]
+    B --> C{users.json'da var mi}
+    C -->|Evet| D[Role oku]
+    C -->|Hayir| E[LDAP search]
+    E --> F{LDAP success}
+    F -->|Evet| D
+    F -->|Hayir| G[Login error]
+    D --> H[Redux session role]
+```
+
+## Roller
+
+Backend valid roller:
+
+```text
+admin, supervisor, engineer
+```
+
+| Rol | Yetki ozeti |
+| --- | --- |
+| `admin` | Tum sayfalar, user management, developer pages |
+| `supervisor` | Settings dahil operasyonel yonetim, user management haric |
+| `engineer` | Run, validate, training/data akislari gibi operasyonel ekranlar |
+| inactive | Login reddedilir veya aktif olmayan kullanici kabul edilir |
+
+## Frontend guard
+
+Rota guard'lari `React/src/app/router/AppRoutes.jsx` ve selector'lar `React/src/domains/flow/selectors.js` tarafindan uygulanir.
+
+| Route | Guard |
+| --- | --- |
+| `/settings` | admin veya supervisor |
+| `/error-tracking` | developer/admin |
+| `/user-management` | admin |
+| `/validate` | validate state |
+| `/export` | export state |
+
+## User Management API
+
+Prefix:
+
+```text
+/users
+```
+
+Mutating endpoint'ler `X-Username` header'i ister ve admin kontrolu yapar.
+
+| Method | Path | Yetki |
+| --- | --- | --- |
+| GET | `/users` | Authenticated user list |
+| POST | `/users` | Admin |
+| PATCH | `/users/{username}/role` | Admin |
+| PATCH | `/users/{username}/active` | Admin |
+| DELETE | `/users/{username}` | Admin |
+
+## Guvenlik notlari
+
+| Konu | Not |
+| --- | --- |
+| CORS | Development'ta genis acik; production'da daraltilmali |
+| users.json | Gercek kullanici verisi icerir; public repo'ya konmamalidir |
+| LDAP config | Settings tarafinda saklanir; ortama gore korunmalidir |
+| Public docs | Dokumantasyonda musteri/kuyu gizli bilgisi olmamalidir |

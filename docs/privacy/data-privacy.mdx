@@ -1,0 +1,40 @@
+---
+title: "Data Privacy"
+description: "Kuyu verisi, model dosyalari ve GitHub/Mintlify paylasim kurallari."
+---
+
+# Data Privacy
+
+## GitHub'a konmamasi gerekenler
+
+| Veri | Neden |
+| --- | --- |
+| `uploaded_data/` | Gercek kuyu goruntuleri olabilir |
+| `Database/*.db` | Session, detection ve kullanici verisi tasir |
+| `data_versioning/*.db` | Dataset lineage ve dosya metadata'si tasir |
+| `storage/` | Raw/processed goruntu ve artifact dosyalari tasir |
+| `Model/Model Files/*.pt` | Buyuk/proprietary model dosyalari olabilir |
+| `*.engine` | GPU/ortam bagimli compiled model dosyalari |
+| `users.json` | Kullanici ve rol bilgisi tasir |
+
+## Dokumantasyon icin maskeleme
+
+| Alan | Maskeleme ornegi |
+| --- | --- |
+| Kuyu adi | `WELL-001` |
+| Dosya yolu | `uploaded_data/WELL-001/...` |
+| Kullanici adi | `operator` |
+| Gercek IP | `10.x.x.x` veya `host.internal` |
+| Model path | Sadece stem veya relative path |
+
+## Ekran goruntusu kurallari
+
+1. Gercek musteri/kuyu ismi gorunmemeli.
+2. Dosya path'lerinde kullanici adi veya network share gizlenmeli.
+3. Test dataset kullanilmali.
+4. Yuz, imza, mail veya kisiel bilgi gorunmemeli.
+5. Screenshot dosyalari dokumantasyon reposuna eklenmeden once review edilmeli.
+
+## Public Mintlify notu
+
+Site public ise linki bilen herkes gorebilir. Bu nedenle dokumantasyon teknik kalmali, hassas veri ornegi icermemelidir.

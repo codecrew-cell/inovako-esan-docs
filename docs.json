@@ -25,6 +25,7 @@
         "pages": [
           "docs/guides/developer-handoff",
           "docs/guides/operator-guide",
+          "docs/guides/user-walkthrough",
           "docs/guides/maintenance-checklist"
         ]
       },
@@ -34,7 +35,8 @@
         "pages": [
           "docs/architecture/system-overview",
           "docs/architecture/backend-runtime",
-          "docs/architecture/frontend-runtime"
+          "docs/architecture/frontend-runtime",
+          "docs/visuals/architecture-diagrams"
         ]
       },
       {
@@ -59,11 +61,39 @@
         ]
       },
       {
+        "group": "API Reference",
+        "icon": "braces",
+        "openapi": "openapi.json"
+      },
+      {
+        "group": "Modeller",
+        "icon": "brain-circuit",
+        "pages": [
+          "docs/models/model-inventory",
+          "docs/models/model-pipeline"
+        ]
+      },
+      {
         "group": "Veri ve DB",
         "icon": "database",
         "pages": [
           "docs/data/database-schema",
           "docs/data/storage-and-files"
+        ]
+      },
+      {
+        "group": "Guvenlik",
+        "icon": "shield-check",
+        "pages": [
+          "docs/security/auth-and-roles",
+          "docs/privacy/data-privacy"
+        ]
+      },
+      {
+        "group": "Test",
+        "icon": "test-tube",
+        "pages": [
+          "docs/testing/test-strategy"
         ]
       },
       {

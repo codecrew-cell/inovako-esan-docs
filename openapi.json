@@ -1,0 +1,162 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "INOVAKO ESAN API",
+    "version": "1.0.0",
+    "description": "Technical API reference for the INOVAKO ESAN FastAPI backend. This spec documents the stable public workflow endpoints used by the React frontend and documentation."
+  },
+  "servers": [
+    { "url": "http://localhost:8000", "description": "Local development backend" }
+  ],
+  "tags": [
+    { "name": "Core Analysis" },
+    { "name": "Validation" },
+    { "name": "Lithology" },
+    { "name": "Training Lab" },
+    { "name": "Data Platform" },
+    { "name": "Settings" },
+    { "name": "Users" },
+    { "name": "Diagnostics" }
+  ],
+  "paths": {
+    "/upload_folder/": {
+      "post": {
+        "tags": ["Core Analysis"],
+        "summary": "Upload a well folder",
+        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "files": { "type": "array", "items": { "type": "string", "format": "binary" } } } } } } },
+        "responses": { "200": { "description": "Folder uploaded" } }
+      }
+    },
+    "/process_images/": {
+      "post": {
+        "tags": ["Core Analysis"],
+        "summary": "Run model inference on selected images",
+        "responses": { "200": { "description": "Processing started or completed" } }
+      }
+    },
+    "/progress/": {
+      "get": {
+        "tags": ["Core Analysis"],
+        "summary": "Read processing progress",
+        "responses": { "200": { "description": "Progress payload" } }
+      }
+    },
+    "/maneuvers_from_changes/{session_id}": {
+      "get": {
+        "tags": ["Validation"],
+        "summary": "Calculate maneuvers from edited detections",
+        "parameters": [{ "name": "session_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Maneuver list" } }
+      }
+    },
+    "/save_bulk_changes/{session_id}": {
+      "post": {
+        "tags": ["Validation"],
+        "summary": "Persist bulk detection edits",
+        "parameters": [{ "name": "session_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Save result" } }
+      }
+    },
+    "/litho/models": {
+      "get": {
+        "tags": ["Lithology"],
+        "summary": "List available lithology models",
+        "responses": { "200": { "description": "Model list and metadata", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LithologyModelsResponse" } } } } }
+      }
+    },
+    "/litho/load-session": {
+      "post": {
+        "tags": ["Lithology"],
+        "summary": "Load lithology editor data for an existing analysis session",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoadSessionRequest" } } } },
+        "responses": { "200": { "description": "Lithology editor package", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LithologyEditorResponse" } } } } }
+      }
+    },
+    "/litho/build-maneuvers": {
+      "post": {
+        "tags": ["Lithology"],
+        "summary": "Build lithology maneuvers from edited regions",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BuildLithoManeuversRequest" } } } },
+        "responses": { "200": { "description": "Lithology maneuver output" } }
+      }
+    },
+    "/traininglab/models": {
+      "get": {
+        "tags": ["Training Lab"],
+        "summary": "List saved Training Lab models",
+        "responses": { "200": { "description": "Training model list" } }
+      }
+    },
+    "/traininglab/compute-embeddings": {
+      "post": {
+        "tags": ["Training Lab"],
+        "summary": "Start embedding computation for training samples",
+        "responses": { "200": { "description": "Embedding job state" } }
+      }
+    },
+    "/traininglab/train-stream": {
+      "get": {
+        "tags": ["Training Lab"],
+        "summary": "Stream training events",
+        "responses": { "200": { "description": "Server-sent training events" } }
+      }
+    },
+    "/data/upload": {
+      "post": {
+        "tags": ["Data Platform"],
+        "summary": "Upload images, annotations, or artifacts into a dataset snapshot",
+        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/DataUploadRequest" } } } },
+        "responses": { "200": { "description": "Ingest report", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IngestReport" } } } } }
+      }
+    },
+    "/data/datasets": {
+      "get": {
+        "tags": ["Data Platform"],
+        "summary": "List datasets",
+        "responses": { "200": { "description": "Dataset list", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/DatasetOut" } } } } } }
+      }
+    },
+    "/data/datasets/{dataset_key}/commit": {
+      "post": {
+        "tags": ["Data Platform"],
+        "summary": "Commit a staging dataset snapshot",
+        "parameters": [{ "name": "dataset_key", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CommitRequest" } } } },
+        "responses": { "200": { "description": "Commit result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CommitResult" } } } } }
+      }
+    },
+    "/data/models/register": {
+      "post": {
+        "tags": ["Data Platform"],
+        "summary": "Register a trained model for lineage",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ModelRegister" } } } },
+        "responses": { "200": { "description": "Registered model" } }
+      }
+    },
+    "/settings": {
+      "get": { "tags": ["Settings"], "summary": "Get application settings", "responses": { "200": { "description": "Settings object" } } },
+      "post": { "tags": ["Settings"], "summary": "Save application settings", "responses": { "200": { "description": "Saved settings" } } }
+    },
+    "/users": {
+      "get": { "tags": ["Users"], "summary": "List users", "parameters": [{ "name": "X-Username", "in": "header", "required": false, "schema": { "type": "string" } }], "responses": { "200": { "description": "User list" } } },
+      "post": { "tags": ["Users"], "summary": "Add user", "parameters": [{ "name": "X-Username", "in": "header", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Created user" } } }
+    },
+    "/timing_stats/latest": {
+      "get": { "tags": ["Diagnostics"], "summary": "Get latest timing stats", "responses": { "200": { "description": "Timing stats" } } }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoadSessionRequest": { "type": "object", "properties": { "session_id": { "type": "string", "nullable": true }, "hole_id": { "type": "string", "nullable": true }, "model_file": { "type": "string", "nullable": true } } },
+      "BuildLithoManeuversRequest": { "type": "object", "properties": { "session_id": { "type": "string", "nullable": true }, "hole_id": { "type": "string", "nullable": true }, "images": { "type": "array", "items": { "type": "object" } } }, "required": ["images"] },
+      "LithologyModelsResponse": { "type": "object", "properties": { "models": { "type": "array", "items": { "type": "string" } }, "models_dir": { "type": "string" }, "models_meta": { "type": "object" } } },
+      "LithologyEditorResponse": { "type": "object", "properties": { "well_id": { "type": "string" }, "folder_path": { "type": "string" }, "images": { "type": "array", "items": { "type": "object" } }, "litho_maneuvers": { "type": "array", "items": { "type": "object" } }, "classes": { "type": "array", "items": { "type": "string" } }, "error": { "type": "string" } } },
+      "DataUploadRequest": { "type": "object", "properties": { "dataset_key": { "type": "string" }, "well_name": { "type": "string" }, "committed_by": { "type": "string" }, "files": { "type": "array", "items": { "type": "string", "format": "binary" } } }, "required": ["dataset_key", "well_name", "files"] },
+      "IngestReport": { "type": "object", "properties": { "dataset_key": { "type": "string" }, "snapshot_id": { "type": "string" }, "accepted": { "type": "integer" }, "skipped": { "type": "integer" }, "duplicate": { "type": "integer" }, "annotations_accepted": { "type": "integer" }, "artifacts_accepted": { "type": "integer" } } },
+      "DatasetOut": { "type": "object", "properties": { "dataset_key": { "type": "string" }, "latest_version": { "type": "string" }, "latest_snapshot_id": { "type": "string" }, "image_count": { "type": "integer" }, "status": { "type": "string" }, "created_at": { "type": "string" } } },
+      "CommitRequest": { "type": "object", "properties": { "committed_by": { "type": "string" }, "semantic_version": { "type": "string", "nullable": true } } },
+      "CommitResult": { "type": "object", "properties": { "snapshot_id": { "type": "string" }, "dataset_key": { "type": "string" }, "semantic_version": { "type": "string" }, "parent_snapshot_id": { "type": "string", "nullable": true }, "image_count": { "type": "integer" }, "unaffected_models": { "type": "array", "items": { "type": "object" } } } },
+      "ModelRegister": { "type": "object", "properties": { "model_name": { "type": "string" }, "model_path": { "type": "string" }, "snapshot_ids": { "type": "array", "items": { "type": "string" } }, "map50": { "type": "number" }, "map50_95": { "type": "number" }, "precision": { "type": "number" }, "recall": { "type": "number" }, "trained_by": { "type": "string" } } }
+    }
+  }
+}

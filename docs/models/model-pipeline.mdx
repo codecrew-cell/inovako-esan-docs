@@ -1,0 +1,74 @@
+---
+title: "Model Pipeline"
+description: "Jeoteknik analiz, OCR ve litoloji siniflandirma model pipeline'i."
+---
+
+# Model Pipeline
+
+## Jeoteknik inference
+
+```mermaid
+sequenceDiagram
+    participant UI as React Run Page
+    participant API as FastAPI
+    participant MW as Model Worker Queue
+    participant YOLO as Main/Takoz/Row Models
+    participant OCR as OCR Wrapper
+    participant DB as SQLite
+
+    UI->>API: POST /process_images/
+    API->>MW: submit image jobs
+    MW->>YOLO: run detections
+    MW->>OCR: extract takoz/depth text
+    MW->>API: return detections
+    API->>DB: write Detection / Changes
+    UI->>API: GET /progress/
+```
+
+## Validate to maneuver
+
+```mermaid
+flowchart LR
+    A[Detection] --> B[Changes]
+    B --> C[User edits]
+    C --> D[ManeuverCalculator]
+    D --> E[Maneuvers]
+    E --> F[Export]
+```
+
+## Lithology pipeline
+
+```mermaid
+flowchart TB
+    A[Changes / session detections] --> B[/litho/load-session]
+    B --> C[Resolve uploaded_data hole folder]
+    C --> D[Row/Takoz/Core model context]
+    D --> E[classify_images_to_litho]
+    E --> F[Editor regions]
+    F --> G[User edits]
+    G --> H[/litho/build-maneuvers]
+    H --> I[Lithology maneuver table]
+```
+
+## Training Lab pipeline
+
+```mermaid
+flowchart LR
+    A[Folder or snapshot] --> B[Tile extraction]
+    B --> C[Embedding]
+    C --> D[UMAP]
+    D --> E[Cluster cleanup]
+    E --> F[Train classifier]
+    F --> G[Save model + encoder]
+    G --> H[Register lineage]
+```
+
+## Performance considerations
+
+| Alan | Not |
+| --- | --- |
+| GPU warmup | `Api/api.py` startup dummy inference yapar |
+| Worker queue | YOLO, takoz ve line modelleri ayri queue worker ile calisir |
+| Image encoding | Base64 yerine `/frame/{session_id}` binary JPEG tercih edilir |
+| SQLite writes | Bulk yazimlar tek tek insert'ten daha verimlidir |
+| TensorRT | Uyumlu GPU'da hiz saglar, tasinabilirlik riski vardir |
