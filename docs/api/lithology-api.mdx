@@ -1,0 +1,58 @@
+---
+title: "Litoloji API"
+description: "/litho prefix'i altindaki litoloji editor endpoint'leri."
+---
+
+# Litoloji API
+
+Litoloji API'si `karot_analiz/litho_api.py` icinde tanimlanir.
+
+```python
+router = APIRouter(prefix="/litho", tags=["litho"])
+```
+
+## Endpoint'ler
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `GET` | `/litho/models` | Kalici litoloji modellerini ve metadata'yi listeler |
+| `POST` | `/litho/load-well` | Standalone/gelistirici kullanim icin klasorden kuyu yukler |
+| `POST` | `/litho/load-session` | Mevcut session veya hole ID ile editor paketini uretir |
+| `POST` | `/litho/build-maneuvers` | Editor bolgelerinden litoloji manevralari uretir |
+| `GET` | `/litho/image` | Editor goruntusunu dosya yolundan servis eder |
+| `POST` | `/litho/save` | Duzenlenmis editor koordinatlarini JSON olarak kaydeder |
+
+## `POST /litho/load-session`
+
+Kullanilan ana production akisidir.
+
+```json
+{
+  "session_id": "optional-session-id",
+  "hole_id": "KUYU_001",
+  "model_file": "model.json"
+}
+```
+
+Basarili yanitta editor icin goruntuler, sinif listesi ve litoloji manevra onerileri doner.
+
+## `POST /litho/build-maneuvers`
+
+Frontend editor'da kullanici degisiklik yaptiktan sonra final manevra listesini yeniden uretir.
+
+```json
+{
+  "session_id": "optional-session-id",
+  "hole_id": "KUYU_001",
+  "images": []
+}
+```
+
+## Bagimliliklar
+
+Bu API'nin dogru calismasi icin:
+
+1. Geoteknik detection verisi uretilmis olmali.
+2. Goruntuler `uploaded_data/{hole_id}` altinda bulunmali.
+3. Secilen litoloji modeli `LithologyAnalysis/karot_inference_pack/models` altinda kayitli olmali.
+4. Label encoder dosyasi mevcut olmali veya fallback `label_encoder.pkl` kullanilabilmeli.

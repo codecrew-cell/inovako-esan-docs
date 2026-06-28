@@ -1,0 +1,68 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "INOVAKO ESAN",
+  "description": "Karot goruntu analizi, litoloji siniflandirma, egitim laboratuvari ve veri versiyonlama platformu icin teknik dokumantasyon.",
+  "colors": {
+    "primary": "#116D6E",
+    "light": "#DDF7F1",
+    "dark": "#0B3E45"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Baslangic",
+        "icon": "rocket",
+        "pages": [
+          "index",
+          "docs/getting-started/local-development",
+          "docs/getting-started/project-map"
+        ]
+      },
+      {
+        "group": "Mimari",
+        "icon": "blocks",
+        "pages": [
+          "docs/architecture/system-overview",
+          "docs/architecture/backend-runtime",
+          "docs/architecture/frontend-runtime"
+        ]
+      },
+      {
+        "group": "Is Akislari",
+        "icon": "workflow",
+        "pages": [
+          "docs/workflows/geotechnical-analysis",
+          "docs/workflows/lithology-analysis",
+          "docs/workflows/training-lab",
+          "docs/workflows/data-versioning"
+        ]
+      },
+      {
+        "group": "API",
+        "icon": "square-terminal",
+        "pages": [
+          "docs/api/backend-api",
+          "docs/api/lithology-api",
+          "docs/api/data-platform-api"
+        ]
+      },
+      {
+        "group": "Operasyon",
+        "icon": "wrench",
+        "pages": [
+          "docs/operations/configuration",
+          "docs/operations/troubleshooting",
+          "docs/operations/mintlify"
+        ]
+      },
+      {
+        "group": "Referans",
+        "icon": "book-open",
+        "pages": [
+          "docs/reference/existing-guides"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+---
+title: "Mintlify Kullanimi"
+description: "Bu projenin teknik dokumantasyonunu Mintlify ile yonetme."
+---
+
+# Mintlify Kullanimi
+
+Bu dokumantasyon Mintlify `docs-as-code` yaklasimiyla repo icinde tutulur.
+
+## Dosyalar
+
+| Dosya | Amac |
+| --- | --- |
+| `docs.json` | Tema, renk ve navigasyon konfigurasyonu |
+| `index.mdx` | Dokumantasyon ana sayfasi |
+| `docs/**/*.mdx` | Teknik dokumantasyon sayfalari |
+| `docs/*.md` | Mevcut Markdown kilavuzlari |
+
+## Lokal onizleme
+
+```powershell
+cd ESANLAST-main
+npm i -g mint
+mint dev
+```
+
+Alternatif:
+
+```powershell
+npm run docs:dev
+```
+
+Onizleme:
+
+```text
+http://localhost:3000
+```
+
+## Yeni sayfa ekleme
+
+1. `docs/` altinda uygun klasore `.mdx` dosyasi ekleyin.
+2. Dosyanin basina frontmatter koyun.
+3. `docs.json` icindeki `navigation.groups[].pages` listesine uzantisiz path'i ekleyin.
+
+Ornek:
+
+```mdx
+---
+title: "Yeni Sayfa"
+description: "Kisa aciklama."
+---
+
+# Yeni Sayfa
+```
+
+`docs.json` referansi:
+
+```json
+"pages": ["docs/operations/yeni-sayfa"]
+```
+
+## OpenAPI entegrasyonu icin sonraki adim
+
+Backend ayaga kaldirildiktan sonra FastAPI'nin `/openapi.json` ciktisi dosyaya alinabilir ve Mintlify API reference olarak baglanabilir.
+
+Onerilen surec:
+
+```powershell
+Invoke-WebRequest http://localhost:8000/openapi.json -OutFile docs\api\openapi.json
+```
+
+Sonra `docs.json` icinde API grubuna `openapi` alani eklenir.

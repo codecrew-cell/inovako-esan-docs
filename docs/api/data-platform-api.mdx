@@ -1,0 +1,57 @@
+---
+title: "Data Platform API"
+description: "/data endpoint'lerinin teknik ozeti."
+---
+
+# Data Platform API
+
+Data Platform API'si `Api/data_service/router.py` icinde `/data` prefix'iyle tanimlanir.
+
+## Dataset ve snapshot
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `POST` | `/data/upload` | Multipart goruntu/artifact yukleme |
+| `POST` | `/data/ingest-folder` | Klasorden ingest |
+| `GET` | `/data/datasets` | Dataset listesi |
+| `GET` | `/data/datasets/{dataset_key}/snapshots` | Dataset snapshot gecmisi |
+| `POST` | `/data/datasets/{dataset_key}/commit` | Staging snapshot'i commit etme |
+| `DELETE` | `/data/datasets/{dataset_key}` | Dataset soft delete |
+| `DELETE` | `/data/datasets/{dataset_key}/permanent` | Kalici dataset silme |
+
+## Snapshot detaylari
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `GET` | `/data/snapshots` | Snapshot listesi |
+| `GET` | `/data/snapshots/{snapshot_id}/summary` | Snapshot ozeti |
+| `GET` | `/data/snapshots/{snapshot_id}/artifacts` | Artifact listesi |
+| `GET` | `/data/snapshots/{snapshot_id}/annotations` | Annotation listesi |
+| `GET` | `/data/snapshots/{snapshot_id}/images` | Goruntu listesi |
+| `GET` | `/data/snapshots/{snapshot_id}/image-paths` | Resolved dosya yollari |
+| `GET` | `/data/snapshots/{snapshot_id}/diff` | Snapshot farki |
+| `POST` | `/data/snapshots/{snapshot_id}/restore` | Snapshot restore |
+
+## Composition
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `GET` | `/data/compositions` | Composition listesi |
+| `POST` | `/data/compositions` | Composition olusturma |
+| `PATCH` | `/data/compositions/{composition_id}` | Composition guncelleme |
+| `POST` | `/data/compositions/{composition_id}/lock` | Edit kilidi alma |
+| `POST` | `/data/compositions/{composition_id}/commit` | Composition snapshot olusturma |
+| `GET` | `/data/compositions/{composition_id}/history` | Gecmis |
+| `GET` | `/data/compositions/{composition_id}/snapshots` | Bagli snapshot'lar |
+
+## Lineage ve model metadata
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `POST` | `/data/models/register` | Egitilen modeli kaydetme |
+| `GET` | `/data/lineage` | Model lineage listesi |
+| `GET` | `/data/snapshots/{snapshot_id}/lineage` | Snapshot kaynakli modeller |
+| `GET` | `/data/models/{model_id}/full-lineage` | Modelin tam lineage agaci |
+| `POST` | `/data/models/{model_id}/export-metadata` | Model metadata export |
+| `POST` | `/data/metadata/export` | Tum metadata export |
+| `POST` | `/data/metadata/export/{dataset_key}` | Dataset metadata export |

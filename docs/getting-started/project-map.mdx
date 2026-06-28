@@ -1,0 +1,55 @@
+---
+title: "Proje Haritasi"
+description: "ESANLAST-main icindeki ana klasorlerin sorumluluklari."
+---
+
+# Proje Haritasi
+
+## Ust seviye yapi
+
+| Yol | Sorumluluk |
+| --- | --- |
+| `main.py` | Frontend ve backend'i birlikte baslatan gelistirme girisi |
+| `run_backend.py` | Sadece FastAPI backend'i baslatan giris |
+| `Api/` | Ana FastAPI sinifi, mixin'ler ve domain router'lari |
+| `React/` | Vite + React frontend uygulamasi |
+| `Model/` | Model controller, OCR uyumluluk katmani ve model dosyalari |
+| `LithologyAnalysis/` | Training Lab, litoloji inference, egitim ve cache katmanlari |
+| `karot_analiz/` | Litoloji editor API'si, annotator ve serit olusturma yardimcilari |
+| `Database/` | Ana uygulama SQLite veritabani |
+| `data_versioning/` | Veri versiyonlama SQLite dosyalari ve metadata |
+| `data_metadata/` | Export edilmis dataset/snapshot metadata dosyalari |
+| `uploaded_data/` | Kullanicinin yukledigi kuyu goruntuleri |
+| `docs/` | Mintlify sayfalari ve mevcut teknik/kullanici kilavuzlari |
+
+## Backend paketleri
+
+| Modul | Not |
+| --- | --- |
+| `Api/api.py` | Uygulamanin ana FastAPI kurulumu ve legacy endpoint kayitlari |
+| `Api/data_service/router.py` | `/data` altinda dataset, snapshot, composition ve lineage API'si |
+| `Api/settings_service/router.py` | `/settings` altinda uygulama ayarlari |
+| `Api/user_management_router.py` | `/users` altinda kullanici ve rol yonetimi |
+| `LithologyAnalysis/training_lab_api.py` | `/traininglab` altinda egitim laboratuvari API'si |
+| `karot_analiz/litho_api.py` | `/litho` altinda litoloji editor API'si |
+
+## Frontend rotalari
+
+Rotalar `React/src/app/router/AppRoutes.jsx` icinde tanimlanir.
+
+| Route | Sayfa |
+| --- | --- |
+| `/` | Dashboard |
+| `/start` | Baslangic paneli |
+| `/run` | Veri yukleme ve analiz baslatma |
+| `/validate` | Tespit dogrulama |
+| `/mineralValidate` | Mineral dogrulama |
+| `/export` | Sonuc export |
+| `/settings` | Ayarlar |
+| `/automl` | AutoML |
+| `/training-lab` | AI Vision Lab / Training Lab |
+| `/lithology` | Litoloji editor |
+| `/data` | Data Platform |
+| `/performance` | Gantt / performans gorunumu |
+| `/error-tracking` | Gelistirici hata takibi |
+| `/user-management` | Kullanici yonetimi |

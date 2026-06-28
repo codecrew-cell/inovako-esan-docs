@@ -1,0 +1,60 @@
+---
+title: "Konfigurasyon"
+description: "Ayar dosyalari, model secimleri ve runtime parametreleri."
+---
+
+# Konfigurasyon
+
+## Uygulama ayarlari
+
+Ana ayar kaynagi:
+
+```text
+colorChangeParams.json
+```
+
+Settings API'si bu dosyayi ve varsayilan degerleri `Api/settings_service/router.py` uzerinden yonetir.
+
+| Ayar | Varsayilan ornek | Amac |
+| --- | --- | --- |
+| `varsayilan_ana_model` | `ahsap_geotechnical_seg_esan_best_v0` | Ana segmentasyon modeli |
+| `varsayilan_takoz_modeli` | `yolo_takoz_seg_best_v4` | Takoz modeli |
+| `confidence` | `0.10` | Inference confidence esigi |
+| `iou` | `0.30` | YOLO IoU esigi |
+| `batch_size` | `4` | Batch isleme ayari |
+| `api_base_url` | `http://localhost:8000` | Frontend API adresi |
+| `rotation_correction` | `true` | EXIF/rotasyon duzeltme |
+
+## Model dosyalari
+
+Ana model dosyalari:
+
+```text
+Model/Model Files
+```
+
+Litoloji model dosyalari:
+
+```text
+LithologyAnalysis/karot_inference_pack/models
+```
+
+TensorRT tercih davranisi bazi modullerde `PREFER_TRT` ortam degiskeniyle kontrol edilir. `PREFER_TRT=1` ise `.engine` dosyasi `.pt` dosyasina gore once denenir.
+
+## Runtime environment
+
+`main.py` ve `run_backend.py` su PyTorch ayarini basta set eder:
+
+```python
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+```
+
+Bu ayar GPU bellegi parcalanmasini azaltmaya yardimci olur.
+
+## Portlar
+
+| Servis | Port |
+| --- | --- |
+| FastAPI backend | `8000` |
+| Vite frontend | `5173` |
+| Mintlify preview | `3000` |

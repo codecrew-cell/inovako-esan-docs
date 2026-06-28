@@ -1,0 +1,62 @@
+---
+title: "Data Versioning"
+description: "Dataset, snapshot, composition, artifact ve lineage sisteminin teknik ozeti."
+---
+
+# Data Versioning
+
+Data Platform, goruntu verisinin versiyonlanmasi ve model egitim lineage bilgisinin izlenmesi icin tasarlanmistir. Backend tarafi `Api/data_service/`, frontend tarafi `React/src/features/data-versioning/` altinda bulunur.
+
+## Kavramlar
+
+| Kavram | Aciklama |
+| --- | --- |
+| Dataset | Mantiksal veri seti adi |
+| Snapshot | Belirli bir andaki degistirilemez veri durumu |
+| Composition | Birden fazla dataset/snapshot birlesimi |
+| Artifact | Snapshot'a bagli annotation, crop, tile veya islenmis cikti |
+| Model lineage | Bir modelin hangi snapshot'lardan uretildigini gosteren kayit |
+
+## Backend modulleri
+
+| Dosya | Sorumluluk |
+| --- | --- |
+| `router.py` | `/data` endpoint'leri |
+| `schemas.py` | Pydantic request/response modelleri |
+| `db.py` | SQLite baglantisi ve tablo kurulumu |
+| `storage.py` | Dosya sistemi path soyutlamasi |
+| `metadata_writer.py` | Metadata export dosyalari |
+| `auth.py` | Request user cozumleme |
+
+## Storage yaklasimi
+
+Data Platform buyuk dosyalari veritabanina koymaz. Goruntu ve artifact dosyalari dosya sisteminde, iliskisel metadata SQLite'ta tutulur.
+
+```text
+storage/
+  raw/
+  processed/
+  crops/
+  tiles/
+  annotations/
+```
+
+## Frontend
+
+Ana sayfa:
+
+```text
+React/src/features/data-versioning/DataVersioningPage.jsx
+```
+
+Ana component'ler:
+
+| Component | Amac |
+| --- | --- |
+| `DatasetList` | Dataset ve snapshot secimi |
+| `SnapshotHistory` | Versiyon gecmisi |
+| `UploadWizard` | Dosya yukleme akisi |
+| `CompositionEditor` | Coklu dataset kompozisyonu |
+| `LineageView` | Model ve kaynak veri iliskileri |
+
+Mevcut ayrintili kilavuzlar icin `Mevcut Kilavuzlar` bolumundeki Data Platform sayfalari korunmustur.

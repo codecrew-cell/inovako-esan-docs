@@ -1,0 +1,67 @@
+---
+title: "Backend API"
+description: "Ana FastAPI endpoint gruplari ve kullanim alanlari."
+---
+
+# Backend API
+
+Ana backend `Api/api.py` icinde FastAPI instance olusturur ve legacy endpoint'leri dogrudan `self.api.get/post/delete/patch` cagrilariyla kaydeder.
+
+## Genel servis bilgisi
+
+| Ozellik | Deger |
+| --- | --- |
+| Base URL | `http://localhost:8000` |
+| Framework | FastAPI |
+| CORS | Tum origin/method/header kombinasyonlari acik |
+| Ana giris | `run_backend.py` veya `main.py` |
+
+## Analiz ve goruntu endpoint'leri
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `POST` | `/upload_folder/` | Klasor yukleme |
+| `GET` | `/get_images/{folder_name}` | Goruntu listesi |
+| `POST` | `/process_images/` | Analiz calistirma |
+| `POST` | `/process_uploaded_folder/` | Yuklenen klasor uzerinden analiz |
+| `POST` | `/reanalyze_image/` | Tek goruntuyu yeniden analiz etme |
+| `GET` | `/progress/` | Islem ilerleme durumu |
+| `GET` | `/frame/{session_id}` | Islenmis gorsel ciktisi |
+
+## Dogrulama ve manevra endpoint'leri
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `GET` | `/maneuvers_from_changes/{session_id}` | Degisikliklerden manevra uretme |
+| `GET` | `/get_maneuvers/{session_id}` | Manevra tablosunu getirme |
+| `POST` | `/add_box_to_changes/{session_id}` | Detection ekleme |
+| `POST` | `/table_changed` | Detection guncelleme |
+| `DELETE` | `/delete_box/` | Detection silme |
+| `POST` | `/save_bulk_changes/{session_id}` | Toplu kaydetme |
+
+## Mineral ve export endpoint'leri
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `POST` | `/mineral_from_changes/{session_id}` | Mineral verisi uretme |
+| `GET` | `/get_mineral_maneuvers/{session_id}` | Mineral manevralari |
+| `GET` | `/get_minerals/{session_id}` | Mineral tablosu |
+| `GET` | `/getColorChange/{holeId}` | Renk degisim tablosu |
+| `GET` | `/save_maneuvers/{session_id}` | Manevralari kaydetme |
+| `GET` | `/download/{hole_id}/{filename}` | Export dosyasi indirme |
+
+## Diagnostik endpoint'ler
+
+| Method | Path | Amac |
+| --- | --- | --- |
+| `GET` | `/timing_stats/latest` | Son timing istatistikleri |
+| `GET` | `/timing_stats/{session_id}` | Session timing |
+| `GET` | `/gantt/latest` | Son Gantt verisi |
+| `GET` | `/gantt/{session_id}` | Session Gantt verisi |
+| `POST` | `/errors/frontend` | Frontend hata bildirimi |
+| `GET` | `/dev/errors` | Gelistirici hata listesi |
+| `GET` | `/dev/issues` | Gruplanmis issue listesi |
+
+## OpenAPI notu
+
+FastAPI otomatik OpenAPI semasi uretebilir. Uretim kalitesinde API reference icin backend ayaga kaldirildiktan sonra `/openapi.json` ciktisi Mintlify `openapi` navigasyonuna baglanabilir.

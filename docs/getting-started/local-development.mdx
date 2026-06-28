@@ -1,0 +1,72 @@
+---
+title: "Lokal Gelistirme"
+description: "Backend, frontend ve dokumantasyon ortamini lokal makinede calistirma."
+---
+
+# Lokal Gelistirme
+
+## Gereksinimler
+
+| Bilesen | Amac |
+| --- | --- |
+| Python | FastAPI backend, goruntu isleme ve model kodlari |
+| Node.js | React frontend ve Mintlify dokumantasyonu |
+| CUDA destekli PyTorch | GPU hizlandirmali YOLO ve OCR akislari |
+| npm | Frontend bagimliliklari ve Vite dev server |
+| Mintlify CLI | Teknik dokumantasyon onizlemesi |
+
+Mintlify icin Node.js `v20.17.0` veya uzeri onerilir.
+
+## Backend
+
+Ana backend `run_backend.py` ile baslar. Bu dosya `ModelController` olusturur, `Api.api.run_api` uzerinden FastAPI uygulamasini kurar ve `uvicorn` ile `8000` portunda servis eder.
+
+```powershell
+cd ESANLAST-main
+python run_backend.py
+```
+
+Backend baslarken model dosyalarini, GPU durumunu ve FastAPI router'larini yukler. Tam uygulama icin model agirliklarinin `Model/Model Files` altinda bulunmasi gerekir.
+
+## Frontend
+
+React uygulamasi `React/` altinda Vite ile calisir.
+
+```powershell
+cd ESANLAST-main\React
+npm install
+npm run dev
+```
+
+Varsayilan frontend adresi:
+
+```text
+http://localhost:5173
+```
+
+## Tek komutla uygulama baslatma
+
+`main.py`, frontend Vite surecini baslatir, tarayiciyi acmayi dener ve ardindan FastAPI backend'i ayaga kaldirir.
+
+```powershell
+cd ESANLAST-main
+python main.py
+```
+
+Bu yontem gelistirme sirasinda pratiktir; servisleri ayri terminallerde baslatmak hata ayiklamayi kolaylastirir.
+
+## Dokumantasyon
+
+Bu Mintlify dokumantasyonu `docs.json`, `index.mdx` ve `docs/**/*.mdx` dosyalarindan olusur.
+
+```powershell
+cd ESANLAST-main
+npm i -g mint
+mint dev
+```
+
+Onizleme adresi:
+
+```text
+http://localhost:3000
+```

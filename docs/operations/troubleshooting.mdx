@@ -1,0 +1,74 @@
+---
+title: "Sorun Giderme"
+description: "Gelistirme ve calisma zamani sirasinda sik gorulen hatalar."
+---
+
+# Sorun Giderme
+
+## Backend acilirken model hatasi
+
+Belirti:
+
+```text
+FileNotFoundError veya YOLO model load error
+```
+
+Kontrol edilecekler:
+
+1. `Model/Model Files` altinda beklenen `.pt` veya `.engine` dosyalari var mi?
+2. `PREFER_TRT=1` iken `.engine` dosyasi bozuk olabilir mi?
+3. Model adi settings dosyasinda dogru mu?
+
+## GPU / CUDA gorunmuyor
+
+Backend baslangicinda `CUDA available: False` gorunurse:
+
+1. PyTorch CUDA build kurulu mu?
+2. NVIDIA driver guncel mi?
+3. Kullanilan Python environment dogru mu?
+
+CPU ile bazi islemler calisabilir, ancak inference suresi ciddi artar.
+
+## Frontend backend'e baglanamiyor
+
+Kontrol listesi:
+
+1. Backend `http://localhost:8000` uzerinde acik mi?
+2. `colorChangeParams.json` icindeki `api_base_url` dogru mu?
+3. Tarayici konsolunda CORS veya network hatasi var mi?
+4. Vite dev server `http://localhost:5173` uzerinde calisiyor mu?
+
+## Litoloji ekraninda veri gelmiyor
+
+Muhtemel nedenler:
+
+1. Once geoteknik analiz/validate yapilmamis.
+2. `session_id` veya `hole_id` yanlis.
+3. Goruntu klasoru `uploaded_data/{hole_id}` altinda yok.
+4. Secilen litoloji modelinin encoder dosyasi eksik.
+
+## Data Platform snapshot gorunmuyor
+
+Kontrol edilecekler:
+
+1. Dataset `READY` durumuna commit edildi mi?
+2. Snapshot soft delete ile archive edildi mi?
+3. `data_versioning` SQLite dosyasi dogru projeye mi ait?
+4. Frontend cache eski veri gosteriyor olabilir; sayfayi yenileyin.
+
+## Mintlify onizleme acilmiyor
+
+Mintlify CLI kurulu degilse:
+
+```powershell
+npm i -g mint
+```
+
+Ardindan:
+
+```powershell
+cd ESANLAST-main
+mint dev
+```
+
+Node surumu eskiyse Mintlify CLI calismayabilir. Node.js `v20.17.0` veya uzeri kullanin.

@@ -1,0 +1,48 @@
+---
+title: "Frontend Runtime"
+description: "React uygulamasinin rota, guard ve domain yapilarina genel bakis."
+---
+
+# Frontend Runtime
+
+Frontend `React/` klasorunde Vite ile calisan React uygulamasidir. UI tarafi React Router, Redux Toolkit, MUI, styled-components, Konva ve domain bazli component yapilari kullanir.
+
+## Calistirma
+
+```powershell
+cd ESANLAST-main\React
+npm install
+npm run dev
+```
+
+## Rota yapisi
+
+Rotalar `React/src/app/router/AppRoutes.jsx` icinde tanimlanir. Guard kararlari `React/src/domains/flow/selectors.js` uzerinden gelen Redux selector'lariyla verilir.
+
+| Route | Erisim kosulu | Alan |
+| --- | --- | --- |
+| `/run` | `canRun` | Analiz baslatma |
+| `/validate` | `canValidate` | Detection dogrulama |
+| `/mineralValidate` | `canMineralValidate` | Mineral dogrulama |
+| `/export` | `canExport` | Cikti uretimi |
+| `/settings` | admin veya supervisor | Ayarlar |
+| `/training-lab` | `canRun` | AI Vision Lab |
+| `/lithology` | `canMineralValidate` | Litoloji editor |
+| `/data` | `canRun` | Data Platform |
+| `/error-tracking` | developer | Hata takibi |
+| `/user-management` | admin | Kullanici yonetimi |
+
+## Ana frontend alanlari
+
+| Klasor | Sorumluluk |
+| --- | --- |
+| `src/pages` | Ust seviye sayfa bilesenleri |
+| `src/features` | Domain bazli feature modulleri |
+| `src/components` | Paylasilan ve legacy component'ler |
+| `src/state` | Redux store, slices ve selector'lar |
+| `src/styles` | Sayfa ve base stil modulleri |
+| `src/app/router` | Rota, guard ve keep-alive outlet yapisi |
+
+## Backend baglantisi
+
+Frontend API cagrilari gelistirme ortaminda `http://localhost:8000` backend'ini hedefler. Ayar servisinde `api_base_url` varsayilani da bu degerdir.
