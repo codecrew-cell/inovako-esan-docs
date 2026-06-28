@@ -1,90 +1,129 @@
 ---
 title: "User Walkthrough"
-description: "Ekran bazli kullanici akisi ve screenshot kontrol listesi."
+description: "Ekran bazli kullanici akisi ve gercek uygulama gorselleri."
 ---
 
 # User Walkthrough
 
-Bu sayfa son kullanici akisini ekran sirasina gore anlatir. Uygulama tam calisir ortamda acildiginda bu sayfaya gercek ekran goruntuleri eklenmelidir.
+Bu sayfa, son kullanicinin platform icinde izledigi ana akisi ekran sirasina gore anlatir. Amac; yeni ekip uyelerinin hangi ekranda ne yapildigini hizli kavramasi ve testlerde ayni sirayi takip edebilmesidir.
 
 ## Ekran sirasi
 
 ```mermaid
 flowchart LR
-    Login[Login] --> Dashboard[Dashboard]
-    Dashboard --> Run[Run]
+    Login[Login] --> Run[Run]
     Run --> Validate[Validate]
-    Validate --> Mineral[Mineral Validate]
-    Mineral --> Lithology[Lithology]
+    Validate --> Lithology[Litoloji]
     Lithology --> Export[Export]
-    Dashboard --> Training[Training Lab]
-    Dashboard --> Data[Data Platform]
+    Run --> Training[Training Lab]
+    Run --> Data[Data Versioning]
+    Run --> Settings[Ayarlar]
 ```
 
-## Login / Dashboard
+## Login
 
-| Kullanici aksiyonu | Beklenen sonuc |
+Kullanici sisteme giris yapar. Backend tarafinda kullanici ve rol bilgisi dogrulanir, frontend tarafinda oturum state'i olusturulur.
+
+![Login screen](/assets/screens/login.png)
+
+| Kontrol | Beklenen sonuc |
 | --- | --- |
-| Kullanici adini girer | `/ldap_auth/{user}` cagrilir |
-| Rol backend'den gelir | Redux session state guncellenir |
-| Role gore menu acilir | Admin/supervisor/engineer yetkileri uygulanir |
-
-Screenshot checklist:
-
-| Dosya adi | Icerik |
-| --- | --- |
-| `assets/screens/login.png` | Login formu |
-| `assets/screens/dashboard.png` | Dashboard ve sidebar |
+| Kullanici girisi | Oturum bilgisi olusur |
+| Rol bilgisi | Menu ve yetkiler role gore acilir |
+| Hata durumu | Kullaniciya giris hatasi gosterilir |
 
 ## Run
 
+Run ekraninda kuyu goruntuleri ve model calistirma akisi yonetilir. Kullanici gorselleri yukler, model/parametre secimi yapar ve isleme surecini baslatir.
+
+![Run overview](/assets/screens/run-overview.png)
+
+![Run processing](/assets/screens/run-processing.png)
+
+![Run results](/assets/screens/run-results.png)
+
 | Adim | Aciklama |
 | --- | --- |
-| Klasor yukle | Kuyu goruntuleri backend'e gonderilir |
-| Model sec | Ana model, takoz modeli ve diger inference ayarlari secilir |
-| Process baslat | YOLO/OCR worker'lari calisir |
-| Progress izle | `/progress/` endpoint'i ile durum takip edilir |
-
-Screenshot checklist:
-
-| Dosya adi | Icerik |
-| --- | --- |
-| `assets/screens/run-upload.png` | Klasor yukleme paneli |
-| `assets/screens/run-progress.png` | Progress state |
+| Klasor yukleme | Kuyu goruntuleri backend'e gonderilir |
+| Model secimi | Ana model, takoz modeli ve ilgili ayarlar secilir |
+| Process baslatma | YOLO/OCR worker'lari calisir |
+| Sonuc izleme | Islem durumu ve cikan sonuclar takip edilir |
 
 ## Validate
 
-Validate ekrani detection kutularini duzeltmek icindir.
+Validate ekrani detection kutularini kontrol etmek, eklemek, silmek ve tablo verisini duzeltmek icindir.
+
+![Validate screen](/assets/screens/validate.png)
 
 | Islem | Backend etkisi |
 | --- | --- |
-| Kutu ekleme | `/add_box_to_changes/{session_id}` |
-| Kutu silme | `/delete_box/` |
-| Tablo degistirme | `/table_changed` |
-| Toplu kaydetme | `/save_bulk_changes/{session_id}` |
+| Kutu ekleme | Yeni detection degisikligi kaydedilir |
+| Kutu silme | Ilgili detection sonucu kaldirilir |
+| Tablo degistirme | Tablo state'i guncellenir |
+| Toplu kaydetme | Session degisiklikleri kalici hale getirilir |
 
-## Lithology
+## Litoloji
 
-Litoloji ekrani onceki detection verisine baglidir.
+Litoloji akisi, onceki detection verilerinden hareketle litolojik siniflandirma ve manevra uretimi icin kullanilir.
+
+![Lithology editor 1](/assets/screens/lithology-1.png)
+
+![Lithology editor 2](/assets/screens/lithology-3.png)
+
+![Lithology editor 3](/assets/screens/lithology-4.png)
 
 1. Model secilir.
-2. `/litho/load-session` ile editor paketi alinir.
-3. Bolgeler UI'da duzenlenir.
-4. `/litho/build-maneuvers` ile final manevralar uretilir.
+2. Session verisi litoloji editorune yuklenir.
+3. Bolgeler ve litoloji siniflari duzenlenir.
+4. Final manevra ciktisi olusturulur.
 
 ## Export
 
-Export oncesi Validate, Mineral Validate ve Lithology akislari kontrol edilmelidir. Kullanici export dosyasini indirdikten sonra dosya adi ve kuyu id dogrulanmalidir.
+Export ekrani Validate, Mineral Validate ve Litoloji adimlarindan gelen sonuclari rapor formatina donusturur.
 
-## Screenshot ekleme standardi
+![Export overview](/assets/screens/export-overview.png)
+
+![Export classification](/assets/screens/export-classification.png)
+
+![Export maneuvers](/assets/screens/export-maneuvers.png)
+
+| Cikti | Kontrol |
+| --- | --- |
+| Siniflandirma | Kuyu ve derinlik bilgisi dogru mu |
+| Manevra tablosu | Baslangic/bitis araliklari tutarli mi |
+| Renk degisimleri | Litoloji renkleri beklenen standarda uygun mu |
+
+## Training Lab
+
+Training Lab; dataset inceleme, veri temizleme, egitim ve test akislari icin kullanilir.
+
+![Training Lab explorer](/assets/screens/training-lab-explorer.png)
+
+![Training Lab cleanout](/assets/screens/training-lab-data-cleanout.png)
+
+![Training Lab train](/assets/screens/training-lab-train.png)
+
+![Training Lab test](/assets/screens/training-lab-test.png)
+
+## Data Versioning
+
+Data Versioning ekraninda dataset ve model ciktilari versiyon bazli izlenir.
+
+![Data versioning](/assets/screens/data-versioning.png)
+
+## Ayarlar ve kullanici yonetimi
+
+Operasyon ve yetki yonetimi icin ayarlar, kullanici yonetim paneli ve hata izleme ekranlari kullanilir.
+
+![Settings](/assets/screens/settings.png)
+
+![User management](/assets/screens/user-management.png)
+
+![Error tracking](/assets/screens/error-tracking.png)
+
+## Screenshot standardi
 
 - PNG format kullanin.
-- Hassas kuyu/veri isimlerini maskeleyin.
-- Dosyalari dokumantasyon reposunda `assets/screens/` altina koyun.
-- MDX icinde relative path ile gosterin.
-
-Ornek:
-
-```mdx
-<img src="/assets/screens/run-upload.png" alt="Run upload screen" />
-```
+- Hassas kuyu, kullanici veya musteri bilgilerini gerekiyorsa maskeleyin.
+- Dosyalari `assets/screens/` altina koyun.
+- Dosya adlarinda Turkce karakter ve bosluk kullanmayin.
