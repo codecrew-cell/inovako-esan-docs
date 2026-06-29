@@ -1,11 +1,11 @@
 ---
 title: "Settings Admin Guide"
-description: "Model, dosya, goruntu isleme, renk analizi, AutoML ve Validate ayarlari."
+description: "Model, dosya, goruntu isleme, renk analizi, Training Lab ve Validate ayarlari."
 ---
 
 # Settings Admin Guide
 
-Settings ekrani admin ve supervisor rollerinin sistem davranisini kod degistirmeden yonetmesini saglar. Bu ekrandaki degerler Run, Validate, Lithology, AutoML ve Training Lab akisini etkiler.
+Settings ekrani admin ve supervisor rollerinin sistem davranisini kod degistirmeden yonetmesini saglar. Bu ekrandaki degerler Run, Validate, Lithology ve Training Lab akisini etkiler.
 
 ## Yetki
 
@@ -21,7 +21,7 @@ Settings ekrani admin ve supervisor rollerinin sistem davranisini kod degistirme
 | Files & Folders | Export klasoru, dosya uzantilari, upload limitleri ve klasor validasyonu. |
 | Image Processing | CLAHE, noise reduction, downscale, rotation correction ve edge trim. |
 | Color Analysis | Renk mesafesi, segment yuksekligi, smoothing, gap ve palette renkleri. |
-| AutoML / Training Lab | Epoch, learning rate, augmentation, train/val split, early stopping ve checkpoint. |
+| Training Lab | Epoch, learning rate, augmentation, train/val split, early stopping ve checkpoint. |
 | Lithology | Litoloji sinif renkleri, opacity, minimum bolge alani, zoom ve sliding window. |
 | Validate / Canvas | Detection kutu renkleri, default class visibility ve canvas parametreleri. |
 
@@ -42,7 +42,7 @@ Kayit sirasinda bazi ayarlar `colorChangeParams.json` ile senkronize edilir. Bu 
 | --- | --- |
 | `varsayilan_ana_model` | Run ekranindaki ana detection modeli. |
 | `varsayilan_takoz_modeli` | Takoz/spacer tespiti. |
-| `varsayilan_cls_modeli` | Siniflandirma ve AutoML sonrasi secim. |
+| `varsayilan_cls_modeli` | Siniflandirma sonrasi secim. |
 | `confidence` | Dusuk skorlu detection'larin filtrelenmesi. |
 | `iou` | Overlap eden detection'larin NMS toleransi. |
 | `batch_size` | Ayni anda islenecek goruntu sayisi. |
@@ -68,4 +68,4 @@ Settings ekraninda yanlis deger kaydedilirse:
 - Model Management bolumu.
 - Validate / Canvas renk ayarlari.
 - Lithology renk ayarlari.
-- AutoML / Training Lab parametreleri.
+- Training Lab parametreleri.
