@@ -198,14 +198,24 @@
     "tabs":  [
                  {
                      "name":  "Turkce",
-                     "url":  "tr"
+                     "url":  "/tr"
                  },
                  {
                      "name":  "English",
-                     "url":  "en"
+                     "url":  "/en"
                  }
              ],
     "primaryTab":  {
                        "name":  "Turkce"
-                   }
+                   },
+    "topbarLinks":  [
+                        {
+                            "name":  "Turkce",
+                            "url":  "/tr"
+                        },
+                        {
+                            "name":  "English",
+                            "url":  "/en"
+                        }
+                    ]
 }
