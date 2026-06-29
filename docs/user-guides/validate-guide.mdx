@@ -75,6 +75,71 @@ Lithology ve Export ciktisini dogrudan etkiler.
   </Step>
 </Steps>
 
+## Manevra tablosu sutunlari
+
+Ekranin alt kismindaki tablo, o an goruntulenen karot fotografina ait tum geoteknik
+analiz sonuclarini sayisal olarak gosterir. Her satir belirli bir derinlik araligini
+(manevra) temsil eder ve o aralige ait tum metrikler hesaplanmis sekilde sunulur.
+
+<Info>
+  **Tablo tamamen dinamiktir.** Gorsel alanda bir kutu ekledigizde, sildiginizde,
+  sinifini degistirdiginizde veya takoz derinligini guncelledigizde tablo aninda
+  yeniden hesaplanir. `Core_Diameter` disinda veriler dogrudan tablodan duzenlenmez;
+  tum degisiklikler gorsel alan uzerinden yapilir. Tablo her zaman o an acik olan
+  fotografa baglidir; baska bir goruntuye gecince otomatik yenilenir.
+</Info>
+
+| Sutun | Anlami | Formul |
+| --- | --- | --- |
+| `Hole_ID` | Sondaj kimligi/kodu; satirin hangi sondaja ait oldugunu gosterir. | — |
+| `Depth_From` | Araligin baslangic metresi. | — |
+| `Depth_To` | Araligin bitis metresi. | — |
+| `Interval_Length` | Manevra uzunlugu. | `Depth_To - Depth_From` |
+| `Recovery_Interval` (TCR) | Iki takoz arasindaki toplam (geri kazanilan) karot uzunlugu. | — |
+| `Recovery_pct` (TCR %) | Toplam karot verim yuzdesi. | `(Recovery_Interval / Interval_Length) * 100` |
+| `RQD_Interval` | 10 cm'den buyuk, saglam karot parcalarinin toplam uzunlugu. | — |
+| `RQD_pct` | Kaya kalitesi yuzdesi. | `(RQD_Interval / Interval_Length) * 100` |
+| `Solid_Recovery_Interval` (SCR) | Silindirik formunu koruyan (solid core) parcalarin toplam uzunlugu. | — |
+| `Solid_Recovery_pct` (SCR %) | Solid core verim yuzdesi. | `(Solid_Recovery_Interval / Interval_Length) * 100` |
+| `Fracture_Count` | Aralikta sayilan toplam kirik/catlak adedi. | — |
+| `Broken_Core_Interval` | Asiri parcalanmis (kirik sistemi ayirt edilemeyen) karot araliklarinin toplam uzunlugu. | — |
+| `Fault_Zone_Interval` | Ezilmis/ufalanmis, kayac butunlugunu kaybetmis zonlarin toplam uzunlugu. | — |
+| `Core_Diameter` | Karot capi/turu bilgisi; kullanici tarafindan elle girilebilir. | — |
+| `Logged_Date` | Kayit/log tarihi. | — |
+| `Logged_By` | Kaydi yapan/analizi yuruten kullanici. | — |
+| `Self_Edit` | Sistemin tespit ettigi kalite/uyari bilgisi (or. missing core blocks, ocr error). Hangi satira oncelik verilecegini gosterir. | — |
+
+### Kritik formuller
+
+```text
+Interval_Length = Depth_To - Depth_From
+TCR_pct = (TCR_Interval / Interval_Length) * 100
+RQD_pct = (RQD_Interval / Interval_Length) * 100
+SCR_pct = (SCR_Interval / Interval_Length) * 100
+```
+
+### Kisaltmalar
+
+| Kisaltma | Acilim |
+| --- | --- |
+| RQD | Rock Quality Designation (kaya kalitesi gostergesi) |
+| TCR | Total Core Recovery (toplam karot verimi) |
+| SCR | Solid Core Recovery (solid karot verimi) |
+| OCR | Optical Character Recognition (optik karakter tanima) |
+| ID | Identifier (kimlik) |
+| Pct / % | Percent (yuzde) |
+| From / To | Baslangic / Bitis |
+| Interval | Aralik (iki derinlik noktasi arasi) |
+| Core | Karot |
+| Fault Zone | Fay zonu |
+
+<Tip>
+  Yapisal bozulma metrikleri (`Fracture_Count`, `Broken_Core_Interval`,
+  `Fault_Zone_Interval`) birlikte degerlendirildiginde kaya yapisinin ne kadar
+  saglam veya problemli oldugunu ozetler. `Self_Edit` uyarisi olan satirlar once
+  incelenmelidir.
+</Tip>
+
 ## Kritik endpointler
 
 | Endpoint | Ne zaman kullanilir |

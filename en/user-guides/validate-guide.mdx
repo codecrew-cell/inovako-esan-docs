@@ -75,6 +75,70 @@ Lithology and Export output.
   </Step>
 </Steps>
 
+## Maneuver table columns
+
+The table at the bottom of the screen shows, numerically, all geotechnical analysis
+results for the currently displayed core photo. Each row represents a specific
+depth interval (maneuver) and all of its metrics are presented already computed.
+
+<Info>
+  **The table is fully dynamic.** When you add a box, delete one, change its class
+  or update the spacer depth in the image area, the table is recomputed instantly.
+  Except for `Core_Diameter`, data is not edited directly in the table; all changes
+  are made through the image area. The table is always bound to the currently open
+  photo and refreshes automatically when you switch images.
+</Info>
+
+| Column | Meaning | Formula |
+| --- | --- | --- |
+| `Hole_ID` | Drillhole identifier/code; shows which hole the row belongs to. | — |
+| `Depth_From` | Start depth (m) of the interval. | — |
+| `Depth_To` | End depth (m) of the interval. | — |
+| `Interval_Length` | Maneuver length. | `Depth_To - Depth_From` |
+| `Recovery_Interval` (TCR) | Total (recovered) core length between two spacers. | — |
+| `Recovery_pct` (TCR %) | Total core recovery percentage. | `(Recovery_Interval / Interval_Length) * 100` |
+| `RQD_Interval` | Total length of solid core pieces longer than 10 cm. | — |
+| `RQD_pct` | Rock quality percentage. | `(RQD_Interval / Interval_Length) * 100` |
+| `Solid_Recovery_Interval` (SCR) | Total length of pieces keeping their cylindrical (solid core) form. | — |
+| `Solid_Recovery_pct` (SCR %) | Solid core recovery percentage. | `(Solid_Recovery_Interval / Interval_Length) * 100` |
+| `Fracture_Count` | Total number of fractures/cracks counted in the interval. | — |
+| `Broken_Core_Interval` | Total length of heavily fragmented core (fracture system indistinguishable). | — |
+| `Fault_Zone_Interval` | Total length of crushed/disintegrated zones that lost rock integrity. | — |
+| `Core_Diameter` | Core diameter/type info; can be entered manually by the user. | — |
+| `Logged_Date` | Record/log date. | — |
+| `Logged_By` | User who logged/ran the analysis. | — |
+| `Self_Edit` | System-detected quality/warning info (e.g. missing core blocks, ocr error). Shows which rows to prioritize. | — |
+
+### Key formulas
+
+```text
+Interval_Length = Depth_To - Depth_From
+TCR_pct = (TCR_Interval / Interval_Length) * 100
+RQD_pct = (RQD_Interval / Interval_Length) * 100
+SCR_pct = (SCR_Interval / Interval_Length) * 100
+```
+
+### Abbreviations
+
+| Abbreviation | Expansion |
+| --- | --- |
+| RQD | Rock Quality Designation |
+| TCR | Total Core Recovery |
+| SCR | Solid Core Recovery |
+| OCR | Optical Character Recognition |
+| ID | Identifier |
+| Pct / % | Percent |
+| From / To | Start / End |
+| Interval | Range between two depth points |
+| Core | Core (karot) |
+| Fault Zone | Crushed/disintegrated rock zone |
+
+<Tip>
+  The structural-damage metrics (`Fracture_Count`, `Broken_Core_Interval`,
+  `Fault_Zone_Interval`), evaluated together, summarize how solid or problematic
+  the rock structure is. Rows with a `Self_Edit` warning should be reviewed first.
+</Tip>
+
 ## Critical endpoints
 
 | Endpoint | When it is used |
