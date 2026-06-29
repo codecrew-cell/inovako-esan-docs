@@ -1,0 +1,51 @@
+---
+title: "Developer Error API"
+description: "Frontend/backend error tracking and issue grouping endpoints."
+---
+
+# Developer Error API
+
+The Developer Error API is used for centrally monitoring frontend and backend
+errors. The Error Tracking screen uses these endpoints.
+
+## Frontend error ingestion
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `POST` | `/errors/frontend` | Saves the error payload captured by the frontend into `errors.db`. |
+
+## Developer endpoints
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/dev/errors` | Returns the error list with filters. |
+| `GET` | `/dev/errors/{error_id}` | Returns a single error detail. |
+| `DELETE` | `/dev/errors` | Clears all error records. |
+| `GET` | `/dev/issues` | Returns the issue list grouped by fingerprint. |
+| `PATCH` | `/dev/errors/{error_id}/status` | Updates the error status. |
+| `GET` | `/dev/session-stats` | Returns session/error statistics for the last 30 days. |
+
+## Query parameters
+
+Supported filters for `GET /dev/errors`:
+
+| Parameter | Description |
+| --- | --- |
+| `source` | Source filter such as frontend/backend. |
+| `level` | Error level. |
+| `limit` | Page size. The frontend uses 50 by default. |
+| `offset` | Pagination offset value. |
+| `fingerprint` | To filter the same error family. |
+| `since` | To get records after a specific date. |
+| `search` | For text search. |
+
+## Storage
+
+Errors are kept in `errors.db`. `log/error_tracker.py` manages table creation,
+migration, capture, listing, status and cleanup operations.
+
+## Authorization
+
+The developer endpoints check the developer/admin authorization of the user
+coming via the `X-Username` header. On the screen side, the `/error-tracking`
+route is behind the developer guard.

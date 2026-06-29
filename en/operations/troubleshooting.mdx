@@ -1,0 +1,75 @@
+---
+title: "Troubleshooting"
+description: "Errors commonly seen during development and runtime."
+---
+
+# Troubleshooting
+
+## Model error while the backend starts
+
+Symptom:
+
+```text
+FileNotFoundError or YOLO model load error
+```
+
+Things to check:
+
+1. Are the expected `.pt` or `.engine` files under `Model/Model Files`?
+2. With `PREFER_TRT=1`, could the `.engine` file be corrupt?
+3. Is the model name correct in the settings file?
+
+## GPU / CUDA not visible
+
+If `CUDA available: False` appears at backend start:
+
+1. Is a PyTorch CUDA build installed?
+2. Is the NVIDIA driver up to date?
+3. Is the Python environment in use correct?
+
+Some operations can run on CPU, but inference time increases significantly.
+
+## Frontend cannot connect to the backend
+
+Checklist:
+
+1. Is the backend up on `http://localhost:8000`?
+2. Is the `api_base_url` in `colorChangeParams.json` correct?
+3. Is there a CORS or network error in the browser console?
+4. Is the Vite dev server running on `http://localhost:5173`?
+
+## No data on the lithology screen
+
+Likely causes:
+
+1. Geotechnical analysis/validate was not done first.
+2. The `session_id` or `hole_id` is wrong.
+3. The image folder is not under `uploaded_data/{hole_id}`.
+4. The encoder file of the selected lithology model is missing.
+
+## Data Platform snapshot not visible
+
+Things to check:
+
+1. Was the dataset committed to the `READY` state?
+2. Was the snapshot archived with a soft delete?
+3. Does the `data_versioning` SQLite file belong to the correct project?
+4. The frontend cache may be showing stale data; refresh the page.
+
+## Mintlify preview does not open
+
+If the Mintlify CLI is not installed:
+
+```powershell
+npm i -g mint
+```
+
+Then:
+
+```powershell
+cd ESANLAST-main
+mint dev
+```
+
+If the Node version is old, the Mintlify CLI may not work. Use Node.js
+`v20.17.0` or higher.

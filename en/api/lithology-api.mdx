@@ -1,0 +1,59 @@
+---
+title: "Lithology API"
+description: "Lithology editor endpoints under the /litho prefix."
+---
+
+# Lithology API
+
+The lithology API is defined inside `karot_analiz/litho_api.py`.
+
+```python
+router = APIRouter(prefix="/litho", tags=["litho"])
+```
+
+## Endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/litho/models` | Lists persistent lithology models and metadata |
+| `POST` | `/litho/load-well` | Loads a well from a folder for standalone/developer use |
+| `POST` | `/litho/load-session` | Produces the editor package from an existing session or hole ID |
+| `POST` | `/litho/build-maneuvers` | Produces lithology maneuvers from editor regions |
+| `GET` | `/litho/image` | Serves the editor image from a file path |
+| `POST` | `/litho/save` | Saves the edited editor coordinates as JSON |
+
+## `POST /litho/load-session`
+
+This is the main production flow used.
+
+```json
+{
+  "session_id": "optional-session-id",
+  "hole_id": "WELL_001",
+  "model_file": "model.json"
+}
+```
+
+A successful response returns the images, class list and lithology maneuver
+suggestions for the editor.
+
+## `POST /litho/build-maneuvers`
+
+Regenerates the final maneuver list after the user makes changes in the frontend editor.
+
+```json
+{
+  "session_id": "optional-session-id",
+  "hole_id": "WELL_001",
+  "images": []
+}
+```
+
+## Dependencies
+
+For this API to work correctly:
+
+1. Geotechnical detection data must have been produced.
+2. Images must be under `uploaded_data/{hole_id}`.
+3. The selected lithology model must be registered under `LithologyAnalysis/karot_inference_pack/models`.
+4. The label encoder file must exist, or the fallback `label_encoder.pkl` must be usable.

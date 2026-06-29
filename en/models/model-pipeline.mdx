@@ -1,0 +1,74 @@
+---
+title: "Model Pipeline"
+description: "Geotechnical analysis, OCR and lithology classification model pipeline."
+---
+
+# Model Pipeline
+
+## Geotechnical inference
+
+```mermaid
+sequenceDiagram
+    participant UI as React Run Page
+    participant API as FastAPI
+    participant MW as Model Worker Queue
+    participant YOLO as Main/Spacer/Row Models
+    participant OCR as OCR Wrapper
+    participant DB as SQLite
+
+    UI->>API: POST /process_images/
+    API->>MW: submit image jobs
+    MW->>YOLO: run detections
+    MW->>OCR: extract spacer/depth text
+    MW->>API: return detections
+    API->>DB: write Detection / Changes
+    UI->>API: GET /progress/
+```
+
+## Validate to maneuver
+
+```mermaid
+flowchart LR
+    A[Detection] --> B[Changes]
+    B --> C[User edits]
+    C --> D[ManeuverCalculator]
+    D --> E[Maneuvers]
+    E --> F[Export]
+```
+
+## Lithology pipeline
+
+```mermaid
+flowchart TB
+    A[Changes / session detections] --> B[/litho/load-session]
+    B --> C[Resolve uploaded_data hole folder]
+    C --> D[Row/Spacer/Core model context]
+    D --> E[classify_images_to_litho]
+    E --> F[Editor regions]
+    F --> G[User edits]
+    G --> H[/litho/build-maneuvers]
+    H --> I[Lithology maneuver table]
+```
+
+## Training Lab pipeline
+
+```mermaid
+flowchart LR
+    A[Folder or snapshot] --> B[Tile extraction]
+    B --> C[Embedding]
+    C --> D[UMAP]
+    D --> E[Cluster cleanup]
+    E --> F[Train classifier]
+    F --> G[Save model + encoder]
+    G --> H[Register lineage]
+```
+
+## Performance considerations
+
+| Area | Note |
+| --- | --- |
+| GPU warmup | `Api/api.py` runs a startup dummy inference |
+| Worker queue | YOLO, spacer and line models run with separate queue workers |
+| Image encoding | Binary JPEG via `/frame/{session_id}` is preferred over Base64 |
+| SQLite writes | Bulk writes are more efficient than inserting one by one |
+| TensorRT | Provides speed on a compatible GPU, but carries a portability risk |

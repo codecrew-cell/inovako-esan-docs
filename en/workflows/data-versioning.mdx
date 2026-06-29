@@ -1,0 +1,66 @@
+---
+title: "Data Versioning"
+description: "Technical summary of the dataset, snapshot, composition, artifact and lineage system."
+---
+
+# Data Versioning
+
+The Data Platform is designed for versioning image data and tracking model
+training lineage. The backend side is under `Api/data_service/`, and the frontend
+side under `React/src/features/data-versioning/`.
+
+## Concepts
+
+| Concept | Description |
+| --- | --- |
+| Dataset | Logical dataset name |
+| Snapshot | An immutable data state at a specific moment |
+| Composition | A combination of multiple datasets/snapshots |
+| Artifact | An annotation, crop, tile or processed output bound to a snapshot |
+| Model lineage | A record showing which snapshots a model was produced from |
+
+## Backend modules
+
+| File | Responsibility |
+| --- | --- |
+| `router.py` | `/data` endpoints |
+| `schemas.py` | Pydantic request/response models |
+| `db.py` | SQLite connection and table setup |
+| `storage.py` | Filesystem path abstraction |
+| `metadata_writer.py` | Metadata export files |
+| `auth.py` | Request user resolution |
+
+## Storage approach
+
+The Data Platform does not put large files in the database. Image and artifact
+files are kept in the filesystem, and relational metadata in SQLite.
+
+```text
+storage/
+  raw/
+  processed/
+  crops/
+  tiles/
+  annotations/
+```
+
+## Frontend
+
+Main page:
+
+```text
+React/src/features/data-versioning/DataVersioningPage.jsx
+```
+
+Main components:
+
+| Component | Purpose |
+| --- | --- |
+| `DatasetList` | Dataset and snapshot selection |
+| `SnapshotHistory` | Version history |
+| `UploadWizard` | File upload flow |
+| `CompositionEditor` | Multi-dataset composition |
+| `LineageView` | Model and source data relationships |
+
+For the existing detailed guides, the Data Platform pages in the `Existing Guides`
+section are preserved.

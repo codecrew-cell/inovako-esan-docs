@@ -1,0 +1,77 @@
+---
+title: "Developer Handoff"
+description: "Critical technical info and first checklist for a developer taking over the project."
+---
+
+# Developer Handoff
+
+This page summarizes the technical info a developer newly taking over the project
+should know in the first 1-2 days.
+
+## System summary
+
+INOVAKO ESAN combines core image upload, YOLO/OCR-based analysis, manual
+validation, lithology classification, model training and data versioning in a
+single application.
+
+| Layer | Technology | Main location |
+| --- | --- | --- |
+| Backend API | FastAPI | `Api/api.py` |
+| Frontend | React + Vite | `React/` |
+| Model runtime | PyTorch, YOLO, OpenCV | `Model/`, `LithologyAnalysis/` |
+| Main DB | SQLite | `Database/Database.db` |
+| Data platform DB | SQLite | `data_versioning/data_versioning.db` |
+| Documentation | Mintlify | `documentation/` |
+
+## First run
+
+```powershell
+cd ESANLAST-main
+python run_backend.py
+```
+
+```powershell
+cd ESANLAST-main\React
+npm install
+npm run dev
+```
+
+## Files to read first
+
+| Priority | File | Why it matters |
+| --- | --- | --- |
+| 1 | `main.py` | How the full dev runtime starts |
+| 2 | `run_backend.py` | Backend-only runtime |
+| 3 | `Api/api.py` | Route registration, worker setup, CORS, static mounts |
+| 4 | `React/src/app/router/AppRoutes.jsx` | Frontend page map and access guards |
+| 5 | `karot_analiz/litho_api.py` | Lithology editor backend flow |
+| 6 | `LithologyAnalysis/training_lab_api.py` | Training Lab API and cache structure |
+| 7 | `Api/data_service/router.py` | Data Platform API and lineage |
+
+## Risky areas
+
+| Area | Risk | Note |
+| --- | --- | --- |
+| Model files | A missing `.pt` or `.engine` file can break backend startup | `Model/Model Files` should be checked |
+| GPU/CUDA | A wrong PyTorch build produces slow or faulty inference | `CUDA available` should be checked in the startup log |
+| SQLite lock | A busy error can occur with parallel operations | The code uses WAL and `busy_timeout` |
+| Session state | Some analysis data is kept in memory | A fresh session can be lost after a backend restart |
+| Encoding | On Windows, Turkish characters can break on the MDX/JSON side | The documentation is kept ASCII |
+
+## When making a code change
+
+1. Find the relevant domain file: API, React page, Redux slice or model helper.
+2. If the API changes, update the frontend client method too.
+3. If the DB schema changes, write the migration code idempotently.
+4. Do not add large image/model files to Git.
+5. Update the relevant page under `documentation/`.
+
+## Definition of Done
+
+| Check | Expected result |
+| --- | --- |
+| Backend starts | `uvicorn` runs on port 8000 |
+| Frontend starts | Vite runs on port 5173 |
+| Documentation link check | `mint broken-links` succeeds |
+| Main flow manual smoke test | upload -> process -> validate -> export flow does not error |
+| GitHub deploy | Mintlify latest update successful |

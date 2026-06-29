@@ -1,0 +1,93 @@
+---
+title: "Storage and Files"
+description: "Where image, model, cache, export and metadata files are kept."
+---
+
+# Storage and Files
+
+The application does not put large binary data inside SQLite. Image, model, tile,
+crop and export files are kept in the filesystem; the DB only stores metadata and
+relationships.
+
+## Main folders
+
+| Path | Content |
+| --- | --- |
+| `uploaded_data/` | Well images uploaded by the user |
+| `Model/Model Files/` | Main YOLO, spacer, line and related model files |
+| `LithologyAnalysis/karot_inference_pack/models/` | Lithology XGBoost/model and encoder files |
+| `LithologyAnalysis/training_lab_cache/` | Training Lab session, feature, tile and recovery cache |
+| `storage/` | Data Platform raw/processed/crops/tiles/annotations files |
+| `data_metadata/` | Exported metadata JSON files |
+| `data_versioning/metadata/` | Dataset, composition and tile metadata snapshots |
+| `ManueverBlocks/` | Export/maneuver image blocks |
+| `exports/` | Application export outputs |
+
+## Model file selection
+
+Some modules try the `.engine` file before the `.pt` file when `PREFER_TRT=1`.
+
+```text
+Model/Model Files/yolo_coreRow_pose_best_v2.engine
+Model/Model Files/yolo_coreRow_pose_best_v2.pt
+```
+
+Selection logic:
+
+1. If `PREFER_TRT=1`, the `.engine` is searched for first.
+2. If not found, the `.pt` is tried.
+3. If the environment variable is off, the `.pt` may be preferred first.
+
+## Data Platform storage
+
+The Data Platform uses relative path logic. This keeps the metadata more
+resilient when moving the project to a different machine.
+
+```text
+storage/
+  raw/
+  processed/
+  crops/
+  tiles/
+  annotations/
+```
+
+## Training Lab cache
+
+| Folder | Purpose |
+| --- | --- |
+| `features/` | Embedding, registry and training history |
+| `sessions/` | Session-based temporary data |
+| `tiles/` | Tile images |
+| `row_crops/` | Row crop outputs |
+| `strips/` | Lithology strip outputs |
+| `test_uploads/` | Test image uploads |
+| `trash/` | Deleted/archived training assets |
+
+## File cleanup policy
+
+| File type | When it is cleaned |
+| --- | --- |
+| `training_lab_cache/sessions` | When there is no interrupted-recovery need |
+| `test_uploads` | When the test is completed |
+| `exports` | After backing up the user exports |
+| `storage/raw` | Normally not deleted; kept for dataset snapshot lineage |
+| `data_metadata` | Archived if no metadata audit is needed |
+
+## What should not be added to Git
+
+```text
+uploaded_data/
+Database/*.db
+Database/*.db-wal
+Database/*.db-shm
+data_versioning/*.db
+storage/
+LithologyAnalysis/training_lab_cache/
+Model/Model Files/*.pt
+Model/Model Files/*.engine
+exports/
+```
+
+The documentation repo should contain only `.mdx`, `docs.json`, README and static
+documentation assets.

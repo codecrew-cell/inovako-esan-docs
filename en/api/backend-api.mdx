@@ -1,0 +1,70 @@
+---
+title: "Backend API"
+description: "Main FastAPI endpoint groups and their use cases."
+---
+
+# Backend API
+
+The main backend creates the FastAPI instance inside `Api/api.py` and registers
+legacy endpoints directly via `self.api.get/post/delete/patch` calls.
+
+## General service info
+
+| Property | Value |
+| --- | --- |
+| Base URL | `http://localhost:8000` |
+| Framework | FastAPI |
+| CORS | All origin/method/header combinations open |
+| Main entry | `run_backend.py` or `main.py` |
+
+## Analysis and image endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/upload_folder/` | Folder upload |
+| `GET` | `/get_images/{folder_name}` | Image list |
+| `POST` | `/process_images/` | Run analysis |
+| `POST` | `/process_uploaded_folder/` | Analyze an uploaded folder |
+| `POST` | `/reanalyze_image/` | Re-analyze a single image |
+| `GET` | `/progress/` | Processing progress status |
+| `GET` | `/frame/{session_id}` | Processed image output |
+
+## Validation and maneuver endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/maneuvers_from_changes/{session_id}` | Generate maneuvers from changes |
+| `GET` | `/get_maneuvers/{session_id}` | Get the maneuver table |
+| `POST` | `/add_box_to_changes/{session_id}` | Add a detection |
+| `POST` | `/table_changed` | Update a detection |
+| `DELETE` | `/delete_box/` | Delete a detection |
+| `POST` | `/save_bulk_changes/{session_id}` | Bulk save |
+
+## Mineral and export endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/mineral_from_changes/{session_id}` | Generate mineral data |
+| `GET` | `/get_mineral_maneuvers/{session_id}` | Mineral maneuvers |
+| `GET` | `/get_minerals/{session_id}` | Mineral table |
+| `GET` | `/getColorChange/{holeId}` | Color change table |
+| `GET` | `/save_maneuvers/{session_id}` | Save maneuvers |
+| `GET` | `/download/{hole_id}/{filename}` | Download export file |
+
+## Diagnostic endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/timing_stats/latest` | Latest timing statistics |
+| `GET` | `/timing_stats/{session_id}` | Session timing |
+| `GET` | `/gantt/latest` | Latest Gantt data |
+| `GET` | `/gantt/{session_id}` | Session Gantt data |
+| `POST` | `/errors/frontend` | Frontend error report |
+| `GET` | `/dev/errors` | Developer error list |
+| `GET` | `/dev/issues` | Grouped issue list |
+
+## OpenAPI note
+
+FastAPI can generate an automatic OpenAPI schema. For a production-quality API
+reference, once the backend is up, the `/openapi.json` output can be wired into
+the Mintlify `openapi` navigation.

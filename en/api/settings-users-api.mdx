@@ -1,0 +1,62 @@
+---
+title: "Settings and Users API"
+description: "Settings and user management endpoints."
+---
+
+# Settings and Users API
+
+This page summarizes the operational APIs used by the Settings and User
+Management screens.
+
+## Settings API
+
+There is no prefix; the endpoints are served under the root as `/settings`.
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/settings` | Returns the active settings. |
+| `POST` | `/settings` | Saves the settings. |
+
+## Settings response fields
+
+| Group | Example fields |
+| --- | --- |
+| Model | `varsayilan_ana_model`, `varsayilan_takoz_modeli`, `varsayilan_cls_modeli`, `confidence`, `iou`, `batch_size` |
+| File | Export directory, upload limit, allowed extensions, folder regex |
+| Image | CLAHE, noise reduction, downscale, rotation correction, edge trim |
+| Color | `colors_count`, `main_colors_number`, `inference_colors` |
+| Training Lab | Epoch, learning rate, augmentation, train/validation split, early stopping |
+| Lithology | Class color, opacity, region threshold, zoom and sliding window |
+| Validate | Box colors, default visibility, image variant, box thickness |
+
+## Related model list endpoints
+
+The dropdowns on the Settings screen are fed by these endpoints.
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/checkMainModelNames` | Returns the main model list. |
+| `GET` | `/checkClsModelNames` | Returns the classification model list. |
+| `GET` | `/checkTakozModelNames` | Returns the spacer model list. |
+
+## User Management API
+
+Prefix:
+
+```text
+/users
+```
+
+| Method | Path | Header | Description |
+| --- | --- | --- | --- |
+| `GET` | `/users` | `X-Username` | Returns the user list. |
+| `POST` | `/users` | `X-Username` | Adds a new user. Admin required. |
+| `PATCH` | `/users/{username}/role` | `X-Username` | Changes the user role. Admin required. |
+| `PATCH` | `/users/{username}/active` | `X-Username` | Changes the user activity status. Admin required. |
+| `DELETE` | `/users/{username}` | `X-Username` | Deletes the user record. Admin required. |
+
+## Security notes
+
+- `users.json` must not be shared in a public repo or public documentation.
+- Mutating endpoints have an admin check, but a stronger auth/token structure is recommended for production.
+- Since saving settings can change model and color behavior, only authorized roles should use it.

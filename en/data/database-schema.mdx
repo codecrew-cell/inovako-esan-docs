@@ -1,0 +1,153 @@
+---
+title: "Database Schema"
+description: "SQLite table schemas of the main application and the Data Platform."
+---
+
+# Database Schema
+
+The project has two main SQLite layers.
+
+| DB | Path | Responsibility |
+| --- | --- | --- |
+| Main application DB | `Database/Database.db` | Detection, Changes, Maneuvers, Minerals |
+| Data Platform DB | `data_versioning/data_versioning.db` | Dataset, snapshot, artifact, composition, lineage |
+
+## Main application DB
+
+Source file:
+
+```text
+Database/database.py
+```
+
+### Detection / Changes / MiddlePoint
+
+These tables use the same detection schema. `Detection` is the raw model output,
+`Changes` is the active data edited by the user, and `MiddlePoint` is for
+intermediate geometry use.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `image_id` | INTEGER PK | Auto id |
+| `session_id` | TEXT | Processing session |
+| `filename` | TEXT | Source image name |
+| `class_name` | TEXT | Detection class |
+| `x`, `y` | INTEGER | Box left/top coordinate |
+| `width`, `height` | INTEGER | Box size |
+| `confidence` | REAL | Model confidence score |
+| `ocr_text` | TEXT | OCR result |
+| `position_in_row` | INTEGER | Order within the row |
+| `row_number` | INTEGER | Row number |
+| `row_width` | INTEGER | Row width |
+| `is_row_start`, `is_row_middle`, `is_row_end` | BOOLEAN | Row position flags |
+| `removed_rows_exist` | BOOLEAN | Row removal info |
+| `is_small_image` | BOOLEAN | Small image flag |
+
+### Maneuvers / ManeuversStatic
+
+Holds the maneuver computation outputs.
+
+| Column | Description |
+| --- | --- |
+| `Hole_ID` | Well name |
+| `session_id` | Session id |
+| `Depth_From`, `Depth_To` | Depth range |
+| `Interval_Length` | Interval length |
+| `Recovery_Interval`, `Recovery_pct` | Recovery metrics |
+| `RQD_Interval`, `RQD_pct` | RQD metrics |
+| `Solid_Recovery_Interval`, `Solid_Recovery_pct` | Solid recovery metrics |
+| `Fracture_Count` | Fracture count |
+| `Broken_Core_Interval` | Broken core interval |
+| `Fault_Zone_Interval` | Fault zone interval |
+| `Core_Diameter` | Core diameter |
+| `Logged_Date`, `Logged_By` | Log metadata |
+| `selfEdit` | User edit info |
+
+### Minerals
+
+Holds the mineral validation outputs.
+
+| Column | Description |
+| --- | --- |
+| `uniqueId` | Unique mineral id on the UI side |
+| `session_id` | Session id |
+| `filename` | Source image |
+| `class_name` | Main mineral class |
+| `secondary_class_name`, `third_class_name` | Alternative classes |
+| `x`, `y`, `width`, `height` | Box coordinates |
+| `position_in_row`, `row_number`, `row_width` | Row position |
+| `ocr_text` | OCR/depth text |
+
+### MineralsManeuvers
+
+Holds mineral or lithology maneuver blocks for export.
+
+| Column | Description |
+| --- | --- |
+| `mineralBlockStart`, `mineralBlockEnd` | Depth range |
+| `colorChangeClass` | Main class |
+| `secondaryColorChangeClass`, `thirdColorChangeClass` | Alternative classes |
+| `color1rgb`, `color2rgb`, `color3rgb` | Color summaries |
+| `color1tonu`, `color2tonu`, `color3tonu` | Tone info |
+
+## Data Platform DB
+
+Source file:
+
+```text
+Api/data_service/db.py
+```
+
+### Core tables
+
+| Table | Responsibility |
+| --- | --- |
+| `users` | User records |
+| `images` | Hash-based image metadata |
+| `dataset_snapshots` | Dataset versions and states |
+| `snapshot_images` | Snapshot -> image link |
+| `artifacts` | Tile, crop, processed image and feature files |
+| `annotations` | Snapshot-based annotation files |
+
+### Composition and lineage
+
+| Table | Responsibility |
+| --- | --- |
+| `compositions` | Multi-well/dataset working sets |
+| `composition_wells` | Composition -> well_name relationship |
+| `composition_history` | Composition change audit trail |
+| `composition_dataset_snapshots` | Dataset snapshot mapping at commit time |
+| `models` | Trained models and their metrics |
+
+### Training cache
+
+| Table | Responsibility |
+| --- | --- |
+| `training_feature_cache` | Sample/tile feature cache |
+| `training_sample_labels` | Sample label records |
+| `training_class_registry` | Class order and color registry |
+
+## Indexes
+
+The main DB uses indexes on the session/file/row/position fields. On the Data
+Platform DB side, there are additional indexes for composition history, feature
+cache and class registry.
+
+## Migration approach
+
+The migrations in `Api/data_service/db.py` try to be idempotent with
+`ALTER TABLE ... ADD COLUMN`. If the column exists, the exception is swallowed. If
+a new column is to be added, the same approach should be kept.
+
+```python
+try:
+    conn.execute("ALTER TABLE models ADD COLUMN new_metric REAL")
+except Exception:
+    pass
+```
+
+## Data security note
+
+The SQLite files carry the application's runtime data. When making a release,
+demo or customer share, the real well/data records in the DB files should be
+checked.

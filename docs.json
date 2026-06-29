@@ -169,8 +169,11 @@
                         "group": "Guides",
                         "icon": "book-marked",
                         "pages": [
+                            "en/guides/developer-handoff",
                             "en/guides/operator-guide",
-                            "en/guides/user-walkthrough"
+                            "en/guides/user-walkthrough",
+                            "en/visuals/screenshot-gallery",
+                            "en/guides/maintenance-checklist"
                         ]
                     },
                     {
@@ -191,18 +194,101 @@
                         ]
                     },
                     {
-                        "group": "English API",
-                        "icon": "square-terminal",
+                        "group": "Architecture",
+                        "icon": "blocks",
                         "pages": [
-                            "en/api/api-overview"
+                            "en/architecture/system-overview",
+                            "en/architecture/backend-runtime",
+                            "en/architecture/frontend-runtime",
+                            "en/visuals/architecture-diagrams"
                         ]
                     },
                     {
-                        "group": "Data and Operations",
+                        "group": "Workflows",
+                        "icon": "workflow",
+                        "pages": [
+                            "en/workflows/geotechnical-analysis",
+                            "en/workflows/lithology-analysis",
+                            "en/workflows/training-lab",
+                            "en/workflows/data-versioning"
+                        ]
+                    },
+                    {
+                        "group": "API",
+                        "icon": "square-terminal",
+                        "pages": [
+                            "en/api/backend-api",
+                            "en/api/request-response-examples",
+                            "en/api/lithology-api",
+                            "en/api/training-lab-api",
+                            "en/api/data-platform-api",
+                            "en/api/settings-users-api",
+                            "en/api/dev-error-api",
+                            "en/api/diagnostics-api",
+                            "en/api/legacy-root-api"
+                        ]
+                    },
+                    {
+                        "group": "API Reference",
+                        "icon": "braces",
+                        "openapi": "openapi.json"
+                    },
+                    {
+                        "group": "Models",
+                        "icon": "brain-circuit",
+                        "pages": [
+                            "en/models/model-inventory",
+                            "en/models/model-pipeline"
+                        ]
+                    },
+                    {
+                        "group": "Data and DB",
                         "icon": "database",
                         "pages": [
-                            "en/data/data-versioning-admin-operations",
+                            "en/data/database-schema",
+                            "en/data/storage-and-files",
+                            "en/data/data-versioning-admin-operations"
+                        ]
+                    },
+                    {
+                        "group": "Security",
+                        "icon": "shield-check",
+                        "pages": [
+                            "en/security/auth-and-roles",
+                            "en/privacy/data-privacy"
+                        ]
+                    },
+                    {
+                        "group": "Testing",
+                        "icon": "test-tube",
+                        "pages": [
+                            "en/testing/test-strategy"
+                        ]
+                    },
+                    {
+                        "group": "Deployment",
+                        "icon": "cloud-upload",
+                        "pages": [
+                            "en/deployment/deployment-guide",
+                            "en/deployment/mintlify-publishing"
+                        ]
+                    },
+                    {
+                        "group": "Operations",
+                        "icon": "wrench",
+                        "pages": [
+                            "en/operations/configuration",
+                            "en/operations/troubleshooting",
                             "en/operations/session-and-recovery",
+                            "en/operations/release-process",
+                            "en/operations/mintlify"
+                        ]
+                    },
+                    {
+                        "group": "Reference",
+                        "icon": "book-open",
+                        "pages": [
+                            "en/reference/existing-guides",
                             "en/reference/output-files-reference"
                         ]
                     }

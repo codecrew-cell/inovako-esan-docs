@@ -1,0 +1,57 @@
+---
+title: "Data Platform API"
+description: "Technical summary of the /data endpoints."
+---
+
+# Data Platform API
+
+The Data Platform API is defined inside `Api/data_service/router.py` with the `/data` prefix.
+
+## Dataset and snapshot
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/data/upload` | Multipart image/artifact upload |
+| `POST` | `/data/ingest-folder` | Ingest from a folder |
+| `GET` | `/data/datasets` | Dataset list |
+| `GET` | `/data/datasets/{dataset_key}/snapshots` | Dataset snapshot history |
+| `POST` | `/data/datasets/{dataset_key}/commit` | Commit the staging snapshot |
+| `DELETE` | `/data/datasets/{dataset_key}` | Dataset soft delete |
+| `DELETE` | `/data/datasets/{dataset_key}/permanent` | Permanent dataset delete |
+
+## Snapshot details
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/data/snapshots` | Snapshot list |
+| `GET` | `/data/snapshots/{snapshot_id}/summary` | Snapshot summary |
+| `GET` | `/data/snapshots/{snapshot_id}/artifacts` | Artifact list |
+| `GET` | `/data/snapshots/{snapshot_id}/annotations` | Annotation list |
+| `GET` | `/data/snapshots/{snapshot_id}/images` | Image list |
+| `GET` | `/data/snapshots/{snapshot_id}/image-paths` | Resolved file paths |
+| `GET` | `/data/snapshots/{snapshot_id}/diff` | Snapshot diff |
+| `POST` | `/data/snapshots/{snapshot_id}/restore` | Snapshot restore |
+
+## Composition
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/data/compositions` | Composition list |
+| `POST` | `/data/compositions` | Create composition |
+| `PATCH` | `/data/compositions/{composition_id}` | Update composition |
+| `POST` | `/data/compositions/{composition_id}/lock` | Acquire edit lock |
+| `POST` | `/data/compositions/{composition_id}/commit` | Create composition snapshot |
+| `GET` | `/data/compositions/{composition_id}/history` | History |
+| `GET` | `/data/compositions/{composition_id}/snapshots` | Linked snapshots |
+
+## Lineage and model metadata
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/data/models/register` | Register a trained model |
+| `GET` | `/data/lineage` | Model lineage list |
+| `GET` | `/data/snapshots/{snapshot_id}/lineage` | Models sourced from a snapshot |
+| `GET` | `/data/models/{model_id}/full-lineage` | A model's full lineage tree |
+| `POST` | `/data/models/{model_id}/export-metadata` | Model metadata export |
+| `POST` | `/data/metadata/export` | Export all metadata |
+| `POST` | `/data/metadata/export/{dataset_key}` | Dataset metadata export |

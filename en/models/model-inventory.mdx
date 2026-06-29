@@ -1,0 +1,67 @@
+---
+title: "Model Inventory"
+description: "Model files in the application, their tasks and runtime selection logic."
+---
+
+# Model Inventory
+
+This page lists the model families in the application and where they are used.
+
+## Model families
+
+| Model | Task | Typical location | Used by module |
+| --- | --- | --- | --- |
+| Main geotechnical YOLO | Core/mineral/geotechnical object detection | `Model/Model Files/ahsap_geotechnical_seg_esan_best_v0.pt` or `.engine` | `Api/api.py`, processing mixin |
+| Spacer YOLO | Spacer area detection | `Model/Model Files/yolo_takoz_seg_best_v4.pt` or `.engine` | OCR/spacer pipeline |
+| Row pose YOLO | Core box row geometry | `Model/Model Files/yolo_coreRow_pose_best_v2.pt` or `.engine` | row geometry, lithology inference |
+| Lithology classifier | Lithology class prediction | `LithologyAnalysis/karot_inference_pack/models/*.json` | `/litho`, Training Lab |
+| Label encoder | Lithology class names | `*_encoder.pkl` or `label_encoder.pkl` | `/litho/models`, editor class list |
+| OCR engine | Spacer/depth text | Paddle VLM OCR wrapper | `Model/paddle_vlm_ocr.py` |
+
+## Selection logic
+
+Some runtimes use this order:
+
+1. If `PREFER_TRT=1`, the `.engine` file is searched for.
+2. If there is no `.engine`, it falls back to the `.pt` file.
+3. The model stem comes from settings or default constants.
+
+## Model metadata
+
+For Training Lab models, metadata is searched for in this file:
+
+```text
+LithologyAnalysis/training_lab_cache/features/model_registry.json
+```
+
+This registry is used for the following info:
+
+| Field | Purpose |
+| --- | --- |
+| `extraction.trim_y_ratio` | Lithology editor inference trim setting |
+| `source_temp_model` | Link from a temporary model to the persistent model |
+| model metrics | Training history and quality tracking |
+
+## Model release record
+
+The table below should be filled in for each new model.
+
+| Field | Value |
+| --- | --- |
+| Model name |  |
+| File path |  |
+| Model type | YOLO / TensorRT / XGBoost / encoder |
+| Training dataset |  |
+| Metrics |  |
+| Owner |  |
+| Rollback file |  |
+| Release date |  |
+
+## Operation risks
+
+| Risk | Impact | Mitigation |
+| --- | --- | --- |
+| `.engine` incompatible on a different GPU | Backend load or inference error | A `.pt` fallback should be kept |
+| Encoder missing | Lithology class list empty | The `label_encoder.pkl` fallback should be checked |
+| Wrong model stem | Runtime cannot find the file | Settings and file name should be updated together |
+| Old model deleted | No rollback | Old files should be moved to the release archive |

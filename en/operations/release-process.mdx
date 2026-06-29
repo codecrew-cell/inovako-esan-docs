@@ -1,0 +1,94 @@
+---
+title: "Release Process"
+description: "Release process for code, model, data and documentation changes."
+---
+
+# Release Process
+
+The release process is not just deploying code. In this application, model files,
+DB schema, data metadata and documentation must be considered together.
+
+## Release types
+
+| Type | Example | Extra check |
+| --- | --- | --- |
+| Frontend-only | UI/style change | `npm run build` |
+| Backend API | Endpoint or schema change | Frontend client compatibility |
+| Model update | New `.pt`, `.engine`, lithology `.json` | Smoke inference |
+| DB migration | New column/table | Idempotent migration |
+| Documentation | Mintlify page update | `mint broken-links` |
+
+## Standard release steps
+
+1. Test the changes locally.
+2. If there is a DB migration, try startup with the old DB.
+3. Build the frontend.
+4. Run a smoke test with a small dataset.
+5. Update the documentation.
+6. Write the commit message according to the release purpose.
+7. After the GitHub push, check the Mintlify deploy status.
+
+## Commit messages
+
+| Change | Example message |
+| --- | --- |
+| Documentation | `Update API documentation` |
+| Bug fix | `Fix lithology session loading error` |
+| Model config | `Update default model configuration` |
+| DB migration | `Add lineage metadata fields` |
+
+## Release note template
+
+```md
+## Release YYYY-MM-DD
+
+### Changed
+- 
+
+### Fixed
+- 
+
+### Migration
+- 
+
+### Validation
+- Backend startup: pass/fail
+- Frontend build: pass/fail
+- Smoke test: pass/fail
+- Docs check: pass/fail
+```
+
+## Model release note
+
+For a model change, the following info should be recorded:
+
+| Field | Description |
+| --- | --- |
+| Model name | File stem |
+| Model path | Runtime path |
+| Training dataset | Data Platform snapshot id or folder |
+| Metrics | mAP, precision, recall or related lithology metrics |
+| Rollback model | Previous model file |
+
+## Documentation release
+
+Documentation repo:
+
+```text
+codecrew-cell/inovako-esan-docs
+```
+
+Before a release:
+
+```powershell
+cd documentation
+mint broken-links
+```
+
+If successful:
+
+```powershell
+git add .
+git commit -m "Update technical documentation"
+git push
+```

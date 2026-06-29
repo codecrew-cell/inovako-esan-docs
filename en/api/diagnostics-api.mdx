@@ -1,0 +1,80 @@
+---
+title: "Diagnostics and Monitoring API"
+description: "Dashboard KPI, session recording, timing stats, Gantt and operational observability endpoints."
+---
+
+## Overview
+
+The diagnostics endpoints are used to track the application's user experience,
+processing times and system health. These endpoints provide supporting data for
+the operator screens, error tracking and the performance Gantt view.
+
+## Dashboard stats
+
+```http
+GET /dashboard/stats
+```
+
+Returns the main dashboard KPI values. If this endpoint does not respond, the
+frontend continues to work with default empty metrics.
+
+Expected fields:
+
+| Field | Description |
+| --- | --- |
+| `total_core_length` | Total processed core length. |
+| `recovery_rate` | Recovery rate. |
+| `class_counts` | Per-class counts. |
+| `fault_zones` | Number of fault/special zones. |
+| `active_models` | Number of active models. |
+| `system_status` | System service status. |
+| `recent_scans` | Recent analysis records. |
+| `timeline_items` | UI timeline records. |
+
+## Starting a session
+
+```http
+POST /sessions/start
+```
+
+Request:
+
+```json
+{
+  "session_uuid": "uuid",
+  "username": "operator"
+}
+```
+
+This record is used to match the user session with error logs and performance data.
+
+## Timing stats
+
+```http
+GET /timing_stats/latest
+GET /timing_stats/{session_id}
+```
+
+Reports the durations of the analysis pipeline steps. On the operator side it is
+used to find performance bottlenecks, and on the developer side for regression
+tracking.
+
+## Gantt endpoints
+
+```http
+GET /gantt/latest
+GET /gantt/{session_id}
+```
+
+The Gantt screen shows session-based processing steps as a timeline. It is used
+to understand which step took how long in long-running analyses.
+
+## When to use
+
+| Situation | Endpoint to check |
+| --- | --- |
+| Dashboard appears empty | `/dashboard/stats` |
+| User session not on the performance screen | `/sessions/start` record |
+| Analysis is slow | `/timing_stats/latest` or session-based timing |
+| Pipeline step order needs review | `/gantt/{session_id}` |
+| An error needs to be linked to a session | `login_session_id` and Dev Error endpoints |

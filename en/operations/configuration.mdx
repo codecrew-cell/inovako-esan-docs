@@ -1,0 +1,63 @@
+---
+title: "Configuration"
+description: "Settings files, model selections and runtime parameters."
+---
+
+# Configuration
+
+## Application settings
+
+Main settings source:
+
+```text
+colorChangeParams.json
+```
+
+The Settings API manages this file and the default values via
+`Api/settings_service/router.py`.
+
+| Setting | Default example | Purpose |
+| --- | --- | --- |
+| `varsayilan_ana_model` | `ahsap_geotechnical_seg_esan_best_v0` | Main segmentation model |
+| `varsayilan_takoz_modeli` | `yolo_takoz_seg_best_v4` | Spacer model |
+| `confidence` | `0.10` | Inference confidence threshold |
+| `iou` | `0.30` | YOLO IoU threshold |
+| `batch_size` | `4` | Batch processing setting |
+| `api_base_url` | `http://localhost:8000` | Frontend API address |
+| `rotation_correction` | `true` | EXIF/rotation correction |
+
+## Model files
+
+Main model files:
+
+```text
+Model/Model Files
+```
+
+Lithology model files:
+
+```text
+LithologyAnalysis/karot_inference_pack/models
+```
+
+In some modules, TensorRT preference behavior is controlled by the `PREFER_TRT`
+environment variable. If `PREFER_TRT=1`, the `.engine` file is tried before the
+`.pt` file.
+
+## Runtime environment
+
+`main.py` and `run_backend.py` set this PyTorch setting at the start:
+
+```python
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+```
+
+This setting helps reduce GPU memory fragmentation.
+
+## Ports
+
+| Service | Port |
+| --- | --- |
+| FastAPI backend | `8000` |
+| Vite frontend | `5173` |
+| Mintlify preview | `3000` |

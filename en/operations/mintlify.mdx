@@ -1,0 +1,73 @@
+---
+title: "Using Mintlify"
+description: "Managing this project's technical documentation with Mintlify."
+---
+
+# Using Mintlify
+
+This documentation is kept inside the repo using the Mintlify `docs-as-code` approach.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `docs.json` | Theme, color and navigation configuration |
+| `index.mdx` | Documentation home page |
+| `docs/**/*.mdx` | Technical documentation pages |
+| `docs/*.md` | Existing Markdown guides |
+
+## Local preview
+
+```powershell
+cd ESANLAST-main
+npm i -g mint
+mint dev
+```
+
+Alternative:
+
+```powershell
+npm run docs:dev
+```
+
+Preview:
+
+```text
+http://localhost:3000
+```
+
+## Adding a new page
+
+1. Add an `.mdx` file to the appropriate folder under `docs/`.
+2. Put frontmatter at the top of the file.
+3. Add the extensionless path to the `navigation.groups[].pages` list in `docs.json`.
+
+Example:
+
+```mdx
+---
+title: "New Page"
+description: "Short description."
+---
+
+# New Page
+```
+
+`docs.json` reference:
+
+```json
+"pages": ["docs/operations/new-page"]
+```
+
+## Next step for OpenAPI integration
+
+After the backend is up, FastAPI's `/openapi.json` output can be saved to a file
+and wired into Mintlify as an API reference.
+
+Recommended process:
+
+```powershell
+Invoke-WebRequest http://localhost:8000/openapi.json -OutFile docs\api\openapi.json
+```
+
+Then an `openapi` field is added to the API group in `docs.json`.

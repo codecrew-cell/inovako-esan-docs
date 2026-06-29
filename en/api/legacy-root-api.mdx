@@ -1,0 +1,62 @@
+---
+title: "Legacy Root API"
+description: "Backward-compatibility endpoints remaining in the main FastAPI file and their use cases."
+---
+
+## Overview
+
+Besides the new service routers, the platform also has endpoints that
+historically remain in the main `Api/api.py`. Some of these endpoints are used by
+active screens, while others are kept for backward compatibility or as a
+development tool.
+
+## File and folder upload
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/upload_image/` | `POST` | Single image upload or fetching a test image. |
+| `/upload_folder/` | `POST` | Legacy endpoint for the folder upload flow. |
+| `/process_uploaded_folder/` | `POST` | Feeds an uploaded folder into the analysis pipeline. |
+| `/get_images` | `GET` | Lists uploaded images. |
+| `/frame` | `GET` | Serves a single frame/image. |
+
+## Analysis and re-analysis
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/process_images/` | `POST` | Runs the main core analysis pipeline. |
+| `/progress/` | `GET` | Returns analysis progress info. |
+| `/reanalyze_image/` | `POST` | Runs re-analysis for a selected image or region. |
+| `/get_session_index` | `GET` | Returns active or last session index info. |
+| `/clear_maneuver_table` | `POST` | Clears the maneuver table. |
+
+## Settings endpoints
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/loadSettings` | `GET` | Reads legacy settings. |
+| `/saveSettings` | `POST` | Saves legacy settings. |
+
+<Note>
+For the new settings screen, the `/settings` router documentation should be
+preferred. The legacy endpoints are kept for old UI flows or backward
+compatibility.
+</Note>
+
+## Model and class helpers
+
+| Endpoint | Purpose |
+| --- | --- |
+| `/deleteClsModel` | Deletes the classification model. |
+| `/changeClsModelDescriptions` | Updates the model description. |
+| `/saveClsModelName/{name}` | Saves a model name. |
+| `/test_classification` | Tests the classification model. |
+| `/get_minerals` | Returns mineral class info. |
+| `/mineralValidate` | Supports the mineral validation flow. |
+
+## Maintenance note
+
+Before these endpoints are fully removed, the frontend should be scanned with
+`rg`, screen links verified, and the API Reference/OpenAPI output updated. If an
+active screen uses it, the endpoint should be kept in the operational
+documentation even if it is "legacy".

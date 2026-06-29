@@ -1,0 +1,67 @@
+---
+title: "Training Lab API"
+description: "/traininglab endpoint groups and the training pipeline contract."
+---
+
+# Training Lab API
+
+The Training Lab API supports the lithology model training process. Router prefix:
+
+```text
+/traininglab
+```
+
+Main file:
+
+```text
+LithologyAnalysis/training_lab_api.py
+```
+
+## Endpoint groups
+
+| Group | Endpoints | Purpose |
+| --- | --- | --- |
+| Dataset | `POST /dataset-info`, `POST /upload-folder` | Folder or dataset preparation |
+| Embedding | `POST /compute-embeddings`, `GET /embedding-progress`, `POST /cancel-embeddings` | Tile/crop feature generation |
+| UMAP and cluster | `POST /compute-umap`, `POST /recluster`, `POST /update-cluster-names` | Visual clustering and class names |
+| Label management | `POST /update-labels`, `POST /rename-class`, `POST /exclude-samples`, `POST /finalize-assignments` | Cleaning of sample labels |
+| Model | `GET /models`, `POST /save-model`, `POST /rename-model`, `POST /delete-model` | Persistent lithology model management |
+| Test | `POST /upload-test-image`, `POST /test-sample`, `GET /image` | Model test and image serving |
+| Export | `GET /download-model`, `GET /download-encoder`, `GET /training-history.csv` | Model and history outputs |
+| Stream | `GET /train-stream` | Training event stream |
+| Recovery | `GET/POST/DELETE /recovery` | Recovering interrupted jobs |
+
+## Cache and registry files
+
+| File / folder | Purpose |
+| --- | --- |
+| `training_lab_cache/features/model_registry.json` | Persistent model metadata record |
+| `training_lab_cache/features/training_history.json` | Training history |
+| `training_lab_cache/features/cluster_metadata.json` | Cluster and label metadata |
+| `training_lab_cache/tiles` | Generated tile images |
+| `training_lab_cache/row_crops` | Row crop outputs |
+| `karot_inference_pack/models` | Saved lithology models |
+
+## Model save behavior
+
+When a model is saved in Training Lab:
+
+1. The model file is written under `LithologyAnalysis/karot_inference_pack/models`.
+2. The encoder file is kept associated with the same model name.
+3. Training metadata is written into `model_registry.json`.
+4. If there is Data Platform integration, a lineage record is created via `/data/models/register`.
+
+## Relationship with the lithology editor
+
+The lithology editor reads the Training Lab model folder via the `/litho/models`
+endpoint. The editor class list is produced from the encoder file. The trim
+settings in the registry can be used on the editor inference side.
+
+## Operation notes
+
+| Situation | Check |
+| --- | --- |
+| Model list empty | Is there a `.json` model under `karot_inference_pack/models`? |
+| Class list empty | Is the encoder file or `label_encoder.pkl` present? |
+| Training interrupted | The `/traininglab/recovery` endpoint should be checked |
+| Test image not loading | Does `/traininglab/image?path=...` resolve the file path? |

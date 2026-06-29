@@ -1,0 +1,79 @@
+---
+title: "Auth and Roles"
+description: "LDAP, users.json, roles and the frontend guard structure."
+---
+
+# Auth and Roles
+
+## Authentication
+
+The login flow starts with the `/ldap_auth/{user}` endpoint. The backend first
+looks at the local user record in `users.json`. If the user is not found, an LDAP
+search is attempted.
+
+```mermaid
+flowchart TB
+    A[Username] --> B[/ldap_auth/{user}]
+    B --> C{Exists in users.json?}
+    C -->|Yes| D[Read role]
+    C -->|No| E[LDAP search]
+    E --> F{LDAP success}
+    F -->|Yes| D
+    F -->|No| G[Login error]
+    D --> H[Redux session role]
+```
+
+## Roles
+
+Valid backend roles:
+
+```text
+admin, supervisor, engineer
+```
+
+| Role | Authorization summary |
+| --- | --- |
+| `admin` | All pages, user management, developer pages |
+| `supervisor` | Operational management including Settings, excluding user management |
+| `engineer` | Operational screens such as Run, validate, training/data flows |
+| inactive | Login is rejected, or an inactive user is accepted |
+
+## Frontend guard
+
+Route guards are applied by `React/src/app/router/AppRoutes.jsx` and the
+selectors in `React/src/domains/flow/selectors.js`.
+
+| Route | Guard |
+| --- | --- |
+| `/settings` | admin or supervisor |
+| `/error-tracking` | developer/admin |
+| `/user-management` | admin |
+| `/validate` | validate state |
+| `/export` | export state |
+
+## User Management API
+
+Prefix:
+
+```text
+/users
+```
+
+Mutating endpoints require the `X-Username` header and perform an admin check.
+
+| Method | Path | Authorization |
+| --- | --- | --- |
+| GET | `/users` | Authenticated user list |
+| POST | `/users` | Admin |
+| PATCH | `/users/{username}/role` | Admin |
+| PATCH | `/users/{username}/active` | Admin |
+| DELETE | `/users/{username}` | Admin |
+
+## Security notes
+
+| Topic | Note |
+| --- | --- |
+| CORS | Wide open in development; should be narrowed in production |
+| users.json | Contains real user data; should not be put in a public repo |
+| LDAP config | Stored on the settings side; should be protected per environment |
+| Public docs | The documentation must not contain customer/well confidential info |

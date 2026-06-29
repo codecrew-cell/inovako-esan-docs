@@ -1,0 +1,55 @@
+---
+title: "System Architecture"
+description: "Overview of the frontend, backend, model and persistent data layers."
+---
+
+# System Architecture
+
+INOVAKO ESAN has a desktop/web hybrid development structure that processes core
+(borehole) images. The frontend runs on Vite, the backend on FastAPI. The heavy
+processing layer consists of YOLO, OCR, OpenCV, PyTorch and lithology models.
+
+## Layers
+
+```mermaid
+flowchart TB
+    UI[React Frontend] --> API[FastAPI API]
+    API --> MC[ModelController]
+    MC --> YOLO[YOLO / TensorRT / PyTorch]
+    API --> OCR[Paddle VLM OCR]
+    API --> DB[(Database/Database.db)]
+    API --> DSV[(data_versioning.db)]
+    API --> FS[uploaded_data / storage / cache]
+    API --> TL[Training Lab Router]
+    TL --> LM[Lithology Model Registry]
+    API --> LE[Lithology Router]
+```
+
+## Main responsibilities
+
+| Layer | Responsibility |
+| --- | --- |
+| React | User flows, visual validation, model selections, training lab and data platform UI |
+| FastAPI | HTTP API, model job queue, file read/write, database operations |
+| ModelController | Management of the main model, spacer model, line model and classification model |
+| Model workers | Separating costly jobs such as YOLO and OCR from the main request flow |
+| SQLite | Detection, maneuver, settings, data platform and lineage data |
+| Filesystem | Images, model files, cache, export and metadata |
+
+## Main data flow
+
+1. The user uploads well images through the frontend.
+2. The backend stores the images under `uploaded_data`.
+3. YOLO-based models extract row, spacer and core classes.
+4. The Validate page makes the detections editable.
+5. The mineral and lithology flows use the validated detection data.
+6. The Export page produces the final maneuver and image outputs.
+
+## Critical design decisions
+
+| Decision | Rationale |
+| --- | --- |
+| FastAPI routers split by domain | Lithology, training lab, data platform and settings can be developed independently |
+| Model worker queues are used | Long-running inference jobs should not block the request flow |
+| The filesystem remains the main storage | Image and model files are large; SQLite is only suitable for metadata |
+| The data platform has a snapshot structure | Datasets used in model training must be traceable |

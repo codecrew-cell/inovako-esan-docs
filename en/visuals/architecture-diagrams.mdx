@@ -1,0 +1,78 @@
+---
+title: "Architecture Diagrams"
+description: "Mermaid diagrams for the system, data, model and deployment flows."
+---
+
+# Architecture Diagrams
+
+## Full system context
+
+```mermaid
+flowchart TB
+    User[Operator / Engineer] --> React[React Vite UI]
+    React --> FastAPI[FastAPI Backend]
+    FastAPI --> MainDB[(Database.db)]
+    FastAPI --> DataDB[(data_versioning.db)]
+    FastAPI --> FS[File storage]
+    FastAPI --> Workers[Model Queue Workers]
+    Workers --> Models[YOLO / OCR / Lithology Models]
+    FastAPI --> Docs[Mintlify Docs via GitHub]
+```
+
+## Backend router map
+
+```mermaid
+flowchart LR
+    API[Api/api.py] --> Legacy[Legacy analysis endpoints]
+    API --> Data[/data router]
+    API --> Litho[/litho router]
+    API --> Training[/traininglab router]
+    API --> Settings[/settings router]
+    API --> Users[/users router]
+    API --> Dev[/dev diagnostics]
+```
+
+## Data lineage
+
+```mermaid
+flowchart TB
+    Image[Raw images] --> Dataset[Dataset]
+    Dataset --> Snapshot[Snapshot READY]
+    Snapshot --> Training[Training Lab]
+    Training --> Model[Registered model]
+    Snapshot --> Composition[Composition]
+    Composition --> TileSnapshot[Tile snapshot]
+    TileSnapshot --> Model
+```
+
+## Lithology sequence
+
+```mermaid
+sequenceDiagram
+    participant UI as Lithology Page
+    participant API as /litho router
+    participant DB as Changes/Memory
+    participant TL as Training Lab model files
+    participant IMG as uploaded_data
+
+    UI->>API: GET /litho/models
+    API->>TL: read models + encoder
+    API-->>UI: model list
+    UI->>API: POST /litho/load-session
+    API->>DB: load detections
+    API->>IMG: resolve images
+    API->>TL: classify images
+    API-->>UI: editor regions
+    UI->>API: POST /litho/build-maneuvers
+    API-->>UI: lithology maneuvers
+```
+
+## Documentation publishing
+
+```mermaid
+flowchart LR
+    Local[Local documentation files] --> Git[Git commit]
+    Git --> GitHub[codecrew-cell/inovako-esan-docs]
+    GitHub --> Mintlify[Mintlify deploy]
+    Mintlify --> Public[Public docs link]
+```

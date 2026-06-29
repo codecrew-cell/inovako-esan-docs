@@ -1,0 +1,88 @@
+---
+title: "Mintlify Publishing"
+description: "Publishing and updating the documentation site with GitHub and Mintlify."
+---
+
+# Mintlify Publishing
+
+This documentation is published from a separate GitHub repo.
+
+```text
+https://github.com/codecrew-cell/inovako-esan-docs
+```
+
+## Repo structure
+
+```text
+docs.json
+index.mdx
+docs/
+  api/
+  architecture/
+  data/
+  deployment/
+  getting-started/
+  guides/
+  operations/
+  workflows/
+```
+
+`docs.json` is at the repo root. The subdirectory option should remain off in the
+Mintlify settings.
+
+## Mintlify settings
+
+| Field | Value |
+| --- | --- |
+| GitHub organization | `codecrew-cell` |
+| Repository | `inovako-esan-docs` |
+| Branch | `main` |
+| Docs directory | `/` |
+| Visibility | `Public` |
+
+## Update flow
+
+```powershell
+cd ESANLAST-main\documentation
+git status
+git add .
+git commit -m "Update documentation"
+git push
+```
+
+After the push, Mintlify starts an automatic deploy. In the dashboard, the
+Activity section should show `Successful`.
+
+## Local check
+
+```powershell
+cd ESANLAST-main\documentation
+mint broken-links
+mint dev
+```
+
+If there is a Windows PowerShell policy issue, use `.cmd`:
+
+```powershell
+mint.cmd broken-links
+mint.cmd dev
+```
+
+## Public link
+
+In the Mintlify dashboard, the domain is in this form:
+
+```text
+https://geocoredocumentation.mintlify.site
+```
+
+If the domain is changed, the link on this page should be updated too.
+
+## Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Repo shows `docs` | `inovako-esan-docs` should be selected in the repository setting |
+| Docs repo inaccessible | The GitHub App repository access should be checked |
+| Build failed | Open the error from the Activity detail, run local `mint broken-links` |
+| Turkish characters break | `docs.json` and nav titles should be kept ASCII |

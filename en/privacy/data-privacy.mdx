@@ -1,0 +1,41 @@
+---
+title: "Data Privacy"
+description: "Well data, model files and GitHub/Mintlify sharing rules."
+---
+
+# Data Privacy
+
+## What should not be put on GitHub
+
+| Data | Why |
+| --- | --- |
+| `uploaded_data/` | May contain real well images |
+| `Database/*.db` | Carries session, detection and user data |
+| `data_versioning/*.db` | Carries dataset lineage and file metadata |
+| `storage/` | Carries raw/processed images and artifact files |
+| `Model/Model Files/*.pt` | May be large/proprietary model files |
+| `*.engine` | GPU/environment-dependent compiled model files |
+| `users.json` | Carries user and role info |
+
+## Masking for documentation
+
+| Field | Masking example |
+| --- | --- |
+| Well name | `WELL-001` |
+| File path | `uploaded_data/WELL-001/...` |
+| Username | `operator` |
+| Real IP | `10.x.x.x` or `host.internal` |
+| Model path | Only the stem or a relative path |
+
+## Screenshot rules
+
+1. Real customer/well names must not be visible.
+2. Username or network share in file paths must be hidden.
+3. A test dataset should be used.
+4. Faces, signatures, emails or personal info must not be visible.
+5. Screenshot files should be reviewed before being added to the documentation repo.
+
+## Public Mintlify note
+
+If the site is public, anyone who knows the link can see it. For this reason the
+documentation must stay technical and must not contain sensitive data examples.

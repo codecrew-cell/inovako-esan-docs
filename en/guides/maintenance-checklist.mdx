@@ -1,0 +1,49 @@
+---
+title: "Maintenance Checklist"
+description: "Checklist for model, data, documentation and deployment maintenance."
+---
+
+# Maintenance Checklist
+
+## Weekly checks
+
+| Check | Command / location | Expected result |
+| --- | --- | --- |
+| Backend logs | `log/` | No critical traceback |
+| Data DB size | `data_versioning/` | No abnormal growth |
+| Main DB size | `Database/Database.db` | Session cleanup in the expected state |
+| Training cache | `LithologyAnalysis/training_lab_cache` | Old temporary files checked |
+| Documentation build | `mint broken-links` | No broken links |
+
+## When changing a model file
+
+1. Put the new model under `Model/Model Files`, or for lithology under `LithologyAnalysis/karot_inference_pack/models`.
+2. Do not delete the old model file immediately; keep it for rollback first.
+3. Verify the default model name on the Settings screen.
+4. Run a smoke test with a small well folder.
+5. Add the model metrics to the documentation or registry.
+
+## Data Platform maintenance
+
+| Area | Note |
+| --- | --- |
+| Snapshot | A `READY` snapshot is considered immutable |
+| Archive | Soft delete is preferred first |
+| Permanent delete | Applied only after dependencies are checked |
+| Metadata export | `POST /data/metadata/export` can be run before a release |
+
+## Minimum test before a release
+
+```powershell
+cd ESANLAST-main\documentation
+mint broken-links
+```
+
+```powershell
+cd ESANLAST-main\React
+npm run build
+```
+
+If there is no full model-loading environment for the backend, at least an
+import/startup test is done. On a machine with a GPU, a full inference smoke test
+is required.

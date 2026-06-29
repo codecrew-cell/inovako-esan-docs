@@ -1,0 +1,53 @@
+---
+title: "Frontend Runtime"
+description: "Overview of the React application's route, guard and domain structures."
+---
+
+# Frontend Runtime
+
+The frontend is a React application running with Vite in the `React/` folder. The
+UI side uses React Router, Redux Toolkit, MUI, styled-components, Konva and
+domain-based component structures.
+
+## Running
+
+```powershell
+cd ESANLAST-main\React
+npm install
+npm run dev
+```
+
+## Route structure
+
+Routes are defined in `React/src/app/router/AppRoutes.jsx`. Guard decisions come
+from the Redux selectors in `React/src/domains/flow/selectors.js`.
+
+| Route | Access condition | Area |
+| --- | --- | --- |
+| `/run` | `canRun` | Starting analysis |
+| `/validate` | `canValidate` | Detection validation |
+| `/mineralValidate` | `canMineralValidate` | Mineral validation (legacy — not in menu) |
+| `/export` | `canExport` | Output generation |
+| `/settings` | admin or supervisor | Settings |
+| `/training-lab` | `canRun` | AI Vision Lab |
+| `/lithology` | `canMineralValidate` | Lithology editor |
+| `/data` | `canRun` | Data Platform |
+| `/error-tracking` | developer | Error tracking |
+| `/user-management` | admin | User management |
+
+## Main frontend areas
+
+| Folder | Responsibility |
+| --- | --- |
+| `src/pages` | Top-level page components |
+| `src/features` | Domain-based feature modules |
+| `src/components` | Shared and legacy components |
+| `src/state` | Redux store, slices and selectors |
+| `src/styles` | Page and base style modules |
+| `src/app/router` | Route, guard and keep-alive outlet structure |
+
+## Backend connection
+
+In the development environment, frontend API calls target the
+`http://localhost:8000` backend. The `api_base_url` default in the settings
+service is also this value.
