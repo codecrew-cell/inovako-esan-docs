@@ -5,7 +5,9 @@ description: "Ekran bazli kullanici akisi ve gercek uygulama gorselleri."
 
 # User Walkthrough
 
-Bu sayfa, son kullanicinin platform icinde izledigi ana akisi ekran sirasina gore anlatir. Amac; yeni ekip uyelerinin hangi ekranda ne yapildigini hizli kavramasi ve testlerde ayni sirayi takip edebilmesidir.
+Bu sayfa, son kullanicinin platform icinde izledigi ana akisi ekran sirasina gore anlatir. Amac; yeni ekip uyelerinin hangi ekranda ne yapildigini hizli kavramasi ve testlerde ayni sirayi takip etmesidir.
+
+Her adimda bir veya iki cumlelik baglam verildi. Boylece sayfa, sadece ekran listesi olmaktan cikip gercek kullanim sirasini anlatan bir rehbere donusur.
 
 ## Ekran sirasi
 
@@ -24,6 +26,8 @@ flowchart LR
 
 Kullanici sisteme giris yapar. Backend tarafinda kullanici ve rol bilgisi dogrulanir, frontend tarafinda oturum state'i olusturulur.
 
+Bu adimda ilk olarak kimlik dogrulama calisir, sonra da aktif oturum bilgisi backend ile eslestirilir.
+
 ![Login screen](/assets/screens/login.png)
 
 | Kontrol | Beklenen sonuc |
@@ -36,9 +40,15 @@ Kullanici sisteme giris yapar. Backend tarafinda kullanici ve rol bilgisi dogrul
 
 Run ekraninda kuyu goruntuleri ve model calistirma akisi yonetilir. Kullanici gorselleri yukler, model/parametre secimi yapar ve isleme surecini baslatir.
 
+Bu ekran, analiz baslamadan once en cok karar verilen yer oldugu icin en cok aciklama gerektiren bolumdur.
+
 ![Run overview](/assets/screens/run-overview.png)
 
+Run overview, kullanicinin calisacagi kuyu klasorunu dogruladigi ana yer.
+
 ![Run processing](/assets/screens/run-processing.png)
+
+Islem sirasinda progress durumunun nasil degistigini gosterir.
 
 ![Run results](/assets/screens/run-results.png)
 
@@ -53,13 +63,23 @@ Run ekraninda kuyu goruntuleri ve model calistirma akisi yonetilir. Kullanici go
 
 Validate ekrani detection kutularini kontrol etmek, eklemek, silmek ve tablo verisini duzeltmek icindir.
 
+Bu bolumde yapilan her degisiklik, son export sonucunu dogrudan etkiler.
+
 ![Validate screen](/assets/screens/validate.png)
+
+Klasor seciminden sonra dogrulamanin nasil tetiklendigini bu gorunumle takip etmek kolaydir.
 
 ![Run folder validation](/assets/screens/run-folder-validation.png)
 
+Canvas uzerindeki kutular, kullanicinin manuel duzeltme yaptigi ana alandir.
+
 ![Validate detections canvas](/assets/screens/validate-detections-canvas.png)
 
+Sinif degisikligi yapildiginda tablo ve renklerin ayni anda guncellendigini gosterir.
+
 ![Validate class change](/assets/screens/validate-class-change-new.png)
+
+Bir kutunun yeniden konumlandirilmasi ile sinif degisikligi arasindaki akisi anlatir.
 
 ![Validate box edit class flow](/assets/screens/validate-box-edit-class-change-flow.png)
 
@@ -73,6 +93,8 @@ Validate ekrani detection kutularini kontrol etmek, eklemek, silmek ve tablo ver
 ## Litoloji
 
 Litoloji akisi, onceki detection verilerinden hareketle litolojik siniflandirma ve manevra uretimi icin kullanilir.
+
+Bu kisimda model ciktilari ile kullanici duzenlemeleri bir araya gelir.
 
 ![Lithology editor 1](/assets/screens/lithology-1.png)
 
@@ -89,6 +111,8 @@ Litoloji akisi, onceki detection verilerinden hareketle litolojik siniflandirma 
 
 Export ekrani Validate, Mineral Validate ve Litoloji adimlarindan gelen sonuclari rapor formatina donusturur.
 
+Burada amac, veriyi sadece indirmek degil, raporun son halini dogrulamaktir.
+
 ![Export overview](/assets/screens/export-overview.png)
 
 ![Export classification](/assets/screens/export-classification.png)
@@ -104,6 +128,8 @@ Export ekrani Validate, Mineral Validate ve Litoloji adimlarindan gelen sonuclar
 ## Training Lab
 
 Training Lab; dataset inceleme, veri temizleme, egitim ve test akislari icin kullanilir.
+
+Bu bolum cok adimli oldugu icin goruntuler parcali sekilde sunuldu; her gorsel ayrica bir alt islemi temsil eder.
 
 ![Training Lab explorer](/assets/screens/training-lab-explorer.png)
 
@@ -131,11 +157,15 @@ Training Lab; dataset inceleme, veri temizleme, egitim ve test akislari icin kul
 
 Data Versioning ekraninda dataset ve model ciktilari versiyon bazli izlenir.
 
+Bu alan, dokumandaki diger tum veri baglamini takip etmek icin kullanilir.
+
 ![Data versioning](/assets/screens/data-versioning.png)
 
 ## Ayarlar ve kullanici yonetimi
 
 Operasyon ve yetki yonetimi icin ayarlar, kullanici yonetim paneli ve hata izleme ekranlari kullanilir.
+
+Bu son grup, sistemin nasil yonetildigini ve kimlerin hangi yetkiyle hareket ettigini gosteren arka plan ekranlarini toplar.
 
 ![Settings](/assets/screens/settings.png)
 

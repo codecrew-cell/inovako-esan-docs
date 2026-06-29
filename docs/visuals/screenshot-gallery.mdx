@@ -5,33 +5,63 @@ description: "Uygulama ekran goruntuleri ve dokumantasyon gorsel referansi."
 
 # Screenshot Gallery
 
-Bu galeri, dokumantasyonda kullanilan uygulama ekran goruntulerini tek sayfada toplar. Yeni bir ekran eklendiginde dosya `assets/screens/` altina ASCII isimle konulmali ve bu sayfaya kisa aciklama ile eklenmelidir.
+Bu galeri, dokumantasyonda kullanilan uygulama ekran goruntulerini tek sayfada toplar. Her gorselin altinda kisa bir baglam verildigi icin sayfa sadece bir resim duvari gibi durmaz; hangi ekranin neyi anlattigi hemen okunur.
+
+Yeni bir ekran eklendiginde dosya `assets/screens/` altina ASCII isimle konulmali ve bu sayfaya kisa aciklama ile eklenmelidir. Buyuk ekranlarda bile okunabilir kalmasi icin her bolumde bir aciklama satiri ve bir gorsel grubu kullanilir.
 
 ## Giris ve calistirma
 
+Login ve Run adimlari, kullanicinin platforma girisini ve ilk analiz akisini gosterir.
+
+Giris ekraninin temiz olmasi, sonraki tum akislari dogru session ile baglamak icin kritiktir.
+
 ![Login screen](/assets/screens/login.png)
+
+Run overview, kullanicinin calisacagi kuyu klasorunu ve temel calisma alanini gosterir.
 
 ![Run overview](/assets/screens/run-overview.png)
 
+Islem baslatildiktan sonra progress paneli bu gorunumle izlenir.
+
 ![Run processing](/assets/screens/run-processing.png)
+
+Analiz tamamlandiktan sonra elde edilen son gorunumu burada gorursun.
 
 ![Run results](/assets/screens/run-results.png)
 
+Validate ekranina gecmeden once detection listesinin ve tablo durumunun ilk gorunumu bu alandadir.
+
 ![Validate screen](/assets/screens/validate.png)
+
+Klasor secimi ve dosya dogrulama adimlarinin temiz bir veri akisi olusturdugu bu gorunumde acik sekilde belgelenir.
 
 ![Run folder validation](/assets/screens/run-folder-validation.png)
 
+Basarili bir calistirma sonrasi bir sonraki adima gecis noktasi burada gorulur.
+
 ![Run to Validate success](/assets/screens/run-to-validate-success.png)
+
+Canvas uzerinde detection kutularinin nasil hizalandigi bu goruntude gorulur.
 
 ![Validate detections canvas](/assets/screens/validate-detections-canvas.png)
 
+Sinif degisikligi yapildiginda kutu ve tablo durumunun nasil guncellendigi bu goruntude yer alir.
+
 ![Validate class change](/assets/screens/validate-class-change-new.png)
 
+Kutu duzenleme ile sinif degistirme akisi tek karede bu sekilde belgelenir.
+
 ![Validate box edit class flow](/assets/screens/validate-box-edit-class-change-flow.png)
+
+Uyari iceren manevra tablosu, operatorun kayda gecmeden once gordugu kontrollu hatayi gosterir.
 
 ![Validate warning maneuver table](/assets/screens/validate-warning-maneuver-table.png)
 
 ## Litoloji
+
+Litoloji bolumu, editor icindeki farkli gorunumleri ve katman duzenlemelerini belgeler.
+
+Bu bolumde model ciktilari ile kullanici duzenlemeleri bir araya gelir.
 
 ![Lithology editor 1](/assets/screens/lithology-1.png)
 
@@ -41,50 +71,100 @@ Bu galeri, dokumantasyonda kullanilan uygulama ekran goruntulerini tek sayfada t
 
 ## Export
 
+Export bolumu, rapor ve ZIP ciktisinin farkli bilesenlerini ayri ayri gosterir.
+
+Siniflandirma export ekraninin kart duzeni.
+
 ![Export overview](/assets/screens/export-overview.png)
+
+Export classification, raporun hangi siniflardan olustugunu ve hangi alanlarin kontrol edilmesi gerektigini gosterir.
 
 ![Export classification](/assets/screens/export-classification.png)
 
+Manevra export alaninin detayli gorunumu.
+
 ![Export maneuvers](/assets/screens/export-maneuvers.png)
+
+Renk degisimleri export edilmeden onceki kontrol ekranidir.
 
 ![Export color changes](/assets/screens/export-color-changes.png)
 
+Manevra renklerinin export edilme sekli.
+
 ![Export maneuver colors](/assets/screens/export-maneuver-colors.png)
 
+Geoteknik manevra tablosu, detayli satir bilgisini ortaya koyar.
+
 ![Export geotechnical maneuver table](/assets/screens/export-geotechnical-maneuver-table.png)
+
+Litolojik manevra tablosunun final gorunumu.
 
 ![Export lithological maneuver table](/assets/screens/export-lithological-maneuver-table.png)
 
 ## Training Lab
 
+Training Lab ekranlari, veri hazirlama ve model denemesi surecini daha parcali olarak gostermek icin gruplandirildi.
+
+Explorer gorunumu, datasetin ilk kez incelendigi ve feature uzayinin hazirlandigi ana noktadir.
+
 ![Training Lab explorer](/assets/screens/training-lab-explorer.png)
+
+Data Cleanout, egitim verisini filtreleme ve duzeltme noktasidir.
 
 ![Training Lab data cleanout](/assets/screens/training-lab-data-cleanout.png)
 
+Egitim asamasinin ana kontrol ekrani.
+
 ![Training Lab train](/assets/screens/training-lab-train.png)
+
+Test akisi, secili modelin dogrudan dogrulanmasi icin kullanilir.
 
 ![Training Lab test](/assets/screens/training-lab-test.png)
 
+Explorer'in yeni akisi, cluster ve lasso temelli islem adimlarini daha detayli anlatir.
+
 ![Training Lab explorer new](/assets/screens/training-lab-explorer-new.png)
+
+Yeni Data Cleanout gorunumu, tile versiyonlama baglamini gosterir.
 
 ![Training Lab data cleanout new](/assets/screens/training-lab-data-cleanout-new.png)
 
+Model egitimi sirasinda beklenen ilerleme paneli.
+
 ![Training Lab model train new](/assets/screens/training-lab-model-train-new.png)
+
+Model test ekraninin daha yeni gorunumu.
 
 ![Training Lab model test new](/assets/screens/training-lab-model-test-new.png)
 
+Uzun calisan embedding veya egitim islemlerinde progress state bu gorunumle izlenir.
+
 ![Training Lab progress state](/assets/screens/training-lab-progress-state-new.png)
 
+Unsupervised clustering manager, sinif agirliklarini ve toplu islemleri tek yerde toplar.
+
 ![Training Lab clustering manager](/assets/screens/training-lab-clustering-manager.png)
+
+Dimensional projection map, UMAP/embedding dagilimini bir bakista gosteren ana gorunumdur.
 
 ![Training Lab dimensional projection map](/assets/screens/training-lab-dimensional-projection-map.png)
 
 ## Veri, ayarlar ve operasyon
 
+Bu bolum, sistemin arka plan yonetimini ve kayitlarin nerede tutuldugunu gosterir.
+
+Data versioning ekraninda dataset ve model ciktilari versiyon bazli izlenir.
+
 ![Data versioning](/assets/screens/data-versioning.png)
+
+Admin ayarlari ve sistem konfigurasyonu bu gorunumde belgelenir.
 
 ![Settings](/assets/screens/settings.png)
 
+Kullanici ve rol yonetimi icin ayrilan ekran.
+
 ![User management](/assets/screens/user-management.png)
+
+Hata izleme paneli, operasyon sirasinda tespit edilen problemleri toplar.
 
 ![Error tracking](/assets/screens/error-tracking.png)
