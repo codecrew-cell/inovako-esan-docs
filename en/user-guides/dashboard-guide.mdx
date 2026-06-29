@@ -55,6 +55,39 @@ respond, the screen opens with safe default values.
 | `timeline_items` | Recent operational events. |
 | `map_sites` | Location cards and site map data. |
 
+## Screen panels
+
+The Dashboard is not a job-launch screen; it is for monitoring and summarizing the
+overall operation status. It answers "what is happening in the system right now?".
+All data is loaded in real time via `GET /dashboard/stats`.
+
+<CardGroup cols={2}>
+  <Card title="Hero area" icon="layout-panel-top">
+    System Status (Online/Offline), a personalized greeting, the active site, the total core length processed during the day, and the Shift Date.
+  </Card>
+  <Card title="KPI cards" icon="gauge">
+    Total Analyzed, Avg Core Recovery, Detected Features and Active Models metrics.
+  </Card>
+  <Card title="Drilling Progress Map" icon="map">
+    Summary view of site and drillhole points (active/completed/planned); "View Full Map" for detail.
+  </Card>
+  <Card title="Recent Core Scans" icon="table">
+    Recently uploaded/processed core records: File Name, Depth, Status and a VIEW action.
+  </Card>
+  <Card title="AI Model Health" icon="activity">
+    AI Confidence (%) and System Load (%) — shown with progress bars.
+  </Card>
+  <Card title="Live Feed" icon="rss">
+    Recent events in chronological order: time, title, description and event type (normal/warning).
+  </Card>
+</CardGroup>
+
+<Note>
+  The Dashboard is monitoring/assessment-focused, not for launching jobs. For the
+  definitive project record, rely on the outputs and export files from the relevant
+  analysis screen.
+</Note>
+
 ## Location behavior
 
 <Tip>

@@ -80,6 +80,39 @@ Lithology and Export flows do not work properly until this screen is completed.
   </Step>
 </Steps>
 
+## File naming convention
+
+For a correct and stable flow on the Run screen, file names must follow a standard
+format. The system derives the ordering from the BOX and metre-range info in the
+file name.
+
+```text
+<Hole_ID>_BOX<boxNo>&<partNo>_<StartMetre>-<EndMetre>.<ext>
+```
+
+Example files:
+
+```text
+OZD-219_BOX01&02_0.00-7.00.jpeg
+OZD-219_BOX03&04_7.00-12.00.jpeg
+OZD-219_BOX05&06_12.00-20.30.jpeg
+OZD-219_BOX07&08_20.30-28.50.jpeg
+```
+
+The system reads the following from these names:
+
+| Part | Example | Meaning |
+| --- | --- | --- |
+| Hole_ID | `OZD-219` | Drillhole/well code |
+| BOX range | `BOX01&02` | Box range the image covers |
+| Metre range | `0.00-7.00` | Depth range of the image |
+
+<Note>
+  Images are processed not in upload order but in **ascending order** based on the
+  box/metre info in the file name:
+  `0.00-7.00 -> 7.00-12.00 -> 12.00-20.30 -> 20.30-28.50`.
+</Note>
+
 ## Model selection
 
 The Run screen fetches the model lists from the backend.

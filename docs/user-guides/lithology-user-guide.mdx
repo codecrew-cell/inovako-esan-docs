@@ -13,6 +13,47 @@ incelemek ve duzenlemek icin kullanilir. Sistem hem entegre API router uzerinden
   ![Lithology editor](/assets/screens/lithology-1.png)
 </Frame>
 
+## Patch tabanli segmentasyon
+
+Karot gorseli, secilen litoloji modeline gore kucuk karelere (**patch**) ayrilir.
+Her patch belirli bir litolojik sinifa atanir; boylece karot boyunca mineral
+dagilimi detayli incelenebilir. Sag panelden **Processed** gorunumu ile
+segmentasyon maskesi arasinda gecis yaparak sonuclar gorsel olarak karsilastirilir.
+
+### Uclu sinif tahmini
+
+Model her segment icin tek bir sonuc degil, olasilik sirasina gore uc tahmin sunar:
+
+<CardGroup cols={3}>
+  <Card title="Primary Class" icon="circle-1">
+    Modelin o segment icin en olasi sinifi.
+  </Card>
+  <Card title="Secondary Class" icon="circle-2">
+    Ikinci en olasi alternatif sinif.
+  </Card>
+  <Card title="Third Class" icon="circle-3">
+    Ucuncu alternatif sinif.
+  </Card>
+</CardGroup>
+
+Bu yapi, benzer litolojik siniflar arasinda karar verirken kullaniciya referans
+saglar. Secili segmentin sinifi sag paneldeki **Class Name** alanindan manuel
+degistirilebilir; degisiklik export'taki litolojik sonuca yansir.
+
+### Proje litoloji siniflari
+
+Alt bolumde projeye ozel litolojik siniflar listelenir ve gorunurluk acisindan
+filtrelenebilir (Select All / Deselect All veya tek tek). Ornek siniflar:
+
+```text
+AND_PORFIRI, FDC, HFL, MRB, QDC, QFDC, SED-CNG, Non-MaficGrayAndesite
+```
+
+<Tip>
+  Bir sinif kapatildiginda o sinifa ait patch'ler gorselden gizlenir; bu, karmasik
+  goruntulerde belirli siniflara odaklanmayi kolaylastirir.
+</Tip>
+
 ## Adim adim akis
 
 <Steps>

@@ -43,6 +43,72 @@ Lithology ve Export ciktisini dogrudan etkiler.
 | Header navigation | Onceki/sonraki goruntu ve sayfa gecislerini yonetir. |
 | Canvas tools | Kutu secme, duzenleme, silme ve goruntu tipi secimi saglar. |
 
+## Temel kavramlar
+
+| Kavram | Aciklama |
+| --- | --- |
+| Karot (Core) | Sondaj sirasinda yer altindan silindirik cikarilan kaya ornekleri. Tum gorseller bunlara aittir. |
+| Takoz (Spacer) | Karot kutularinda derinlik araligini gosteren isaretleyici; uzerinde metre bilgisi (or. 12.30-13.50) bulunur ve referans noktasi olarak kullanilir. |
+| Solid Core | Butunlugu bozulmamis, silindirik formunu koruyan saglam karot; yuksek kaliteli kaya yapisi. |
+| Broken Core | Parcalanmis/kirilmis karot; orta seviye yapisal zayiflik. |
+| Fault Zone | Ezilmis, ufalanmis veya dagilmis kaya bolgesi; en zayif ve problemli zonlar. |
+| Fracture (Derin catlak) | Karot boyunca belirgin, derin kirik. Eski ad `Fracture_A`. |
+| Joint (Hafif catlak) | Yuzeysel/kucuk catlak. Eski ad `Fracture_B`. |
+
+## Canvas renk legendi
+
+Fotograf uzerindeki renkli kutular farkli yapilari temsil eder:
+
+| Renk | Yapi |
+| --- | --- |
+| Mavi | Solid Core (saglam karot) |
+| Turuncu | Broken Core (kirik karot) |
+| Mor | Fault Zone (fay zonu) |
+| Magenta | Fracture (derin catlak) |
+| Cyan | Joint (yuzeysel catlak) |
+| Yesil | Spacer / Takoz (yaninda siyah arka planli, beyaz yazili OCR derinlik etiketi) |
+
+## Canvas etkilesimleri
+
+<AccordionGroup>
+  <Accordion title="Zoom / Pan" icon="move">
+    Fare tekerlegi ile imlec merkezli yakinlasma/uzaklasma; sol tik surukleme ile kaydirma (imlec "grab" olur). Sag altta zoom in/out/reset ve mevcut zoom yuzdesi.
+  </Accordion>
+  <Accordion title="Kutu secme ve boyutlandirma" icon="pen-line">
+    Secilen kutu vurgulanir; takoz degilse sag/sol tutamaclar belirir. Yalnizca **yatay** boyutlandirma yapilir; yukseklik ve dikey konum sabittir. Kutu seciliyken pan devre disi kalir ve "Pan Kilitli" uyarisi gorunur.
+  </Accordion>
+  <Accordion title="Original / Processed mod" icon="images">
+    Sag panelden ham goruntu (Original) ile modelin isledigi versiyon (Processed) arasinda gecis. Kutular her iki modda da ayni kalir, sadece arka plan degisir.
+  </Accordion>
+  <Accordion title="OCR derinlik duzenleme" icon="text-cursor-input">
+    Takozun yanindaki siyah OCR etiketine cift tiklayarak deger duzenlenir; Enter ile kaydedilir, Escape ile iptal edilir. Derinlik degisikligi ilgili manevra satirlarini yeniden hesaplatir.
+  </Accordion>
+  <Accordion title="Yeni kutu ekleme" icon="plus">
+    Sag paneldeki "+" ile kutu ekleme modu acilir; imlec crosshair olur. Fotograf uzerinde tiklayip surukleyerek (kirmizi kesik cizgili alan) yeni kutu cizilir. Sol taraftaki sinif secici yeni kutunun sinifini belirler; cop kutusu butonu secili kutuyu siler.
+  </Accordion>
+</AccordionGroup>
+
+## Level filtreleri
+
+Sag panelde manevralar onem seviyesine gore filtrelenir. En az bir seviye aktif
+kalmalidir; bir seviyede manevra yoksa o seviye secilemez.
+
+<CardGroup cols={3}>
+  <Card title="Level 1" icon="circle-check">
+    Sorunsuz manevralar.
+  </Card>
+  <Card title="Level 2" icon="circle-alert">
+    Belirli kosullara sahip orta seviye durumlar.
+  </Card>
+  <Card title="Level 3" icon="octagon-alert">
+    Ciddi hatalar; oncelikli incelenmeli.
+  </Card>
+</CardGroup>
+
+Manevra karti, secili manevranin sirasini (renkli rozet), sorun tipini, derinlik
+araligini ve toplam icindeki konumu (progress bar) gosterir. Ok butonlariyla
+yalnizca aktif filtreye uyan manevralar arasinda gezinilir.
+
 ## Adim adim akis
 
 <Steps>

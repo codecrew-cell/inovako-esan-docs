@@ -28,6 +28,66 @@ Lithology and Training Lab flows.
 | Lithology | Lithology class colors, opacity, minimum region area, zoom and sliding window. |
 | Validate / Canvas | Detection box colors, default class visibility and canvas parameters. |
 
+## Algorithm parameters (color segmentation)
+
+Settings globally manages the color-based segmentation and classification behavior.
+The values here directly affect the color-focused results in Validate, Lithology and
+Export.
+
+### Left panel — Algorithm Parameters
+
+| Parameter | Range | Effect |
+| --- | --- | --- |
+| Threshold (Euclidean) | 20–255 | Color difference sensitivity. Higher → tends to group different colors together (more tolerant); lower → more sensitive, more fragmented. |
+| Slice Thickness | 50–200 px | Segment height. Higher → wide areas as a single segment; lower → thinner, more detailed separation. |
+| Consistency Steps (k) | — | Noise reduction: how many neighbor slices to check before accepting a change. |
+| Divider Height | 3–10 px | The gap/divider thickness between segments. |
+
+### How Consistency Steps (k) works
+
+The system checks the difference between two consecutive slices; if the difference
+exceeds the threshold, it is a "change candidate".
+
+<AccordionGroup>
+  <Accordion title="k = 0" icon="zap">
+    The change is accepted directly — most sensitive but open to noise.
+  </Accordion>
+  <Accordion title="k > 0" icon="shield-check">
+    The system looks at more distant neighbor slices. If the change appears in only one slice and does not continue around it, it is treated as noise and eliminated.
+  </Accordion>
+</AccordionGroup>
+
+```text
+Example sequence:  A - A - B - A - A
+k = 0  ->  B is accepted as a change
+k = 1  ->  since the surroundings are A again, B is treated as noise and ignored
+```
+
+<Tip>
+  Small k → more sensitive, catches more changes. Large k → more stable, but may miss short real changes.
+</Tip>
+
+### Right panel — Visual Signature
+
+| Parameter | Range | Effect |
+| --- | --- | --- |
+| Active Palette Size | 2–54 | Total number of color classes used in analysis. |
+| Top Dominant Filter | ≤ palette size | Number of dominant colors to surface (Export main-color summaries). |
+| Inference Palette | — | The palette is edited manually via color boxes; each box is the model's real color representation. |
+| Selected Color | — | The RGB value of the selected color (for technical verification). |
+
+### Saving: Reset vs Synchronize
+
+<Warning>
+  Changes on this page are **not saved automatically**; you must press
+  **Synchronize**. Numeric values cannot go out of range (auto-clamped).
+  **Reset Defaults** returns to the last configuration saved on the backend, not to
+  factory defaults. After Synchronize, `Last Global Sync` is updated.
+</Warning>
+
+Recommended flow: Threshold + Slice Thickness → Consistency Steps (k) → Palette Size
++ Top Dominant → (if needed) palette colors → Synchronize → verify in Validate/Export.
+
 ## Backend behavior
 
 The Settings API is served under the `/settings` prefix in `Api/settings_service/router.py`.

@@ -28,6 +28,66 @@ akisini etkiler.
 | Lithology | Litoloji sinif renkleri, opacity, minimum bolge alani, zoom ve sliding window. |
 | Validate / Canvas | Detection kutu renkleri, default class visibility ve canvas parametreleri. |
 
+## Algoritma parametreleri (renk segmentasyonu)
+
+Settings, renk bazli segmentasyon ve siniflandirma davranisini global yonetir.
+Buradaki degerler Validate, Lithology ve Export'taki renk odakli sonuclara dogrudan
+yansir.
+
+### Sol panel — Algorithm Parameters
+
+| Parametre | Aralik | Etki |
+| --- | --- | --- |
+| Threshold (Euclidean) | 20–255 | Renk farki hassasiyeti. Yuksek deger → farkli renkleri ayni grupta toplama egilimi artar (daha toleransli); dusuk → daha hassas, daha parcali. |
+| Slice Thickness | 50–200 px | Segment yuksekligi. Yuksek → genis alanlar tek segment; dusuk → daha ince, detayli ayrim. |
+| Consistency Steps (k) | — | Gurultu azaltma: bir degisimi kabul etmeden once kac komsu dilime bakilacagi. |
+| Divider Height | 3–10 px | Segmentler arasi ayrac/bosluk kalinligi. |
+
+### Consistency Steps (k) nasil calisir?
+
+Sistem iki ardisik dilim arasindaki farki kontrol eder; fark threshold'dan buyukse
+bu bir "degisim adayi"dir.
+
+<AccordionGroup>
+  <Accordion title="k = 0" icon="zap">
+    Degisim dogrudan kabul edilir — en hassas ama gurultuye acik.
+  </Accordion>
+  <Accordion title="k > 0" icon="shield-check">
+    Sistem daha uzak komsu dilimlere bakar. Degisim sadece tek dilimde gorulup cevresinde devam etmiyorsa gurultu sayilip elenir.
+  </Accordion>
+</AccordionGroup>
+
+```text
+Ornek dizi:  A - A - B - A - A
+k = 0  ->  B bir degisim olarak kabul edilir
+k = 1  ->  cevresi tekrar A oldugu icin B parazit sayilir ve yok sayilir
+```
+
+<Tip>
+  Kucuk k → daha hassas, daha fazla degisim yakalar. Buyuk k → daha stabil, ancak kisa gercek degisimleri kacirabilir.
+</Tip>
+
+### Sag panel — Visual Signature
+
+| Parametre | Aralik | Etki |
+| --- | --- | --- |
+| Active Palette Size | 2–54 | Analizde kullanilacak toplam renk sinifi sayisi. |
+| Top Dominant Filter | ≤ palette size | One cikarilacak baskin renk sayisi (Export ana renk ozetleri). |
+| Inference Palette | — | Renk kutulari uzerinden palet manuel duzenlenir; her kutu modelin gercek renk temsilidir. |
+| Selected Color | — | Secilen rengin RGB degeri (teknik dogrulama icin). |
+
+### Kaydetme: Reset vs Synchronize
+
+<Warning>
+  Bu sayfadaki degisiklikler **otomatik kaydedilmez**; mutlaka **Synchronize**
+  butonuna basilmalidir. Sayisal degerler sinir disina cikamaz (otomatik clamp
+  edilir). **Reset Defaults**, fabrika ayarina degil, backend'de kayitli son
+  konfigurasyona doner. Synchronize sonrasi `Last Global Sync` guncellenir.
+</Warning>
+
+Onerilen akis: Threshold + Slice Thickness → Consistency Steps (k) → Palette Size +
+Top Dominant → (gerekirse) palet renkleri → Synchronize → Validate/Export'ta kontrol.
+
 ## Backend davranisi
 
 Settings API'si `Api/settings_service/router.py` icinde `/settings` prefix'i ile sunulur.

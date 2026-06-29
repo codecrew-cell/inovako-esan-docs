@@ -43,6 +43,72 @@ Lithology and Export output.
 | Header navigation | Manages previous/next image and page transitions. |
 | Canvas tools | Box selection, editing, deletion and image type selection. |
 
+## Core concepts
+
+| Concept | Description |
+| --- | --- |
+| Core (Karot) | Cylindrical rock samples extracted underground during drilling. All images belong to these. |
+| Spacer (Takoz) | A marker showing the depth range in core boxes; carries metre info (e.g. 12.30-13.50) and is used as a reference point. |
+| Solid Core | Intact core keeping its cylindrical form; high-quality rock structure. |
+| Broken Core | Fragmented/broken core; medium structural weakness. |
+| Fault Zone | Crushed, disintegrated rock zone; the weakest and most problematic zones. |
+| Fracture (major) | A prominent, deep break along the core. Old name `Fracture_A`. |
+| Joint (minor) | A surface/small crack. Old name `Fracture_B`. |
+
+## Canvas color legend
+
+The colored boxes on the photo represent different structures:
+
+| Color | Structure |
+| --- | --- |
+| Blue | Solid Core |
+| Orange | Broken Core |
+| Purple | Fault Zone |
+| Magenta | Fracture |
+| Cyan | Joint |
+| Green | Spacer (with a black-background, white-text OCR depth label) |
+
+## Canvas interactions
+
+<AccordionGroup>
+  <Accordion title="Zoom / Pan" icon="move">
+    Mouse wheel zooms in/out centered on the cursor; left-click drag pans (cursor becomes "grab"). Zoom in/out/reset and the current zoom percentage are at the bottom right.
+  </Accordion>
+  <Accordion title="Box selection and resizing" icon="pen-line">
+    The selected box is highlighted; if it is not a spacer, left/right handles appear. Only **horizontal** resizing is possible; height and vertical position are fixed. While a box is selected, pan is disabled and a "Pan Locked" warning appears.
+  </Accordion>
+  <Accordion title="Original / Processed mode" icon="images">
+    Switch between the raw image (Original) and the model-processed version (Processed) from the right panel. The boxes stay the same in both modes; only the background changes.
+  </Accordion>
+  <Accordion title="OCR depth editing" icon="text-cursor-input">
+    Double-click the black OCR label next to a spacer to edit the value; Enter saves, Escape cancels. A depth change re-computes the related maneuver rows.
+  </Accordion>
+  <Accordion title="Adding a new box" icon="plus">
+    The "+" in the right panel opens box-add mode; the cursor becomes a crosshair. Click and drag on the photo (a red dashed area) to draw a new box. The class selector on the left sets the new box's class; the trash button deletes the selected box.
+  </Accordion>
+</AccordionGroup>
+
+## Level filters
+
+In the right panel, maneuvers are filtered by severity level. At least one level
+must stay active; if a level has no maneuvers it cannot be selected.
+
+<CardGroup cols={3}>
+  <Card title="Level 1" icon="circle-check">
+    Problem-free maneuvers.
+  </Card>
+  <Card title="Level 2" icon="circle-alert">
+    Medium-level cases with certain conditions.
+  </Card>
+  <Card title="Level 3" icon="octagon-alert">
+    Serious errors; should be reviewed first.
+  </Card>
+</CardGroup>
+
+The maneuver card shows the selected maneuver's order (colored badge), the problem
+type, the depth range and its position within the total (progress bar). The arrow
+buttons navigate only among maneuvers matching the active filter.
+
 ## Step by step
 
 <Steps>

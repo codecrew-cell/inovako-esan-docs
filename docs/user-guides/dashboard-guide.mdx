@@ -54,6 +54,38 @@ veremezse ekran guvenli varsayilan degerlerle acilir.
 | `timeline_items` | Son operasyon hareketleri. |
 | `map_sites` | Lokasyon kartlari ve saha harita verisi. |
 
+## Ekran panelleri
+
+Dashboard bir is baslatma ekrani degil; operasyonun genel durumunu izlemek ve
+ozetlemek icindir. "Su an sistemde ne oluyor?" sorusuna anlik cevap verir. Tum
+veriler `GET /dashboard/stats` ile gercek zamanli yuklenir.
+
+<CardGroup cols={2}>
+  <Card title="Hero alani" icon="layout-panel-top">
+    System Status (Online/Offline), kullaniciya ozel karsilama, aktif saha (Active Site), gun ici toplam karot uzunlugu ve Shift Date.
+  </Card>
+  <Card title="KPI kartlari" icon="gauge">
+    Total Analyzed, Avg Core Recovery, Detected Features ve Active Models metrikleri.
+  </Card>
+  <Card title="Drilling Progress Map" icon="map">
+    Saha ve sondaj noktalarinin (aktif/tamamlanmis/planli) ozet gorunumu; "View Full Map" ile detay.
+  </Card>
+  <Card title="Recent Core Scans" icon="table">
+    Son yuklenen/islenen karot kayitlari: File Name, Depth, Status ve VIEW aksiyonu.
+  </Card>
+  <Card title="AI Model Health" icon="activity">
+    AI Confidence (%) ve System Load (%) — progress bar ile gosterilir.
+  </Card>
+  <Card title="Live Feed" icon="rss">
+    Son olaylar kronolojik sirayla: saat, baslik, aciklama ve olay tipi (normal/uyari).
+  </Card>
+</CardGroup>
+
+<Note>
+  Dashboard izleme/degerlendirme odaklidir, baslatma degil. Kesin proje kaydi icin
+  ilgili analiz ekranindaki ciktilar ve export dosyalari esas alinmalidir.
+</Note>
+
 ## Konum bilgisi
 
 <Tip>

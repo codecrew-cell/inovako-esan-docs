@@ -12,6 +12,48 @@ standalone editor's `/api/*` API during development.
   ![Lithology editor](/assets/screens/lithology-1.png)
 </Frame>
 
+## Patch-based segmentation
+
+The core image is split into small squares (**patches**) according to the selected
+lithology model. Each patch is assigned a lithology class, so the mineral
+distribution along the core can be examined in detail. From the right panel, switch
+between the **Processed** view and the segmentation mask to compare results visually.
+
+### Three-class prediction
+
+For each segment, the model offers not a single result but three predictions in
+order of probability:
+
+<CardGroup cols={3}>
+  <Card title="Primary Class" icon="circle-1">
+    The model's most likely class for that segment.
+  </Card>
+  <Card title="Secondary Class" icon="circle-2">
+    The second most likely alternative class.
+  </Card>
+  <Card title="Third Class" icon="circle-3">
+    The third alternative class.
+  </Card>
+</CardGroup>
+
+This structure gives the user a reference when deciding between similar lithology
+classes. The selected segment's class can be changed manually from the **Class Name**
+field in the right panel; the change is reflected in the lithology output for export.
+
+### Project lithology classes
+
+The bottom section lists the project-specific lithology classes and lets you filter
+their visibility (Select All / Deselect All or individually). Example classes:
+
+```text
+AND_PORFIRI, FDC, HFL, MRB, QDC, QFDC, SED-CNG, Non-MaficGrayAndesite
+```
+
+<Tip>
+  When a class is turned off, its patches are hidden from the image; this makes it
+  easier to focus on specific classes in complex images.
+</Tip>
+
 ## Step by step
 
 <Steps>

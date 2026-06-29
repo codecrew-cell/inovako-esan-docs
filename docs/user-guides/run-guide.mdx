@@ -81,6 +81,39 @@ ve Export akislari saglikli calismaz.
   </Step>
 </Steps>
 
+## Dosya adlandirma kurali
+
+Run ekraninda dogru ve stabil bir akis icin dosya adlarinin standart formatta
+olmasi gerekir. Sistem siralamayi dosya adindaki BOX ve metre araligi bilgisinden
+cikarir.
+
+```text
+<Hole_ID>_BOX<kutuNo>&<parcaNo>_<BaslangicMetre>-<BitisMetre>.<uzanti>
+```
+
+Ornek dosyalar:
+
+```text
+OZD-219_BOX01&02_0.00-7.00.jpeg
+OZD-219_BOX03&04_7.00-12.00.jpeg
+OZD-219_BOX05&06_12.00-20.30.jpeg
+OZD-219_BOX07&08_20.30-28.50.jpeg
+```
+
+Sistem bu adlardan sunlari okur:
+
+| Parca | Ornek | Anlami |
+| --- | --- | --- |
+| Hole_ID | `OZD-219` | Sondaj/kuyu kodu |
+| BOX araligi | `BOX01&02` | Gorselin kapsadigi kutu araligi |
+| Metre araligi | `0.00-7.00` | Gorselin derinlik araligi |
+
+<Note>
+  Gorseller yukleme sirasina gore degil, dosya adindaki kutu/metre bilgisine gore
+  **artan sirada** islenir:
+  `0.00-7.00 -> 7.00-12.00 -> 12.00-20.30 -> 20.30-28.50`.
+</Note>
+
 ## Model secimi
 
 Run ekrani model listelerini backend'den alir.
