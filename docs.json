@@ -1,221 +1,209 @@
 {
-    "$schema":  "https://mintlify.com/docs.json",
-    "theme":  "mint",
-    "name":  "INOVAKO ESAN",
-    "description":  "Karot goruntu analizi, litoloji siniflandirma, egitim laboratuvari ve veri versiyonlama platformu icin teknik dokumantasyon.",
-    "colors":  {
-                   "primary":  "#116D6E",
-                   "light":  "#DDF7F1",
-                   "dark":  "#0B3E45"
-               },
-    "navigation":  {
-                       "groups":  [
-                                      {
-                                          "group":  "Baslangic",
-                                          "icon":  "rocket",
-                                          "pages":  [
-                                                        "tr",
-                                                        "index",
-                                                        "docs/getting-started/local-development",
-                                                        "docs/getting-started/project-map"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Klavuzlar",
-                                          "icon":  "book-marked",
-                                          "pages":  [
-                                                        "docs/guides/developer-handoff",
-                                                        "docs/guides/operator-guide",
-                                                        "docs/guides/user-walkthrough",
-                                                        "docs/visuals/screenshot-gallery",
-                                                        "docs/guides/maintenance-checklist"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Ekran Kilavuzlari",
-                                          "icon":  "monitor",
-                                          "pages":  [
-                                                        "docs/user-guides/dashboard-guide",
-                                                        "docs/user-guides/run-guide",
-                                                        "docs/user-guides/validate-guide",
-                                                        "docs/user-guides/mineral-validate-guide",
-                                                        "docs/user-guides/export-guide",
-                                                        "docs/user-guides/lithology-user-guide",
-                                                        "docs/user-guides/training-lab-user-guide",
-                                                        "docs/user-guides/training-lab-model-management",
-                                                        "docs/user-guides/automl-guide",
-                                                        "docs/user-guides/settings-admin-guide",
-                                                        "docs/user-guides/user-management-admin-guide",
-                                                        "docs/user-guides/error-tracking-dev-guide",
-                                                        "docs/user-guides/performance-gantt-guide"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Mimari",
-                                          "icon":  "blocks",
-                                          "pages":  [
-                                                        "docs/architecture/system-overview",
-                                                        "docs/architecture/backend-runtime",
-                                                        "docs/architecture/frontend-runtime",
-                                                        "docs/visuals/architecture-diagrams"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Is Akislari",
-                                          "icon":  "workflow",
-                                          "pages":  [
-                                                        "docs/workflows/geotechnical-analysis",
-                                                        "docs/workflows/lithology-analysis",
-                                                        "docs/workflows/training-lab",
-                                                        "docs/workflows/data-versioning"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "API",
-                                          "icon":  "square-terminal",
-                                          "pages":  [
-                                                        "docs/api/backend-api",
-                                                        "docs/api/request-response-examples",
-                                                        "docs/api/lithology-api",
-                                                        "docs/api/training-lab-api",
-                                                        "docs/api/data-platform-api",
-                                                        "docs/api/settings-users-api",
-                                                        "docs/api/dev-error-api",
-                                                        "docs/api/diagnostics-api",
-                                                        "docs/api/legacy-root-api"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "API Reference",
-                                          "icon":  "braces",
-                                          "openapi":  "openapi.json"
-                                      },
-                                      {
-                                          "group":  "Modeller",
-                                          "icon":  "brain-circuit",
-                                          "pages":  [
-                                                        "docs/models/model-inventory",
-                                                        "docs/models/model-pipeline"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Veri ve DB",
-                                          "icon":  "database",
-                                          "pages":  [
-                                                        "docs/data/database-schema",
-                                                        "docs/data/storage-and-files",
-                                                        "docs/data/data-versioning-admin-operations"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Guvenlik",
-                                          "icon":  "shield-check",
-                                          "pages":  [
-                                                        "docs/security/auth-and-roles",
-                                                        "docs/privacy/data-privacy"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Test",
-                                          "icon":  "test-tube",
-                                          "pages":  [
-                                                        "docs/testing/test-strategy"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Deployment",
-                                          "icon":  "cloud-upload",
-                                          "pages":  [
-                                                        "docs/deployment/deployment-guide",
-                                                        "docs/deployment/mintlify-publishing"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Operasyon",
-                                          "icon":  "wrench",
-                                          "pages":  [
-                                                        "docs/operations/configuration",
-                                                        "docs/operations/troubleshooting",
-                                                        "docs/operations/session-and-recovery",
-                                                        "docs/operations/release-process",
-                                                        "docs/operations/mintlify"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Referans",
-                                          "icon":  "book-open",
-                                          "pages":  [
-                                                        "docs/reference/existing-guides",
-                                                        "docs/reference/output-files-reference"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Start",
-                                          "icon":  "rocket",
-                                          "pages":  [
-                                                        "en",
-                                                        "en/getting-started/local-development",
-                                                        "en/getting-started/project-map"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Guides",
-                                          "icon":  "book-marked",
-                                          "pages":  [
-                                                        "en/guides/operator-guide",
-                                                        "en/guides/user-walkthrough"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Screen Guides",
-                                          "icon":  "monitor",
-                                          "pages":  [
-                                                        "en/user-guides/dashboard-guide",
-                                                        "en/user-guides/run-guide",
-                                                        "en/user-guides/validate-guide",
-                                                        "en/user-guides/training-lab-user-guide",
-                                                        "en/user-guides/lithology-user-guide"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "English API",
-                                          "icon":  "square-terminal",
-                                          "pages":  [
-                                                        "en/api/api-overview"
-                                                    ]
-                                      },
-                                      {
-                                          "group":  "Data and Operations",
-                                          "icon":  "database",
-                                          "pages":  [
-                                                        "en/data/data-versioning-admin-operations",
-                                                        "en/operations/session-and-recovery",
-                                                        "en/reference/output-files-reference"
-                                                    ]
-                                      }
-                                  ]
-                   },
-    "tabs":  [
-                 {
-                     "name":  "Turkce",
-                     "url":  "/tr"
-                 },
-                 {
-                     "name":  "English",
-                     "url":  "/en"
-                 }
-             ],
-    "primaryTab":  {
-                       "name":  "Turkce"
-                   },
-    "topbarLinks":  [
-                        {
-                            "name":  "Turkce",
-                            "url":  "/tr"
-                        },
-                        {
-                            "name":  "English",
-                            "url":  "/en"
-                        }
-                    ]
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "INOVAKO ESAN",
+    "description": "Karot goruntu analizi, litoloji siniflandirma, egitim laboratuvari ve veri versiyonlama platformu icin teknik dokumantasyon.",
+    "colors": {
+        "primary": "#116D6E",
+        "light": "#DDF7F1",
+        "dark": "#0B3E45"
+    },
+    "navigation": {
+        "languages": [
+            {
+                "language": "tr",
+                "default": true,
+                "groups": [
+                    {
+                        "group": "Baslangic",
+                        "icon": "rocket",
+                        "pages": [
+                            "tr",
+                            "index",
+                            "docs/getting-started/local-development",
+                            "docs/getting-started/project-map"
+                        ]
+                    },
+                    {
+                        "group": "Klavuzlar",
+                        "icon": "book-marked",
+                        "pages": [
+                            "docs/guides/developer-handoff",
+                            "docs/guides/operator-guide",
+                            "docs/guides/user-walkthrough",
+                            "docs/visuals/screenshot-gallery",
+                            "docs/guides/maintenance-checklist"
+                        ]
+                    },
+                    {
+                        "group": "Ekran Kilavuzlari",
+                        "icon": "monitor",
+                        "pages": [
+                            "docs/user-guides/dashboard-guide",
+                            "docs/user-guides/run-guide",
+                            "docs/user-guides/validate-guide",
+                            "docs/user-guides/mineral-validate-guide",
+                            "docs/user-guides/export-guide",
+                            "docs/user-guides/lithology-user-guide",
+                            "docs/user-guides/training-lab-user-guide",
+                            "docs/user-guides/training-lab-model-management",
+                            "docs/user-guides/automl-guide",
+                            "docs/user-guides/settings-admin-guide",
+                            "docs/user-guides/user-management-admin-guide",
+                            "docs/user-guides/error-tracking-dev-guide",
+                            "docs/user-guides/performance-gantt-guide"
+                        ]
+                    },
+                    {
+                        "group": "Mimari",
+                        "icon": "blocks",
+                        "pages": [
+                            "docs/architecture/system-overview",
+                            "docs/architecture/backend-runtime",
+                            "docs/architecture/frontend-runtime",
+                            "docs/visuals/architecture-diagrams"
+                        ]
+                    },
+                    {
+                        "group": "Is Akislari",
+                        "icon": "workflow",
+                        "pages": [
+                            "docs/workflows/geotechnical-analysis",
+                            "docs/workflows/lithology-analysis",
+                            "docs/workflows/training-lab",
+                            "docs/workflows/data-versioning"
+                        ]
+                    },
+                    {
+                        "group": "API",
+                        "icon": "square-terminal",
+                        "pages": [
+                            "docs/api/backend-api",
+                            "docs/api/request-response-examples",
+                            "docs/api/lithology-api",
+                            "docs/api/training-lab-api",
+                            "docs/api/data-platform-api",
+                            "docs/api/settings-users-api",
+                            "docs/api/dev-error-api",
+                            "docs/api/diagnostics-api",
+                            "docs/api/legacy-root-api"
+                        ]
+                    },
+                    {
+                        "group": "API Reference",
+                        "icon": "braces",
+                        "openapi": "openapi.json"
+                    },
+                    {
+                        "group": "Modeller",
+                        "icon": "brain-circuit",
+                        "pages": [
+                            "docs/models/model-inventory",
+                            "docs/models/model-pipeline"
+                        ]
+                    },
+                    {
+                        "group": "Veri ve DB",
+                        "icon": "database",
+                        "pages": [
+                            "docs/data/database-schema",
+                            "docs/data/storage-and-files",
+                            "docs/data/data-versioning-admin-operations"
+                        ]
+                    },
+                    {
+                        "group": "Guvenlik",
+                        "icon": "shield-check",
+                        "pages": [
+                            "docs/security/auth-and-roles",
+                            "docs/privacy/data-privacy"
+                        ]
+                    },
+                    {
+                        "group": "Test",
+                        "icon": "test-tube",
+                        "pages": [
+                            "docs/testing/test-strategy"
+                        ]
+                    },
+                    {
+                        "group": "Deployment",
+                        "icon": "cloud-upload",
+                        "pages": [
+                            "docs/deployment/deployment-guide",
+                            "docs/deployment/mintlify-publishing"
+                        ]
+                    },
+                    {
+                        "group": "Operasyon",
+                        "icon": "wrench",
+                        "pages": [
+                            "docs/operations/configuration",
+                            "docs/operations/troubleshooting",
+                            "docs/operations/session-and-recovery",
+                            "docs/operations/release-process",
+                            "docs/operations/mintlify"
+                        ]
+                    },
+                    {
+                        "group": "Referans",
+                        "icon": "book-open",
+                        "pages": [
+                            "docs/reference/existing-guides",
+                            "docs/reference/output-files-reference"
+                        ]
+                    }
+                ]
+            },
+            {
+                "language": "en",
+                "groups": [
+                    {
+                        "group": "Start",
+                        "icon": "rocket",
+                        "pages": [
+                            "en",
+                            "en/getting-started/local-development",
+                            "en/getting-started/project-map"
+                        ]
+                    },
+                    {
+                        "group": "Guides",
+                        "icon": "book-marked",
+                        "pages": [
+                            "en/guides/operator-guide",
+                            "en/guides/user-walkthrough"
+                        ]
+                    },
+                    {
+                        "group": "Screen Guides",
+                        "icon": "monitor",
+                        "pages": [
+                            "en/user-guides/dashboard-guide",
+                            "en/user-guides/run-guide",
+                            "en/user-guides/validate-guide",
+                            "en/user-guides/training-lab-user-guide",
+                            "en/user-guides/lithology-user-guide"
+                        ]
+                    },
+                    {
+                        "group": "English API",
+                        "icon": "square-terminal",
+                        "pages": [
+                            "en/api/api-overview"
+                        ]
+                    },
+                    {
+                        "group": "Data and Operations",
+                        "icon": "database",
+                        "pages": [
+                            "en/data/data-versioning-admin-operations",
+                            "en/operations/session-and-recovery",
+                            "en/reference/output-files-reference"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 }
