@@ -1,37 +1,135 @@
 ---
 title: "Run Screen Guide"
-description: "How to load data, select models, and start the image analysis pipeline."
+description: "How to load data, select models, start the analysis pipeline and check results."
+icon: "play"
 ---
 
-# Run Screen Guide
+Run is the main entry point for image analysis. It is where raw core images are
+loaded into the system and the main analysis job is started. The Validate,
+Lithology and Export flows do not work properly until this screen is completed.
 
-## Purpose
+<Info>
+  The user must have the `run` permission to access this screen.
+</Info>
 
-Run is the main entry point for image analysis. Operators load a folder, choose models, start processing, and then move to validation screens.
+<Frame caption="Run screen overview">
+  ![Run screen overview](/assets/screens/run-overview.png)
+</Frame>
 
-## Basic workflow
+## What it does
 
-1. Select or upload a core image folder.
-2. Confirm that the image list is visible.
-3. Select the required models.
-4. Start processing.
-5. Watch progress until completion.
-6. Continue to Validate.
+<CardGroup cols={2}>
+  <Card title="Load a dataset" icon="folder-open">
+    The images in the well folder are registered with the backend.
+  </Card>
+  <Card title="Validate file names" icon="spell-check">
+    Folder and file names are checked against the well/depth standard.
+  </Card>
+  <Card title="Select models" icon="layers">
+    The main YOLO model, spacer model and classification model are selected.
+  </Card>
+  <Card title="Analysis and progress" icon="activity">
+    Backend workers run the image, OCR, row and detection steps; status is tracked via `/progress/`.
+  </Card>
+</CardGroup>
 
-## Key controls
+## Prerequisites
 
-| Control | Purpose |
-| --- | --- |
-| Folder selection | Loads the source images for the active well/session. |
-| Model selectors | Choose detection, block, OCR, or classification models. |
-| Process button | Starts backend image processing. |
-| Progress panel | Shows current processing state. |
-| Navigation actions | Move to Validate or related screens after processing. |
+<Note>
+  - The backend must be running.
+  - The frontend `BASE_URL` must point to the correct backend address.
+  - Model files must be present under `Model/Model Files`.
+  - Folder/file names must match the expected well standard.
+</Note>
 
-## Common checks
+## Step by step
 
-- The folder contains the expected images.
-- Backend is running before processing starts.
-- Model files are available in the configured model directory.
-- Progress reaches completion before switching screens.
+<Steps>
+  <Step title="Select and validate the folder">
+    Select the well image folder. The system checks file names against the
+    well/depth standard; non-conforming names are shown as a warning before processing.
 
+    <Frame caption="Folder selection and file name validation">
+      ![Folder validation](/assets/screens/run-folder-validation.png)
+    </Frame>
+  </Step>
+  <Step title="Select model settings">
+    Select the main model, spacer model and classification model. The defaults from
+    Settings may be applied automatically; verify the model names before the operation.
+  </Step>
+  <Step title="Start processing and watch progress">
+    Start the process. Backend workers process the images and progress updates live.
+
+    <Frame caption="Processing / progress state">
+      ![Run processing](/assets/screens/run-processing.png)
+    </Frame>
+  </Step>
+  <Step title="Check the results">
+    When processing finishes, check the detection and row outputs in the preview.
+
+    <Frame caption="Run results">
+      ![Run results](/assets/screens/run-results.png)
+    </Frame>
+  </Step>
+  <Step title="Continue to Validate">
+    After the session is created, move to the Validate screen.
+
+    <Frame caption="Moving to Validate after a successful run">
+      ![Run to validate](/assets/screens/run-to-validate-success.png)
+    </Frame>
+  </Step>
+</Steps>
+
+## Model selection
+
+The Run screen fetches the model lists from the backend.
+
+| List | Endpoint | Note |
+| --- | --- | --- |
+| Main model | `GET /checkMainModelNames` | Segmentation/detection model. |
+| Spacer model | `GET /checkTakozModelNames` | Used for spacer detection. |
+| Classification model | `GET /checkClsModelNames` | Classification support model. |
+
+<Tip>
+  The default models selected on the Settings screen may be applied automatically on the Run screen. Verify the model name is correct before the operation.
+</Tip>
+
+## File validation
+
+| Check | Endpoint | If it fails |
+| --- | --- | --- |
+| Folder/file standard | `GET /validate_filenames/?folder_name=...` | An error is shown to the user before the folder is processed. |
+| Image list | `GET /get_images/{folder_name}` | If the image list is empty, processing should not be started. |
+| Static image access | `/static/uploaded_data/...` | If the thumbnail/preview fails to load, the path is checked. |
+
+## Success criteria
+
+<Check>The progress value advances and the backend returns no error.</Check>
+<Check>A session id is created.</Check>
+<Check>You can move to the Validate screen.</Check>
+<Check>The `get_maneuvers` and frame endpoints return data on the next screen.</Check>
+
+## Common errors
+
+<AccordionGroup>
+  <Accordion title="File name validation error" icon="triangle-alert">
+    **Likely cause:** The folder name and the image prefix do not match.
+
+    **Fix:** Correct the file names according to the well standard.
+  </Accordion>
+  <Accordion title="Model list is empty" icon="triangle-alert">
+    **Likely cause:** The model folders are missing or the backend cannot scan models.
+
+    **Fix:** Check `Model/Model Files` and the Settings model names.
+  </Accordion>
+  <Accordion title="Progress does not advance" icon="triangle-alert">
+    **Likely cause:** A backend worker is stuck or there is a GPU/CPU problem.
+
+    **Fix:** Check the backend logs and the Error Tracking screen.
+  </Accordion>
+  <Accordion title="Validate opens but has no data" icon="triangle-alert">
+    **Likely cause:** The session record was not completed.
+
+    **Fix:** Retry the run and check the backend response.
+  </Accordion>
+</AccordionGroup>

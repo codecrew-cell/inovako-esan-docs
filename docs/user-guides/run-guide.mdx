@@ -1,43 +1,85 @@
 ---
-title: "Run Guide"
+title: "Run Kilavuzu"
 description: "Karot goruntulerini yukleme, model secme, isleme baslatma ve sonuc kontrolu."
+icon: "play"
 ---
 
-# Run Guide
+Run ekrani, ham karot goruntulerinin sisteme alindigi ve ana analiz isinin
+baslatildigi ilk operasyon ekranidir. Bu ekran tamamlanmadan Validate, Lithology
+ve Export akislari saglikli calismaz.
 
-Run ekrani, ham karot goruntulerinin sisteme alindigi ve ana analiz isinin baslatildigi ilk operasyon ekranidir. Bu ekran tamamlanmadan Validate, Mineral Validate, Export ve Lithology akislari saglikli calismaz.
+<Info>
+  Bu ekrana erismek icin kullanicinin `run` yetkisi olmalidir.
+</Info>
 
-## Kullanici amaci
+<Frame caption="Run ekrani genel gorunum">
+  ![Run ekrani genel gorunum](/assets/screens/run-overview.png)
+</Frame>
 
-| Amac | Aciklama |
-| --- | --- |
-| Dataset yuklemek | Kuyu klasorundeki goruntuler backend'e tanitilir. |
-| Dosya adlarini dogrulamak | Klasor ve dosya isimleri kuyu/derinlik standardina gore kontrol edilir. |
-| Model secmek | Ana YOLO modeli, takoz modeli ve siniflandirma modeli secilir. |
-| Analizi baslatmak | Backend worker'lari goruntu, OCR, row ve detection adimlarini calistirir. |
-| Progress izlemek | Isleme durumu `/progress/` uzerinden takip edilir. |
+## Ne ise yarar?
+
+<CardGroup cols={2}>
+  <Card title="Dataset yukleme" icon="folder-open">
+    Kuyu klasorundeki goruntuler backend'e tanitilir.
+  </Card>
+  <Card title="Dosya adlarini dogrulama" icon="spell-check">
+    Klasor ve dosya isimleri kuyu/derinlik standardina gore kontrol edilir.
+  </Card>
+  <Card title="Model secimi" icon="layers">
+    Ana YOLO modeli, takoz modeli ve siniflandirma modeli secilir.
+  </Card>
+  <Card title="Analiz ve progress" icon="activity">
+    Backend worker'lari goruntu, OCR, row ve detection adimlarini calistirir; durum `/progress/` ile izlenir.
+  </Card>
+</CardGroup>
 
 ## On kosullar
 
-- Backend calisir durumda olmali.
-- Frontend `BASE_URL` dogru backend adresini gostermeli.
-- Model dosyalari `Model/Model Files` altinda bulunmali.
-- Klasor/dosya adlari beklenen kuyu standardina uymali.
-- Kullanici `run` yetkisine sahip olmali.
+<Note>
+  - Backend calisir durumda olmali.
+  - Frontend `BASE_URL` dogru backend adresini gostermeli.
+  - Model dosyalari `Model/Model Files` altinda bulunmali.
+  - Klasor/dosya adlari beklenen kuyu standardina uymali.
+</Note>
 
-## Ekran akisi
+## Adim adim akis
 
-```mermaid
-flowchart TD
-    A[Run ekranini ac] --> B[Dataset klasorunu sec]
-    B --> C[Dosya adlarini validate et]
-    C --> D{Hata var mi}
-    D -->|Evet| E[Dosya adlarini duzelt]
-    D -->|Hayir| F[Model ayarlarini sec]
-    F --> G[Process baslat]
-    G --> H[Progress izle]
-    H --> I[Validate ekranina gec]
-```
+<Steps>
+  <Step title="Klasoru sec ve dogrula">
+    Kuyu goruntu klasorunu secin. Sistem dosya adlarini kuyu/derinlik standardina
+    gore kontrol eder; uygunsuz isimler islemeden once uyari olarak gosterilir.
+
+    <Frame caption="Klasor secimi ve dosya adi dogrulama">
+      ![Klasor dogrulama](/assets/screens/run-folder-validation.png)
+    </Frame>
+  </Step>
+  <Step title="Model ayarlarini sec">
+    Ana model, takoz modeli ve classification modelini secin. Settings'teki
+    varsayilanlar otomatik yansiyabilir; operasyon oncesi model adlarini dogrulayin.
+  </Step>
+  <Step title="Islemi baslat ve ilerlemeyi izle">
+    Process'i baslatin. Backend worker'lari goruntuleri isler ve ilerleme canli
+    olarak guncellenir.
+
+    <Frame caption="Isleme / progress durumu">
+      ![Run processing](/assets/screens/run-processing.png)
+    </Frame>
+  </Step>
+  <Step title="Sonuclari kontrol et">
+    Isleme bitince tespit ve satir ciktilarini on izlemede kontrol edin.
+
+    <Frame caption="Run sonuclari">
+      ![Run results](/assets/screens/run-results.png)
+    </Frame>
+  </Step>
+  <Step title="Validate ekranina gec">
+    Session olustuktan sonra Validate ekranina gecin.
+
+    <Frame caption="Basarili run sonrasi Validate'e gecis">
+      ![Run to validate](/assets/screens/run-to-validate-success.png)
+    </Frame>
+  </Step>
+</Steps>
 
 ## Model secimi
 
@@ -49,7 +91,9 @@ Run ekrani model listelerini backend'den alir.
 | Takoz modeli | `GET /checkTakozModelNames` | Spacer/takoz tespiti icin kullanilir. |
 | Classification modeli | `GET /checkClsModelNames` | Siniflandirma destek modeli. |
 
-Settings ekraninda secilen varsayilan modeller Run ekranina otomatik yansiyabilir. Operasyon oncesi model adinin dogru oldugunu kontrol edin.
+<Tip>
+  Settings ekraninda secilen varsayilan modeller Run ekranina otomatik yansiyabilir. Operasyon oncesi model adinin dogru oldugunu kontrol edin.
+</Tip>
 
 ## Dosya dogrulama
 
@@ -61,23 +105,32 @@ Settings ekraninda secilen varsayilan modeller Run ekranina otomatik yansiyabili
 
 ## Basarili calisma kriterleri
 
-- Progress degeri ilerler ve backend hata donmez.
-- Session id olusur.
-- Validate ekranina gecilebilir.
-- `get_maneuvers` ve frame endpointleri sonraki ekranda veri dondurur.
+<Check>Progress degeri ilerler ve backend hata donmez.</Check>
+<Check>Session id olusur.</Check>
+<Check>Validate ekranina gecilebilir.</Check>
+<Check>`get_maneuvers` ve frame endpointleri sonraki ekranda veri dondurur.</Check>
 
 ## Sik hatalar
 
-| Belirti | Muhtemel neden | Cozum |
-| --- | --- | --- |
-| Dosya adi validasyon hatasi | Klasor adi ile goruntu prefix'i uyumsuz | Dosya adlarini kuyu standardina gore duzeltin. |
-| Model listesi bos | Model klasorleri eksik veya backend model scan edemiyor | `Model/Model Files` ve Settings model adlarini kontrol edin. |
-| Progress ilerlemiyor | Backend worker takildi veya GPU/CPU problemi var | Backend loglarini ve Error Tracking ekranini kontrol edin. |
-| Validate aciliyor ama veri yok | Session kaydi tamamlanmamis | Run islemini tekrar deneyin, backend response'unu kontrol edin. |
+<AccordionGroup>
+  <Accordion title="Dosya adi validasyon hatasi" icon="triangle-alert">
+    **Muhtemel neden:** Klasor adi ile goruntu prefix'i uyumsuz.
 
-## Screenshot beklenenleri
+    **Cozum:** Dosya adlarini kuyu standardina gore duzeltin.
+  </Accordion>
+  <Accordion title="Model listesi bos" icon="triangle-alert">
+    **Muhtemel neden:** Model klasorleri eksik veya backend model scan edemiyor.
 
-- Klasor secimi ve dosya validasyonu.
-- Model secim alani.
-- Progress state.
-- Basarili run sonrasi Validate'e gecis.
+    **Cozum:** `Model/Model Files` ve Settings model adlarini kontrol edin.
+  </Accordion>
+  <Accordion title="Progress ilerlemiyor" icon="triangle-alert">
+    **Muhtemel neden:** Backend worker takildi veya GPU/CPU problemi var.
+
+    **Cozum:** Backend loglarini ve Error Tracking ekranini kontrol edin.
+  </Accordion>
+  <Accordion title="Validate aciliyor ama veri yok" icon="triangle-alert">
+    **Muhtemel neden:** Session kaydi tamamlanmamis.
+
+    **Cozum:** Run islemini tekrar deneyin, backend response'unu kontrol edin.
+  </Accordion>
+</AccordionGroup>
