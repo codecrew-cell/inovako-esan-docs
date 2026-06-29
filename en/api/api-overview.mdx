@@ -1,0 +1,30 @@
+---
+title: "API Overview"
+description: "High-level map of backend API areas and their responsibilities."
+---
+
+# API Overview
+
+## Main API areas
+
+| Area | Prefix | Responsibility |
+| --- | --- | --- |
+| Core backend | root endpoints | Uploads, processing, validation, export, settings compatibility, dashboard stats. |
+| Settings | `/settings` | Runtime and admin settings management. |
+| Users | `/users` | User and role management. |
+| Data platform | `/data` | Dataset snapshots, artifacts, compositions, lineage, and metadata export. |
+| Training Lab | `/traininglab` | Embeddings, UMAP, clustering, labels, training, model registry, testing. |
+| Lithology | `/litho` | Lithology models, well/session loading, maneuver building, image serving, save. |
+| Diagnostics | `/dashboard`, `/timing_stats`, `/gantt`, `/sessions` | KPIs, session correlation, timing, and performance visibility. |
+
+## Practical usage
+
+- Use the screen guides for user-facing flows.
+- Use API pages for endpoint behavior and payload references.
+- Use Data Versioning pages before deleting or restoring records.
+- Use Diagnostics pages when analyzing performance or production issues.
+
+## Compatibility note
+
+Some root endpoints remain for legacy UI flows. They should be documented and tested until all frontend usage is migrated to newer routers.
+

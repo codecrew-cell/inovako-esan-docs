@@ -1,0 +1,52 @@
+---
+title: "Session and Recovery"
+description: "Login session, client session, Training Lab recovery state, and recovery after browser refresh or disconnect."
+---
+
+# Session and Recovery
+
+## Session layers
+
+| Layer | Storage | Purpose |
+| --- | --- | --- |
+| `login_session_id` | `sessionStorage` | Correlates login, errors, performance, and Gantt data. |
+| `client_id` | Client session utility | Connects Training Lab embedding, UMAP, and training jobs to the browser client. |
+
+## Login session
+
+After successful login, the frontend calls:
+
+```http
+POST /sessions/start
+```
+
+Request:
+
+```json
+{
+  "session_uuid": "browser-generated-uuid",
+  "username": "operator"
+}
+```
+
+## Training Lab recovery
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /traininglab/recovery` | Check if recoverable state exists. |
+| `POST /traininglab/recovery` | Save the current recovery context. |
+| `DELETE /traininglab/recovery` | Clear completed or cancelled recovery state. |
+| `POST /traininglab/client-disconnect` | Notify backend when the browser client disconnects. |
+
+## Long-running jobs
+
+- Embedding progress is polled through `GET /traininglab/embedding-progress`.
+- Running jobs can be cancelled with `POST /traininglab/cancel-embeddings`.
+- If the browser reloads, the frontend checks whether it can reconnect to an active job.
+
+## Operational guidance
+
+- Clear recovery state after successful completion.
+- Show a clear status when cancellation is requested.
+- Verify active snapshot/composition context before saving a trained model.
+

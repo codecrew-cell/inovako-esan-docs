@@ -1,0 +1,36 @@
+---
+title: "Lithology Editor Guide"
+description: "How to load lithology models, build maneuvers, edit regions, and save results."
+---
+
+# Lithology Editor Guide
+
+## Purpose
+
+Lithology Editor is used to inspect and edit lithology regions on core imagery. It can work through the integrated `/litho/*` API or the standalone editor API during development.
+
+## Workflow
+
+1. List available models with `/litho/models`.
+2. Load a well folder with `/litho/load-well` or an existing session with `/litho/load-session`.
+3. Build maneuvers with `/litho/build-maneuvers`.
+4. Inspect images through `/litho/image`.
+5. Save edited regions through `/litho/save`.
+
+## Controls
+
+| Control | Purpose |
+| --- | --- |
+| Model selector | Selects the lithology model. |
+| Load well/session | Loads source image context. |
+| Region editor | Adjusts lithology intervals, classes, and colors. |
+| Save | Persists edited lithology maneuvers. |
+| Preview | Confirms that regions align with the image. |
+
+## Checks
+
+- The selected model is correct for the project.
+- The loaded well/session is the intended data source.
+- Region colors and labels match reporting standards.
+- Saved results appear in downstream export or reporting screens.
+

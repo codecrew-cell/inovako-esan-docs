@@ -1,0 +1,36 @@
+---
+title: "Project Map"
+description: "High-level folder and runtime map for the INOVAKO ESAN repository."
+---
+
+# Project Map
+
+## Main folders
+
+| Path | Purpose |
+| --- | --- |
+| `Api/` | FastAPI routes, settings, user management, data platform, diagnostics, and root API flows. |
+| `React/` | Vite + React frontend, Redux state, pages, components, and Playwright tests. |
+| `LithologyAnalysis/` | Training Lab API, embedding, clustering, model training, and inference support. |
+| `karot_analiz/` | Core image analysis and lithology editor services. |
+| `Model/` | Model files, labels, and runtime assets. |
+| `documentation/` | Mintlify documentation site. |
+| `uploaded_data/` | Runtime upload and processing workspace. |
+
+## Runtime services
+
+| Service | Typical URL | Notes |
+| --- | --- | --- |
+| Backend | `http://localhost:8000` | FastAPI application. |
+| Frontend | `http://localhost:5173` | Vite development server. |
+| Documentation | `http://localhost:3000` | Mintlify local preview. |
+
+## Key flows
+
+1. User logs in from the React frontend.
+2. The frontend calls FastAPI endpoints.
+3. Backend services load model files and process uploaded core imagery.
+4. Validation screens persist user corrections.
+5. Training Lab creates features, clusters, labels, and model artifacts.
+6. Data Versioning records datasets, snapshots, compositions, lineage, and metadata exports.
+

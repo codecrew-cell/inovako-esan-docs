@@ -1,0 +1,48 @@
+---
+title: "Training Lab User Guide"
+description: "How to prepare features, inspect clusters, clean labels, train models, and test samples."
+---
+
+# Training Lab User Guide
+
+## Purpose
+
+Training Lab supports dataset exploration, feature extraction, UMAP visualization, clustering, label cleanup, model training, and sample testing.
+
+## Main tabs
+
+| Tab | Purpose |
+| --- | --- |
+| Explorer | Load sources, compute embeddings, inspect UMAP clusters, and adjust class labels. |
+| Data Cleanout | Review tile snapshots and clean training data. |
+| Classes | Manage class-level labels and assignments. |
+| Train | Start model training and monitor progress. |
+| Test | Upload or select samples and run inference against saved models. |
+
+## Source modes
+
+| Mode | Use case |
+| --- | --- |
+| Folder | Start from a local folder and optionally register it as a dataset snapshot. |
+| Composition | Use a committed composition from Data Versioning. |
+| Tiles | Load an existing tile snapshot directly. |
+
+## Key controls
+
+- Row edge trim controls how much top/bottom crop is removed.
+- Window overlap controls tile overlap during extraction.
+- Composite length controls physical length assumptions.
+- UMAP neighbors, distance, and dimensionality affect cluster projection.
+- Lasso selection enables bulk reassignment or exclusion.
+- Class package export/import supports label reuse across datasets.
+
+## Save criteria
+
+Before saving or training a model:
+
+1. Cluster names are meaningful.
+2. Excluded samples and clusters are reviewed.
+3. Merge operations are complete.
+4. Active snapshot or composition context is correct.
+5. Training history and model lineage are traceable.
+

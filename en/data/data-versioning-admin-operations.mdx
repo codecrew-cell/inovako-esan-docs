@@ -1,0 +1,51 @@
+---
+title: "Data Versioning Admin Operations"
+description: "Snapshot, dataset, artifact, composition, tile snapshot, restore, delete, and lineage operations."
+---
+
+# Data Versioning Admin Operations
+
+## Purpose
+
+Data Versioning is the source of truth for datasets, snapshots, compositions, tile snapshots, artifacts, models, and lineage. Admin operations can affect traceability, so dependency checks should happen before deletion.
+
+## Delete types
+
+| Type | Meaning |
+| --- | --- |
+| Soft delete | Hides or disables a record while keeping restore possible. |
+| Restore | Re-activates a soft-deleted record. |
+| Permanent delete | Removes the record permanently. |
+| Cascade delete | Deletes an artifact and related dependent records. |
+
+## Important endpoints
+
+| Endpoint | Purpose |
+| --- | --- |
+| `DELETE /data/snapshots/{snapshot_id}` | Soft delete a snapshot. |
+| `POST /data/snapshots/{snapshot_id}/restore` | Restore a snapshot. |
+| `GET /data/datasets/{dataset_key}/dependencies` | Check dependencies before deleting a dataset. |
+| `DELETE /data/datasets/{dataset_key}` | Soft delete a dataset. |
+| `DELETE /data/datasets/{dataset_key}/permanent` | Permanently delete a dataset. |
+| `DELETE /data/compositions/{composition_id}` | Soft delete a composition. |
+| `POST /data/compositions/{composition_id}/restore` | Restore a composition. |
+| `DELETE /data/compositions/{composition_id}/permanent` | Permanently delete a composition. |
+| `DELETE /data/tile-snapshots/{snapshot_id}` | Delete a tile snapshot. |
+
+## Lineage endpoints
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /data/lineage` | List registered model lineage. |
+| `GET /data/snapshots/{snapshot_id}/lineage` | Inspect lineage for a snapshot. |
+| `GET /data/snapshots/{snapshot_id}/models-using` | Find models using a snapshot. |
+| `GET /data/models/{model_id}/full-lineage` | Inspect complete model lineage. |
+
+## Pre-delete checklist
+
+- Dependency report was reviewed.
+- No active model depends on the snapshot.
+- Composition state is known.
+- Tile snapshot is not active in Training Lab or Data Cleanout.
+- Metadata export or backup is complete if required.
+

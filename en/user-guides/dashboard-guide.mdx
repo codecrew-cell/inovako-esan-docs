@@ -1,0 +1,42 @@
+---
+title: "Dashboard and Login Guide"
+description: "Login flow, session creation, and dashboard KPI fields."
+---
+
+# Dashboard and Login Guide
+
+## Login flow
+
+1. Enter a username.
+2. The frontend calls `GET /ldap_auth/{username}`.
+3. On success, the browser creates a `login_session_id`.
+4. The frontend calls `POST /sessions/start`.
+5. The application clears stale analysis state and navigates to Run.
+
+## Stored session values
+
+| Key | Purpose |
+| --- | --- |
+| `login_username` | Current authenticated user. |
+| `login_session_id` | Session correlation for performance, errors, and diagnostics. |
+
+## Dashboard metrics
+
+`GET /dashboard/stats` powers the dashboard cards.
+
+| Field | Meaning |
+| --- | --- |
+| `total_core_length` | Total processed core length. |
+| `recovery_rate` | Recovery percentage. |
+| `class_counts` | Class or lithology distribution. |
+| `fault_zones` | Detected fault or special zones. |
+| `active_models` | Number of active models. |
+| `ai_confidence` | Summary confidence metric. |
+| `system_status` | Backend/service status summary. |
+| `recent_scans` | Recent analysis records. |
+| `timeline_items` | Recent operational events. |
+
+## Location behavior
+
+If the browser permits geolocation, the Dashboard attempts reverse geocoding through OpenStreetMap Nominatim. If not available, it falls back to `N/A` or default location data.
+

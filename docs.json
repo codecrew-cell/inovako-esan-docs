@@ -14,6 +14,7 @@
                                           "group":  "Baslangic",
                                           "icon":  "rocket",
                                           "pages":  [
+                                                        "tr",
                                                         "index",
                                                         "docs/getting-started/local-development",
                                                         "docs/getting-started/project-map"
@@ -147,7 +148,64 @@
                                                         "docs/reference/existing-guides",
                                                         "docs/reference/output-files-reference"
                                                     ]
+                                      },
+                                      {
+                                          "group":  "Start",
+                                          "icon":  "rocket",
+                                          "pages":  [
+                                                        "en",
+                                                        "en/getting-started/local-development",
+                                                        "en/getting-started/project-map"
+                                                    ]
+                                      },
+                                      {
+                                          "group":  "Guides",
+                                          "icon":  "book-marked",
+                                          "pages":  [
+                                                        "en/guides/operator-guide",
+                                                        "en/guides/user-walkthrough"
+                                                    ]
+                                      },
+                                      {
+                                          "group":  "Screen Guides",
+                                          "icon":  "monitor",
+                                          "pages":  [
+                                                        "en/user-guides/dashboard-guide",
+                                                        "en/user-guides/run-guide",
+                                                        "en/user-guides/validate-guide",
+                                                        "en/user-guides/training-lab-user-guide",
+                                                        "en/user-guides/lithology-user-guide"
+                                                    ]
+                                      },
+                                      {
+                                          "group":  "English API",
+                                          "icon":  "square-terminal",
+                                          "pages":  [
+                                                        "en/api/api-overview"
+                                                    ]
+                                      },
+                                      {
+                                          "group":  "Data and Operations",
+                                          "icon":  "database",
+                                          "pages":  [
+                                                        "en/data/data-versioning-admin-operations",
+                                                        "en/operations/session-and-recovery",
+                                                        "en/reference/output-files-reference"
+                                                    ]
                                       }
                                   ]
+                   },
+    "tabs":  [
+                 {
+                     "name":  "Turkce",
+                     "url":  "tr"
+                 },
+                 {
+                     "name":  "English",
+                     "url":  "en"
+                 }
+             ],
+    "primaryTab":  {
+                       "name":  "Turkce"
                    }
 }

@@ -1,0 +1,67 @@
+---
+title: "Local Development"
+description: "How to run the backend, frontend, and documentation locally."
+---
+
+# Local Development
+
+## Requirements
+
+| Component | Purpose |
+| --- | --- |
+| Python | FastAPI backend, image processing, and model code. |
+| Node.js | React frontend and Mintlify documentation. |
+| CUDA-enabled PyTorch | GPU acceleration for YOLO, OCR, and model workflows. |
+| npm | Frontend dependencies and Vite dev server. |
+| Mintlify CLI | Local documentation preview and validation. |
+
+Mintlify requires Node.js `20.17.0` or newer. LTS versions are recommended.
+
+## Backend
+
+Start the main backend from `ESANLAST-main`:
+
+```powershell
+python run_backend.py
+```
+
+The backend initializes the `ModelController`, loads model files, registers FastAPI routers, and serves the API on port `8000`.
+
+## Frontend
+
+The React application lives under `React/` and runs with Vite:
+
+```powershell
+cd React
+npm install
+npm run dev
+```
+
+Default frontend URL:
+
+```text
+http://localhost:5173
+```
+
+## One-command startup
+
+`main.py` starts the Vite frontend, attempts to open the browser, and then starts the FastAPI backend:
+
+```powershell
+python main.py
+```
+
+For debugging, running backend and frontend in separate terminals is usually easier.
+
+## Documentation
+
+The documentation site is stored in `documentation/` and is configured by `docs.json`.
+
+```powershell
+npm i -g mint
+cd documentation
+mint.cmd dev
+```
+
+Use `mint.cmd` on Windows because PowerShell execution policy can block `mint.ps1`.
+
