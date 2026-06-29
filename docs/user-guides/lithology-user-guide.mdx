@@ -1,19 +1,48 @@
 ---
 title: "Lithology Editor Kullanici Kilavuzu"
 description: "Litoloji modeli secme, kuyu veya session yukleme, bolge duzenleme ve manevra kaydetme akisi."
+icon: "gem"
 ---
 
-## Amac
+Lithology Editor, kuyu gorsellerinde litoloji bolgelerini model destegiyle
+incelemek ve duzenlemek icin kullanilir. Sistem hem entegre API router uzerinden
+`/litho/*` endpointlerini hem de gelistirme icin standalone editor servisindeki
+`/api/*` endpointlerini destekler.
 
-Lithology Editor, kuyu gorsellerinde litoloji bolgelerini model destegiyle incelemek ve duzenlemek icin kullanilir. Sistem hem entegre API router uzerinden `/litho/*` endpointlerini hem de gelistirme icin standalone editor servisindeki `/api/*` endpointlerini destekler.
+<Frame caption="Lithology editor">
+  ![Lithology editor](/assets/screens/lithology-1.png)
+</Frame>
 
-## Temel is akisi
+## Adim adim akis
 
-1. **Model secimi:** Kullanilabilir modeller `/litho/models` ile listelenir.
-2. **Veri yukleme:** Kuyu klasoru `/litho/load-well` veya mevcut analiz oturumu `/litho/load-session` ile yuklenir.
-3. **Manevra uretimi:** Secilen model ve girdi gorselleri ile `/litho/build-maneuvers` calistirilir.
-4. **Gorsel inceleme:** Gorseller `/litho/image` uzerinden goruntulenir.
-5. **Kayit:** Kullanici duzenlemeleri `/litho/save` ile kaydedilir.
+<Steps>
+  <Step title="Model sec">
+    Kullanilabilir modeller `/litho/models` ile listelenir; litoloji tahmini icin
+    kullanilacak modeli secin.
+  </Step>
+  <Step title="Veri yukle">
+    Kuyu klasoru `/litho/load-well` veya mevcut analiz oturumu `/litho/load-session`
+    ile yuklenir.
+  </Step>
+  <Step title="Manevra uret">
+    Secilen model ve girdi gorselleri ile `/litho/build-maneuvers` calistirilir.
+
+    <Frame caption="Litoloji bolgeleri ve manevralar">
+      ![Lithology regions](/assets/screens/lithology-3.png)
+    </Frame>
+  </Step>
+  <Step title="Incele ve duzenle">
+    Bolgeleri, siniflari ve renkleri region editor uzerinde duzenleyin; gorseller
+    `/litho/image` ile goruntulenir.
+
+    <Frame caption="Bolge duzenleme">
+      ![Lithology editing](/assets/screens/lithology-4.png)
+    </Frame>
+  </Step>
+  <Step title="Kaydet">
+    Kullanici duzenlemeleri `/litho/save` ile kaydedilir.
+  </Step>
+</Steps>
 
 ## Ekranda beklenen kontroller
 
@@ -34,18 +63,25 @@ Lithology Editor, kuyu gorsellerinde litoloji bolgelerini model destegiyle incel
 
 ## Kullanici icin kontrol listesi
 
-- Dogru model secildiginden emin olun.
-- Yuklenen kuyu/session beklenen proje verisine ait olmali.
-- Otomatik uretilen litoloji bolgeleri kaydetmeden once gorsel olarak kontrol edilmeli.
-- Sinif renkleri ve isimleri final rapor standardiyla uyumlu olmali.
-- Kayit sonrasi export veya rapor ekraninda sonucun gorundugu dogrulanmali.
+<Check>Dogru model secildi.</Check>
+<Check>Yuklenen kuyu/session beklenen proje verisine ait.</Check>
+<Check>Otomatik uretilen bolgeler kaydetmeden once gorsel olarak kontrol edildi.</Check>
+<Check>Sinif renkleri ve isimleri final rapor standardiyla uyumlu.</Check>
+<Check>Kayit sonrasi export/rapor ekraninda sonuc gorunuyor.</Check>
 
 ## Sik sorunlar
 
-| Sorun | Kontrol |
-| --- | --- |
-| Model listesi bos | Model dosyalari ve backend model dizini kontrol edilmeli. |
-| Gorsel acilmiyor | `/litho/image` icin path parametresi ve dosya erisimi kontrol edilmeli. |
-| Save basarisiz | Payload icindeki bolge koordinatlari ve sinif adlari dogrulanmali. |
-| Session yuklenmiyor | `session_id` degeri ve ilgili cikti klasoru var mi kontrol edilmeli. |
-
+<AccordionGroup>
+  <Accordion title="Model listesi bos" icon="triangle-alert">
+    Model dosyalari ve backend model dizini kontrol edilmeli.
+  </Accordion>
+  <Accordion title="Gorsel acilmiyor" icon="triangle-alert">
+    `/litho/image` icin path parametresi ve dosya erisimi kontrol edilmeli.
+  </Accordion>
+  <Accordion title="Save basarisiz" icon="triangle-alert">
+    Payload icindeki bolge koordinatlari ve sinif adlari dogrulanmali.
+  </Accordion>
+  <Accordion title="Session yuklenmiyor" icon="triangle-alert">
+    `session_id` degeri ve ilgili cikti klasoru var mi kontrol edilmeli.
+  </Accordion>
+</AccordionGroup>

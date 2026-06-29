@@ -1,19 +1,16 @@
 ---
 title: "Performance / Gantt Guide"
 description: "Monitoring model, OCR and worker timings of a Run on the Gantt screen."
+icon: "activity"
 ---
 
-# Performance / Gantt Guide
-
 The Performance screen shows the time distribution and processing steps of the
-last run in a Gantt-style view. The goal is to quickly identify a slow model,
-OCR or file-processing step.
+last run in a Gantt-style view. The goal is to quickly identify a slow model, OCR
+or file-processing step.
 
-## Authorization
-
-| Route | Guard |
-| --- | --- |
-| `/performance` | `canRun` |
+<Info>
+  Users with the `canRun` permission can access this screen (`/performance`).
+</Info>
 
 ## Data source
 
@@ -22,34 +19,47 @@ OCR or file-processing step.
 | `GET /gantt/latest` | Fetches Gantt data for the most recent session. |
 | `GET /gantt/{session_id}` | Fetches Gantt data for a specific session. |
 
-On the backend, timing data is written during processing and includes
-per-model and per-worker durations.
+On the backend, timing data is written during processing and includes per-model
+and per-worker durations.
 
 ## User flow
 
-1. Complete a run on the Run screen.
-2. Open the Performance screen.
-3. Verify that the latest Gantt data has loaded.
-4. Use the `Models` or other detail filters to find the slow step.
-5. If the issue is model-related check the Settings/model file; if OCR-related check the backend logs.
+<Steps>
+  <Step title="Complete a run">
+    Complete a process on the Run screen.
+  </Step>
+  <Step title="Open Performance">
+    Open the Performance screen and verify the latest Gantt data has loaded.
+  </Step>
+  <Step title="Find the slow step">
+    Use the `Models` or other detail filters to find the slow step.
+  </Step>
+  <Step title="Drill into the source">
+    If the issue is model-related check the Settings/model file; if OCR-related check the backend logs.
+  </Step>
+</Steps>
 
 ## Interpretation
 
-| Symptom | Meaning |
-| --- | --- |
-| A single model step takes too long | Check GPU/CPU, the model file or TensorRT fallback. |
-| OCR steps are long | Inspect image quality, number of rows or OCR worker performance. |
-| First batch long, next batches normal | May be model warm-up or cache effect. |
-| All batches slow | Could be hardware, batch size or disk I/O problem. |
+<AccordionGroup>
+  <Accordion title="A single model step takes too long" icon="gauge">
+    Check GPU/CPU, the model file or TensorRT fallback.
+  </Accordion>
+  <Accordion title="OCR steps are long" icon="gauge">
+    Inspect image quality, number of rows or OCR worker performance.
+  </Accordion>
+  <Accordion title="First batch long, next batches normal" icon="gauge">
+    May be model warm-up or cache effect.
+  </Accordion>
+  <Accordion title="All batches slow" icon="gauge">
+    Could be hardware, batch size or disk I/O problem.
+  </Accordion>
+</AccordionGroup>
 
 ## Operation notes
 
-- The Gantt screen is a debugging tool; it is for performance analysis, not a user report.
-- Before a release, run a timing comparison with the same test dataset.
-- Settings `batch_size`, model type and `PREFER_TRT` behavior can affect performance.
-
-## Expected screenshots
-
-- Latest Gantt timeline.
-- Model/detail filters.
-- Detail view of the long-running step.
+<Note>
+  - The Gantt screen is a debugging tool; it is for performance analysis, not a user report.
+  - Before a release, run a timing comparison with the same test dataset.
+  - Settings `batch_size`, model type and `PREFER_TRT` behavior can affect performance.
+</Note>

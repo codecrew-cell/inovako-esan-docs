@@ -1,18 +1,47 @@
 ---
-title: "Export Guide"
+title: "Export Kilavuzu"
 description: "Jeoteknik, mineral ve litoloji ciktisini dosya ve gorsel olarak disari alma."
+icon: "download"
 ---
 
-# Export Guide
+Export ekrani, Validate ve Lithology akislari sonrasinda uretilen verileri
+raporlanabilir gorsel ve tablo ciktisina donusturur. Kullanici tarafindan
+paylasilan nihai dosyalar bu ekrandan alinir.
 
-Export ekrani, Validate, Mineral Validate ve Lithology akislari sonrasinda uretilen verileri raporlanabilir gorsel ve tablo ciktisina donusturur. Kullanici tarafindan paylasilan nihai dosyalar bu ekrandan alinir.
+<Note>
+  **On kosullar:** Run tamamlanmis, Validate degisiklikleri kaydedilmis, mineral
+  manevralari uretilmis olmali. Litoloji kullanilacaksa Lithology editor ciktisi
+  kaydedilmis olmali.
+</Note>
 
-## On kosullar
+<Frame caption="Export ekrani genel gorunum">
+  ![Export overview](/assets/screens/export-overview.png)
+</Frame>
 
-- Run tamamlanmis olmali.
-- Validate degisiklikleri kaydedilmis olmali.
-- Mineral manevralari uretilmis olmali.
-- Litoloji kullanilacaksa Lithology editor ciktisi kaydedilmis olmali.
+## Cikti gorunumleri
+
+<Tabs>
+  <Tab title="Manevralar">
+    <Frame caption="Manevra on izleme">
+      ![Export maneuvers](/assets/screens/export-maneuvers-preview-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Manevra Renkleri">
+    <Frame caption="Manevra renk profili">
+      ![Export maneuver colors](/assets/screens/export-maneuver-colors-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Siniflandirma">
+    <Frame caption="AI siniflandirma gorunumu">
+      ![Export classification](/assets/screens/export-classification.png)
+    </Frame>
+  </Tab>
+  <Tab title="Renk Degisimleri">
+    <Frame caption="Renk degisim sinirlari">
+      ![Export color changes](/assets/screens/export-color-changes-new.png)
+    </Frame>
+  </Tab>
+</Tabs>
 
 ## Ana ciktilar
 
@@ -24,19 +53,37 @@ Export ekrani, Validate, Mineral Validate ve Lithology akislari sonrasinda ureti
 | Color change gorseli | Renk analizi | Renk gecisleri mantikli mi. |
 | ZIP indirme | Frontend JSZip | Tum beklenen dosyalar pakette var mi. |
 
-## Akis
+## Tablo ciktilari
 
-```mermaid
-flowchart TD
-    A[Export ac] --> B[/get_mineral_maneuvers]
-    B --> C{Veri var mi}
-    C -->|Hayir| D[/mineral_from_changes ile yeniden uret]
-    C -->|Evet| E[Manevra gorsellerini getir]
-    D --> E
-    E --> F[Preview kontrolu]
-    F --> G[Save maneuvers]
-    G --> H[ZIP indir]
-```
+<Tabs>
+  <Tab title="Jeoteknik tablo">
+    <Frame caption="Jeoteknik manevra tablosu">
+      ![Geotechnical maneuver table](/assets/screens/export-geotechnical-maneuver-table-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Litolojik tablo">
+    <Frame caption="Litolojik manevra tablosu">
+      ![Lithological maneuver table](/assets/screens/export-lithological-maneuver-table.png)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## Adim adim akis
+
+<Steps>
+  <Step title="Manevra verisini hazirla">
+    `get_mineral_maneuvers` veri dondurmezse `mineral_from_changes` ile yeniden uretilir.
+  </Step>
+  <Step title="On izlemeyi kontrol et">
+    Manevra gorsellerini ve tabloyu kuyu id / derinlik araliklari acisindan dogrulayin.
+  </Step>
+  <Step title="Manevralari kaydet">
+    `save_maneuvers` ile ciktiyi kalici hale getirin.
+  </Step>
+  <Step title="ZIP indir">
+    Tum gorseller ve Excel tablolari ZIP olarak indirilir.
+  </Step>
+</Steps>
 
 ## Endpointler
 
@@ -52,24 +99,28 @@ flowchart TD
 
 ## Kullanici kontrol listesi
 
-1. Hole id dogru mu kontrol edin.
-2. Manevra baslangic/bitis degerlerini kontrol edin.
-3. Geoteknik, mineral ve litoloji ciktisinin ayni session'a ait oldugundan emin olun.
-4. Birlesik gorsellerde satir sirasi bozulmamis mi kontrol edin.
-5. ZIP indirdikten sonra dosya adlari ve dosya sayisini kontrol edin.
+<Check>Hole id dogru.</Check>
+<Check>Manevra baslangic/bitis degerleri tutarli.</Check>
+<Check>Jeoteknik, mineral ve litoloji ciktisi ayni session'a ait.</Check>
+<Check>Birlesik gorsellerde satir sirasi bozulmamis.</Check>
+<Check>ZIP indirildikten sonra dosya adlari ve sayisi dogru.</Check>
 
 ## Kalite kapisi
 
-Export ekrani rapor uretim noktasi oldugu icin, burada gorulen hata genelde onceki adimdan gelir.
+Export ekrani rapor uretim noktasi oldugu icin, burada gorulen hata genelde
+onceki adimdan gelir.
 
-1. Export verisi bos ise Mineral Validate'e donun.
-2. Derinlik araligi yanlis ise Validate tablosuna donun.
-3. Litoloji rengi/bolgesi yanlis ise Lithology editorune donun.
-4. Dosya uretilmiyorsa backend `ManueverBlocks` ve log klasorlerini kontrol edin.
-
-## Screenshot beklenenleri
-
-- Export ana tablo.
-- Preview modal/gorsel alanlari.
-- ZIP indirme aksiyonu.
-- Renk degisimi ve manevra renkleri.
+<AccordionGroup>
+  <Accordion title="Export verisi bos" icon="triangle-alert">
+    Validate/Lithology akisina donun ve manevralari yeniden uretin.
+  </Accordion>
+  <Accordion title="Derinlik araligi yanlis" icon="triangle-alert">
+    Validate tablosuna donup OCR/derinlik degerlerini duzeltin.
+  </Accordion>
+  <Accordion title="Litoloji rengi/bolgesi yanlis" icon="triangle-alert">
+    Lithology editorune donup segmentleri duzeltin.
+  </Accordion>
+  <Accordion title="Dosya uretilmiyor" icon="triangle-alert">
+    Backend `ManueverBlocks` ve log klasorlerini kontrol edin.
+  </Accordion>
+</AccordionGroup>

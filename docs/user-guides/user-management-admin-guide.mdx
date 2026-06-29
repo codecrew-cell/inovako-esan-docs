@@ -1,27 +1,35 @@
 ---
 title: "User Management Admin Guide"
 description: "Kullanici ekleme, rol degistirme, aktif/pasif yapma ve silme islemleri."
+icon: "users"
 ---
 
-# User Management Admin Guide
+User Management ekrani sadece admin kullanicilar icindir. Buradan lokal kullanici
+kayitlari, roller ve aktiflik durumu yonetilir.
 
-User Management ekrani sadece admin kullanicilar icindir. Buradan lokal kullanici kayitlari, roller ve aktiflik durumu yonetilir.
+<Info>
+  Bu ekrana yalnizca `admin` rolu erisebilir (`/user-management`). Mutating
+  endpoint'ler `X-Username` header'i ile gelen kullanicinin admin olup olmadigini
+  kontrol eder.
+</Info>
 
-## Yetki
-
-| Route | Guard |
-| --- | --- |
-| `/user-management` | `admin` |
-
-Mutating endpoint'ler `X-Username` header'i ile gelen kullanicinin admin olup olmadigini kontrol eder.
+<Frame caption="User Management ekrani">
+  ![User management](/assets/screens/user-management.png)
+</Frame>
 
 ## Roller
 
-| Rol | Tipik kullanici |
-| --- | --- |
-| `admin` | Kullanici ve sistem yonetimi yapan yetkili. |
-| `supervisor` | Operasyon ayarlari ve kontrol surecini yoneten kullanici. |
-| `engineer` | Run, Validate, Training Lab ve Data akislari uzerinde calisan kullanici. |
+<CardGroup cols={3}>
+  <Card title="admin" icon="shield">
+    Kullanici ve sistem yonetimi yapan yetkili.
+  </Card>
+  <Card title="supervisor" icon="user-cog">
+    Operasyon ayarlari ve kontrol surecini yoneten kullanici.
+  </Card>
+  <Card title="engineer" icon="user">
+    Run, Validate, Training Lab ve Data akislari uzerinde calisan kullanici.
+  </Card>
+</CardGroup>
 
 ## Islem listesi
 
@@ -35,22 +43,29 @@ Mutating endpoint'ler `X-Username` header'i ile gelen kullanicinin admin olup ol
 
 ## Operasyon kurallari
 
-- Admin sayisini gereksiz artirmayin.
-- Pasif yapma islemi, silmeye gore daha guvenli ilk adimdir.
-- Rol degisikligi sonrasi kullanicinin tarayici oturumu yenilenmelidir.
-- Public dokumanda gercek kullanici listesi veya mail adresi paylasilmaz.
+<Warning>
+  - Admin sayisini gereksiz artirmayin.
+  - Pasif yapma islemi, silmeye gore daha guvenli ilk adimdir.
+  - Rol degisikligi sonrasi kullanicinin tarayici oturumu yenilenmelidir.
+  - Public dokumanda gercek kullanici listesi veya mail adresi paylasilmaz.
+</Warning>
 
 ## Hata durumlari
 
-| Belirti | Muhtemel neden | Cozum |
-| --- | --- | --- |
-| 403/unauthorized | `X-Username` admin degil | Aktif admin hesabiyla giris yapin. |
-| Kullanici gorunmuyor | `users.json` okunamiyor veya backend farkli dizinde | Backend calisma dizinini kontrol edin. |
-| Rol degisti ama menu degismedi | Frontend session state eski | Logout/login veya sayfa yenileme yapin. |
+<AccordionGroup>
+  <Accordion title="403 / unauthorized" icon="triangle-alert">
+    **Neden:** `X-Username` admin degil.
 
-## Screenshot beklenenleri
+    **Cozum:** Aktif admin hesabiyla giris yapin.
+  </Accordion>
+  <Accordion title="Kullanici gorunmuyor" icon="triangle-alert">
+    **Neden:** `users.json` okunamiyor veya backend farkli dizinde.
 
-- Kullanici tablosu.
-- Rol degistirme kontrolu.
-- Aktif/pasif toggle.
-- Kullanici ekleme formu.
+    **Cozum:** Backend calisma dizinini kontrol edin.
+  </Accordion>
+  <Accordion title="Rol degisti ama menu degismedi" icon="triangle-alert">
+    **Neden:** Frontend session state eski.
+
+    **Cozum:** Logout/login veya sayfa yenileme yapin.
+  </Accordion>
+</AccordionGroup>

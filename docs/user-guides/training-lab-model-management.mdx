@@ -1,20 +1,39 @@
-﻿---
+---
 title: "Training Lab Model Yonetimi"
 description: "Training Lab icinde model kaydetme, yeniden adlandirma, silme, indirme ve egitim gecmisi izleme rehberi."
+icon: "brain-circuit"
 ---
 
-## Amac
+Training Lab sadece sinif duzenleme ekrani degildir; ayni zamanda egitilen
+modellerin kaydedildigi, indirildigi, yeniden adlandirildigi ve veri
+versiyonlariyla iliskilendirildigi model yonetim alanidir.
 
-Training Lab sadece sinif duzenleme ekrani degildir; ayni zamanda egitilen modellerin kaydedildigi, indirildigi, yeniden adlandirildigi ve veri versiyonlariyla iliskilendirildigi model yonetim alanidir.
+<Frame caption="Model egitimi">
+  ![Model training](/assets/screens/training-lab-model-train-new.png)
+</Frame>
 
 ## Model yasam dongusu
 
-1. **Feature space hazirlanir:** Dataset, composition veya tile snapshot kaynak olarak secilir.
-2. **Siniflar temizlenir:** Cluster adlari, lasso secimleri, exclude islemleri ve merge kararlari uygulanir.
-3. **Atamalar finalize edilir:** `/traininglab/finalize-assignments` veya ilgili UI aksiyonu ile aktif etiket seti olusturulur.
-4. **Egitim baslatilir:** `/traininglab/train-stream` SSE akisi egitim ilerlemesini canli verir.
-5. **Model kaydedilir:** `/traininglab/save-model` model artifact kaydini olusturur.
-6. **Lineage baglanir:** Model, kullanilan snapshot veya composition bilgisiyle Data Versioning tarafina kaydedilir.
+<Steps>
+  <Step title="Feature space hazirlanir">
+    Dataset, composition veya tile snapshot kaynak olarak secilir.
+  </Step>
+  <Step title="Siniflar temizlenir">
+    Cluster adlari, lasso secimleri, exclude islemleri ve merge kararlari uygulanir.
+  </Step>
+  <Step title="Atamalar finalize edilir">
+    `/traininglab/finalize-assignments` veya ilgili UI aksiyonu ile aktif etiket seti olusturulur.
+  </Step>
+  <Step title="Egitim baslatilir">
+    `/traininglab/train-stream` SSE akisi egitim ilerlemesini canli verir.
+  </Step>
+  <Step title="Model kaydedilir">
+    `/traininglab/save-model` model artifact kaydini olusturur.
+  </Step>
+  <Step title="Lineage baglanir">
+    Model, kullanilan snapshot veya composition bilgisiyle Data Versioning tarafina kaydedilir.
+  </Step>
+</Steps>
 
 ## Model islemleri
 
@@ -31,21 +50,37 @@ Training Lab sadece sinif duzenleme ekrani degildir; ayni zamanda egitilen model
 
 ## Kayit oncesi kalite kontrol
 
-- Cluster isimleri varsayilan `Cluster 0`, `Cluster 1` gibi kalmamalidir.
-- Exclude edilen siniflar ve ornekler son kez kontrol edilmelidir.
-- Merge islemleri sonrasi sinif sayisi beklenen hedef sinif setiyle uyumlu olmalidir.
-- Tile snapshot secimi dogru version olmalidir; draft tile aktifse Data Cleanout tarafinda ana tile kaydi netlestirilmelidir.
-- Model adinda proje, veri versiyonu ve tarih bilgisi bulunmasi onerilir.
+<Warning>
+  Asagidaki maddeler tamamlanmadan model kaydetmeyin; eksik bilgi ileride modelin
+  hangi veriyle egitildigini izlemeyi zorlastirir.
+</Warning>
+
+<Check>Cluster isimleri varsayilan `Cluster 0`, `Cluster 1` gibi kalmadi.</Check>
+<Check>Exclude edilen siniflar ve ornekler son kez kontrol edildi.</Check>
+<Check>Merge sonrasi sinif sayisi hedef sinif setiyle uyumlu.</Check>
+<Check>Dogru tile snapshot version secildi; draft tile aktifse Data Cleanout'ta ana tile netlestirildi.</Check>
+<Check>Model adinda proje, veri versiyonu ve tarih bilgisi var.</Check>
 
 ## Lineage icin iyi uygulama
 
 Model kaydi yapmadan once aktif kaynak bilgilerini kontrol edin:
 
-| Kaynak | Kontrol |
-| --- | --- |
-| Folder | Dataset Key girilmis ve dataset snapshot kaydi tamamlanmis olmali. |
-| Composition | Composition committed durumda olmali. |
-| Tiles | Dogru tile snapshot version secilmeli. |
+<CardGroup cols={3}>
+  <Card title="Folder" icon="folder-open">
+    Dataset Key girilmis ve dataset snapshot kaydi tamamlanmis olmali.
+  </Card>
+  <Card title="Composition" icon="layers">
+    Composition committed durumda olmali.
+  </Card>
+  <Card title="Tiles" icon="grid-2x2">
+    Dogru tile snapshot version secilmeli.
+  </Card>
+</CardGroup>
 
-Bu bilgiler eksikse model dosyasi uretilse bile ileride hangi veriyle egitildigini izlemek zorlasir.
+## Model testi
 
+Kaydedilen model tekil ornek veya strip uzerinde Test tabinda dogrulanir.
+
+<Frame caption="Model testi">
+  ![Model testing](/assets/screens/training-lab-model-test-new.png)
+</Frame>

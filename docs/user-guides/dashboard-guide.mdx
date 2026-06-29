@@ -1,27 +1,45 @@
-﻿---
+---
 title: "Dashboard ve Giris Kilavuzu"
 description: "Kullanici girisi, oturum baslatma ve ana dashboard KPI alanlarinin kullanici acisindan aciklamasi."
+icon: "gauge"
 ---
 
-## Amac
-
-Dashboard, kullanicinin sisteme girdikten sonra platform durumunu ve son analiz ozetlerini tek ekranda gormesi icin tasarlanmistir. Giris ekrani kullanici adini dogrular, yeni bir tarayici oturumu baslatir ve kullaniciyi analiz akisi icin Run ekranina yonlendirir.
+Dashboard, kullanicinin sisteme girdikten sonra platform durumunu ve son analiz
+ozetlerini tek ekranda gormesi icin tasarlanmistir. Giris ekrani kullanici adini
+dogrular, yeni bir tarayici oturumu baslatir ve kullaniciyi Run ekranina yonlendirir.
 
 ## Giris akisi
 
-1. Kullanici adinizi girin.
-2. Sistem `GET /ldap_auth/{username}` istegi ile kullaniciyi dogrular.
-3. Dogrulama basariliysa tarayici icin yeni bir `login_session_id` uretilir.
-4. Sistem `POST /sessions/start` ile backend tarafinda oturumu kaydeder.
-5. Uygulama Run ekranina gecer ve eski analiz cache durumlarini temizler.
+<Steps>
+  <Step title="Kullanici adini gir">
+    Kullanici adinizi girin ve giris yapin.
+
+    <Frame caption="Giris ekrani">
+      ![Login](/assets/screens/login.png)
+    </Frame>
+  </Step>
+  <Step title="Dogrulama">
+    Sistem `GET /ldap_auth/{username}` istegi ile kullaniciyi dogrular.
+  </Step>
+  <Step title="Oturum olusturma">
+    Dogrulama basariliysa tarayici icin yeni bir `login_session_id` uretilir ve
+    `POST /sessions/start` ile backend tarafinda oturum kaydedilir.
+  </Step>
+  <Step title="Run ekranina gecis">
+    Uygulama Run ekranina gecer ve eski analiz cache durumlarini temizler.
+  </Step>
+</Steps>
 
 <Note>
-Giris sirasinda uygulama `sessionStorage` icinde `login_username` ve `login_session_id` degerlerini saklar. Bu degerler performans loglari, Gantt gorunumu, hata izleme ve oturum kurtarma akislariyla iliskilidir.
+  Giris sirasinda uygulama `sessionStorage` icinde `login_username` ve
+  `login_session_id` degerlerini saklar. Bu degerler performans loglari, Gantt
+  gorunumu, hata izleme ve oturum kurtarma akislariyla iliskilidir.
 </Note>
 
 ## Dashboard kartlari
 
-Dashboard Start ekraninda `GET /dashboard/stats` verisi kullanilir. Backend cevap veremezse ekran guvenli varsayilan degerlerle acilir.
+Dashboard Start ekraninda `GET /dashboard/stats` verisi kullanilir. Backend cevap
+veremezse ekran guvenli varsayilan degerlerle acilir.
 
 | Alan | Ne anlatir |
 | --- | --- |
@@ -38,7 +56,12 @@ Dashboard Start ekraninda `GET /dashboard/stats` verisi kullanilir. Backend ceva
 
 ## Konum bilgisi
 
-Tarayici izin verirse Dashboard, kullanicinin yaklasik konumunu gostermek icin browser geolocation bilgisini kullanir. Adres metni icin OpenStreetMap Nominatim reverse geocoding cagirilir. Konum izni verilmezse ekran `N/A` veya varsayilan lokasyonla calisir.
+<Tip>
+  Tarayici izin verirse Dashboard, kullanicinin yaklasik konumunu gostermek icin
+  browser geolocation bilgisini kullanir. Adres metni icin OpenStreetMap Nominatim
+  reverse geocoding cagirilir. Konum izni verilmezse ekran `N/A` veya varsayilan
+  lokasyonla calisir.
+</Tip>
 
 ## Operasyon notlari
 
@@ -46,4 +69,3 @@ Tarayici izin verirse Dashboard, kullanicinin yaklasik konumunu gostermek icin b
 - Giris sirasinda onceki Redux analiz state'i ve arayuz cache kayitlari temizlenir.
 - `BASE_URL` tanimli degilse frontend varsayilan olarak `http://localhost:8002` adresini kullanir.
 - Dashboard verileri karar destek amaclidir; kesin proje kaydi icin ilgili analiz ekranindaki ciktilar ve export dosyalari esas alinmalidir.
-

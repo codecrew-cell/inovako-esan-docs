@@ -1,17 +1,16 @@
 ---
 title: "Performance / Gantt Guide"
 description: "Run isleminin model, OCR ve worker surelerini Gantt ekraninda izleme."
+icon: "activity"
 ---
 
-# Performance / Gantt Guide
+Performance ekrani son run isleminin zaman dagilimini ve isleme adimlarini Gantt
+mantiginda gosterir. Amac yavaslayan model, OCR veya dosya isleme adimini hizli
+tespit etmektir.
 
-Performance ekrani son run isleminin zaman dagilimini ve isleme adimlarini Gantt mantiginda gosterir. Amac yavaslayan model, OCR veya dosya isleme adimini hizli tespit etmektir.
-
-## Yetki
-
-| Route | Guard |
-| --- | --- |
-| `/performance` | `canRun` |
+<Info>
+  Bu ekrana `canRun` yetkisi olan kullanicilar erisebilir (`/performance`).
+</Info>
 
 ## Veri kaynagi
 
@@ -20,33 +19,47 @@ Performance ekrani son run isleminin zaman dagilimini ve isleme adimlarini Gantt
 | `GET /gantt/latest` | En son session icin Gantt verisini getirir. |
 | `GET /gantt/{session_id}` | Belirli session icin Gantt verisini getirir. |
 
-Backend tarafinda timing verisi isleme sirasinda yazilir ve model/worker bazli sureleri icerir.
+Backend tarafinda timing verisi isleme sirasinda yazilir ve model/worker bazli
+sureleri icerir.
 
 ## Kullanici akisi
 
-1. Run ekraninda bir islem tamamlayin.
-2. Performance ekranini acin.
-3. Latest Gantt verisinin geldigini kontrol edin.
-4. `Models` veya diger detay filtreleriyle yavas adimi bulun.
-5. Sorun model bazliysa Settings/model dosyasini, OCR bazliysa backend loglarini kontrol edin.
+<Steps>
+  <Step title="Run tamamla">
+    Run ekraninda bir islem tamamlayin.
+  </Step>
+  <Step title="Performance'i ac">
+    Performance ekranini acin ve latest Gantt verisinin geldigini kontrol edin.
+  </Step>
+  <Step title="Yavas adimi bul">
+    `Models` veya diger detay filtreleriyle yavas adimi tespit edin.
+  </Step>
+  <Step title="Kaynaga in">
+    Sorun model bazliysa Settings/model dosyasini, OCR bazliysa backend loglarini kontrol edin.
+  </Step>
+</Steps>
 
 ## Yorumlama
 
-| Belirti | Anlam |
-| --- | --- |
-| Tek model adimi asiri uzun | GPU/CPU, model dosyasi veya TensorRT fallback kontrol edilmeli. |
-| OCR adimlari uzun | Goruntu kalitesi, satir sayisi veya OCR worker performansi incelenmeli. |
-| Ilk batch uzun, sonraki batch normal | Model warm-up veya cache etkisi olabilir. |
-| Tum batch'ler yavas | Donanim, batch size veya disk I/O problemi olabilir. |
+<AccordionGroup>
+  <Accordion title="Tek model adimi asiri uzun" icon="gauge">
+    GPU/CPU, model dosyasi veya TensorRT fallback kontrol edilmeli.
+  </Accordion>
+  <Accordion title="OCR adimlari uzun" icon="gauge">
+    Goruntu kalitesi, satir sayisi veya OCR worker performansi incelenmeli.
+  </Accordion>
+  <Accordion title="Ilk batch uzun, sonraki batch normal" icon="gauge">
+    Model warm-up veya cache etkisi olabilir.
+  </Accordion>
+  <Accordion title="Tum batch'ler yavas" icon="gauge">
+    Donanim, batch size veya disk I/O problemi olabilir.
+  </Accordion>
+</AccordionGroup>
 
 ## Operasyon notlari
 
-- Gantt ekrani hata ayiklama aracidir; kullanici raporu yerine performans analizi icindir.
-- Release oncesi ayni test dataset ile sure karsilastirmasi yapilmalidir.
-- Settings `batch_size`, model tipi ve `PREFER_TRT` davranisi performansi etkileyebilir.
-
-## Screenshot beklenenleri
-
-- Latest Gantt timeline.
-- Model/detail filtreleri.
-- Uzun suren adimin detay gorunumu.
+<Note>
+  - Gantt ekrani hata ayiklama aracidir; kullanici raporu yerine performans analizi icindir.
+  - Release oncesi ayni test dataset ile sure karsilastirmasi yapilmalidir.
+  - Settings `batch_size`, model tipi ve `PREFER_TRT` davranisi performansi etkileyebilir.
+</Note>

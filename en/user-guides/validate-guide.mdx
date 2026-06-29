@@ -1,35 +1,108 @@
 ---
 title: "Validate Screen Guide"
 description: "How to review detection boxes, edit classes, and save validation changes."
+icon: "square-check"
 ---
 
-# Validate Screen Guide
+Validate is the main quality gate where the detection and OCR data produced by Run
+is reviewed by a human. The corrections made on this screen directly affect the
+Lithology and Export output.
 
-## Purpose
+<Warning>
+  This screen is a quality gate: any error left here carries directly into the
+  Lithology and Export outputs.
+</Warning>
 
-Validate is used to inspect model detections and correct them before mineral, lithology, or export steps.
+<Frame caption="Main canvas with detection boxes">
+  ![Validate detections canvas](/assets/screens/validate-detections-canvas.png)
+</Frame>
 
-## Main actions
+## What it does
 
-| Action | Description |
+<CardGroup cols={2}>
+  <Card title="Review detections" icon="scan-search">
+    Box positions, classes and image variants are reviewed.
+  </Card>
+  <Card title="Edit boxes" icon="pen-line">
+    Add a missing box, delete an incorrect box or change its class.
+  </Card>
+  <Card title="Maneuver table" icon="table">
+    OCR-sourced start/end depths are corrected.
+  </Card>
+  <Card title="Bulk save" icon="save">
+    Session changes are written to the backend in one go.
+  </Card>
+</CardGroup>
+
+## Main screen sections
+
+| Section | Role |
 | --- | --- |
-| Review boxes | Confirm that each detection is correctly positioned. |
-| Add box | Create a missing detection. |
-| Delete box | Remove an incorrect detection. |
-| Change class | Assign the correct class to a detection. |
-| Save changes | Persist session changes to the backend. |
+| Image viewer | Shows the active core image and detection boxes. |
+| Maneuver table | Lists depth ranges and self-edit warnings. |
+| Header navigation | Manages previous/next image and page transitions. |
+| Canvas tools | Box selection, editing, deletion and image type selection. |
 
-## Recommended workflow
+## Step by step
 
-1. Move through images in order.
-2. Correct obvious false positives and missing detections.
-3. Save changes regularly.
-4. Continue to Mineral Validate after geotechnical detections are stable.
+<Steps>
+  <Step title="Review the detections">
+    Check the box positions and classes in the active image.
 
-## Quality checklist
+    <Frame caption="Detection canvas">
+      ![Validate detections](/assets/screens/validate-detections-canvas.png)
+    </Frame>
+  </Step>
+  <Step title="Edit a box / change a class">
+    Add a missing box, delete an incorrect box or change its class.
 
-- No important region is missing.
-- Incorrect boxes are removed.
-- Class labels follow the project standard.
-- Bulk save completed successfully.
+    <Frame caption="Box editing and class change flow">
+      ![Validate box edit](/assets/screens/validate-box-edit-class-change-flow.png)
+    </Frame>
+    <Frame caption="Class change">
+      ![Validate class change](/assets/screens/validate-class-change-new.png)
+    </Frame>
+  </Step>
+  <Step title="Check the maneuver table">
+    Correct OCR-sourced depth errors and `selfEdit` warnings.
 
+    <Frame caption="Maneuver table with warnings">
+      ![Validate maneuver warning](/assets/screens/validate-warning-maneuver-table.png)
+    </Frame>
+  </Step>
+  <Step title="Bulk save and continue">
+    Submit all changes with a single save, then continue to Lithology or Export.
+  </Step>
+</Steps>
+
+## Critical endpoints
+
+| Endpoint | When it is used |
+| --- | --- |
+| `GET /maneuvers_from_changes/{session_id}` | To generate maneuvers from the changes table. |
+| `GET /maneuversPhoto/{session_id}` | To create maneuver images. |
+| `GET /get_maneuvers/{session_id}` | To read the maneuver table. |
+| `GET /getColorChange/{hole_id}` | To get color change info. |
+| `GET /frame/{session_id}` | To load the active image frame. |
+| `POST /save_bulk_changes/{session_id}` | To bulk save user changes. |
+
+## Blocking checks
+
+On the Validate screen, `selfEdit` values are used to flag OCR/maneuver errors.
+Equal or reversed depths must be corrected before export.
+
+| Check | Expected state |
+| --- | --- |
+| Maneuver start | Must be smaller than the end value. |
+| Empty maneuver table | The Run or changes data should be checked. |
+| Box-row consistency | Detection boxes should stay within the relevant core row. |
+| Downstream screens | Session data must be saved for lithology and export. |
+
+## Save standard
+
+<Tip>
+  - Do not leave the page without doing a bulk save.
+  - If multiple box/table changes were made, send them to the backend with a single save.
+  - After saving, recheck the maneuver table.
+  - Before export, at least one image and one maneuver row should be reviewed manually.
+</Tip>

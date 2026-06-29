@@ -1,48 +1,138 @@
 ---
 title: "Training Lab User Guide"
 description: "How to prepare features, inspect clusters, clean labels, train models, and test samples."
+icon: "flask-conical"
 ---
 
-# Training Lab User Guide
+Training Lab is the screen for data preparation, embedding extraction, clustering,
+label cleanup, model training and testing for lithology classification models.
 
-## Purpose
+<Frame caption="Training Lab Explorer">
+  ![Training Lab explorer](/assets/screens/training-lab-explorer-new.png)
+</Frame>
 
-Training Lab supports dataset exploration, feature extraction, UMAP visualization, clustering, label cleanup, model training, and sample testing.
+## Tab structure
 
-## Main tabs
+<Tabs>
+  <Tab title="Explorer">
+    Prepares the feature space from a folder/snapshot/tile source and provides UMAP and cluster views.
 
-| Tab | Purpose |
+    <Frame caption="Explorer">
+      ![Explorer](/assets/screens/training-lab-explorer-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Data Cleanout">
+    Cleans and saves tiles/samples.
+
+    <Frame caption="Data Cleanout">
+      ![Data Cleanout](/assets/screens/training-lab-data-cleanout-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Train">
+    Trains the model with the cleaned data and saves it to the registry.
+
+    <Frame caption="Model training">
+      ![Train](/assets/screens/training-lab-model-train-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Test">
+    Tests the saved model on a single sample or strip.
+
+    <Frame caption="Model testing">
+      ![Test](/assets/screens/training-lab-model-test-new.png)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## Explorer source modes
+
+<CardGroup cols={3}>
+  <Card title="Folder" icon="folder-open">
+    For quick analysis from a local folder.
+  </Card>
+  <Card title="Composition" icon="layers">
+    To prepare training from a Data Platform composition.
+  </Card>
+  <Card title="Tiles" icon="grid-2x2">
+    To reload a previously produced tile snapshot.
+  </Card>
+</CardGroup>
+
+## Explorer flow
+
+<Steps>
+  <Step title="Select a source and prepare the feature space">
+    Select a folder, composition or tile snapshot and run "Prepare Feature Space".
+    Embedding progress is tracked live.
+
+    <Frame caption="Processing / progress state">
+      ![Progress](/assets/screens/training-lab-progress-state-new.png)
+    </Frame>
+  </Step>
+  <Step title="Compute and inspect UMAP">
+    Compute UMAP performs dimensionality reduction and clustering.
+
+    <Frame caption="Dimensional projection map">
+      ![Dimensional projection map](/assets/screens/training-lab-dimensional-projection-map.png)
+    </Frame>
+  </Step>
+  <Step title="Manage clusters">
+    Edit cluster names, multi-select with the lasso, apply merge/exclude.
+
+    <Frame caption="Clustering manager">
+      ![Clustering manager](/assets/screens/training-lab-clustering-manager.png)
+    </Frame>
+  </Step>
+  <Step title="Move to Data Cleanout or Train">
+    Once labels are finalized, move to the cleanup or training step.
+  </Step>
+</Steps>
+
+## Key endpoints
+
+| Endpoint | Purpose |
 | --- | --- |
-| Explorer | Load sources, compute embeddings, inspect UMAP clusters, and adjust class labels. |
-| Data Cleanout | Review tile snapshots and clean training data. |
-| Classes | Manage class-level labels and assignments. |
-| Train | Start model training and monitor progress. |
-| Test | Upload or select samples and run inference against saved models. |
+| `POST /traininglab/dataset-info` | Reads the image count and status in a folder. |
+| `POST /traininglab/compute-embeddings` | Starts tile extraction and the embedding process. |
+| `GET /traininglab/embedding-progress` | Tracks the background job. |
+| `POST /traininglab/compute-umap` | Computes UMAP coordinates and clusters. |
+| `POST /traininglab/recluster` | Changes the number of clusters. |
+| `POST /traininglab/update-cluster-names` | Saves the cluster/class names. |
+| `POST /traininglab/export-class-package` | Downloads a class label package as a ZIP. |
+| `POST /traininglab/import-class-package` | Applies a label package to another cluster. |
+| `POST /traininglab/finalize-assignments` | Persists the final label assignments. |
+| `GET /traininglab/train-stream` | Streams the model training logs. |
+| `POST /traininglab/test-sample` | Runs the model test. |
 
-## Source modes
+## User checklist
 
-| Mode | Use case |
-| --- | --- |
-| Folder | Start from a local folder and optionally register it as a dataset snapshot. |
-| Composition | Use a committed composition from Data Versioning. |
-| Tiles | Load an existing tile snapshot directly. |
+<Check>The source mode is selected correctly.</Check>
+<Check>If tile extraction parameters changed, they are not mixed with an old snapshot.</Check>
+<Check>UMAP cluster names were saved before Train.</Check>
+<Check>Excluded samples were rechecked before Train.</Check>
+<Check>A Data Platform lineage record was created after the model was saved.</Check>
 
-## Key controls
+## Common errors
 
-- Row edge trim controls how much top/bottom crop is removed.
-- Window overlap controls tile overlap during extraction.
-- Composite length controls physical length assumptions.
-- UMAP neighbors, distance, and dimensionality affect cluster projection.
-- Lasso selection enables bulk reassignment or exclusion.
-- Class package export/import supports label reuse across datasets.
+<AccordionGroup>
+  <Accordion title="UMAP is empty" icon="triangle-alert">
+    **Cause:** The embedding did not complete or there is no cache.
 
-## Save criteria
+    **Fix:** Wait until progress finishes, then Compute Plot.
+  </Accordion>
+  <Accordion title="Tile snapshot does not load" icon="triangle-alert">
+    **Cause:** The snapshot is not READY or there is no composition link.
 
-Before saving or training a model:
+    **Fix:** Check the snapshot status in the Data Platform.
+  </Accordion>
+  <Accordion title="Train does not save the model" icon="triangle-alert">
+    **Cause:** The classes are not finalized.
 
-1. Cluster names are meaningful.
-2. Excluded samples and clusters are reviewed.
-3. Merge operations are complete.
-4. Active snapshot or composition context is correct.
-5. Training history and model lineage are traceable.
+    **Fix:** Complete the Data Cleanout/Classes steps.
+  </Accordion>
+  <Accordion title="Test result differs from expected" icon="triangle-alert">
+    **Cause:** Wrong model or wrong trim/window parameter.
 
+    **Fix:** Check the registry metadata and Settings values.
+  </Accordion>
+</AccordionGroup>

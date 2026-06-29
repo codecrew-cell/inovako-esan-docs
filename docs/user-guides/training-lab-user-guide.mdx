@@ -1,42 +1,92 @@
 ---
 title: "Training Lab User Guide"
 description: "Explorer, Data Cleanout, Classes, Train ve Test tablari icin kullanici kilavuzu."
+icon: "flask-conical"
 ---
 
-# Training Lab User Guide
+Training Lab, litoloji siniflandirma modelleri icin veri hazirlama, embedding
+cikarma, kumeleme, etiket temizleme, model egitme ve test etme ekranidir.
 
-Training Lab, litoloji siniflandirma modelleri icin veri hazirlama, embedding cikarma, kumeleme, etiket temizleme, model egitme ve test etme ekranidir.
+<Frame caption="Training Lab Explorer">
+  ![Training Lab explorer](/assets/screens/training-lab-explorer-new.png)
+</Frame>
 
 ## Tab yapisi
 
-| Tab | Amac |
-| --- | --- |
-| Explorer | Folder/snapshot/tile kaynagindan feature space hazirlar, UMAP ve cluster gorunumu sunar. |
-| Data Cleanout | Tile/samples uzerinde temizleme ve kaydetme islemlerini yapar. |
-| Classes | Sinif isimleri ve etiket paketleri uzerinde calisir. |
-| Train | Temizlenmis veriyle modeli egitir ve registry'ye kaydeder. |
-| Test | Kaydedilen modeli tekil ornek veya strip uzerinde test eder. |
+<Tabs>
+  <Tab title="Explorer">
+    Folder/snapshot/tile kaynagindan feature space hazirlar, UMAP ve cluster gorunumu sunar.
+
+    <Frame caption="Explorer">
+      ![Explorer](/assets/screens/training-lab-explorer-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Data Cleanout">
+    Tile/samples uzerinde temizleme ve kaydetme islemlerini yapar.
+
+    <Frame caption="Data Cleanout">
+      ![Data Cleanout](/assets/screens/training-lab-data-cleanout-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Train">
+    Temizlenmis veriyle modeli egitir ve registry'ye kaydeder.
+
+    <Frame caption="Model egitimi">
+      ![Train](/assets/screens/training-lab-model-train-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Test">
+    Kaydedilen modeli tekil ornek veya strip uzerinde test eder.
+
+    <Frame caption="Model testi">
+      ![Test](/assets/screens/training-lab-model-test-new.png)
+    </Frame>
+  </Tab>
+</Tabs>
 
 ## Explorer kaynak modlari
 
-| Mode | Ne zaman kullanilir |
-| --- | --- |
-| Folder | Lokal klasorden hizli analiz yapmak icin. |
-| Composition | Data Platform composition uzerinden egitim hazirlamak icin. |
-| Tiles | Daha once uretilmis tile snapshot'i tekrar yuklemek icin. |
+<CardGroup cols={3}>
+  <Card title="Folder" icon="folder-open">
+    Lokal klasorden hizli analiz yapmak icin.
+  </Card>
+  <Card title="Composition" icon="layers">
+    Data Platform composition uzerinden egitim hazirlamak icin.
+  </Card>
+  <Card title="Tiles" icon="grid-2x2">
+    Daha once uretilmis tile snapshot'i tekrar yuklemek icin.
+  </Card>
+</CardGroup>
 
 ## Explorer akisi
 
-```mermaid
-flowchart TD
-    A[Kaynak sec] --> B[Dataset/tile snapshot yukle]
-    B --> C[Prepare Feature Space]
-    C --> D[Embedding progress]
-    D --> E[Compute UMAP]
-    E --> F[Cluster inspect]
-    F --> G[Class rename / merge / export-import]
-    G --> H[Data Cleanout veya Train]
-```
+<Steps>
+  <Step title="Kaynak sec ve feature space hazirla">
+    Folder, composition veya tile snapshot secip "Prepare Feature Space" calistirin.
+    Embedding ilerlemesi canli izlenir.
+
+    <Frame caption="Isleme / progress durumu">
+      ![Progress](/assets/screens/training-lab-progress-state-new.png)
+    </Frame>
+  </Step>
+  <Step title="UMAP hesapla ve incele">
+    Compute UMAP ile boyut indirgeme ve kumeleme yapilir.
+
+    <Frame caption="Boyutsal projeksiyon haritasi">
+      ![Dimensional projection map](/assets/screens/training-lab-dimensional-projection-map.png)
+    </Frame>
+  </Step>
+  <Step title="Cluster'lari yonet">
+    Kume isimlerini duzenleyin, lasso ile coklu secim yapin, merge/exclude uygulayin.
+
+    <Frame caption="Kumeleme yoneticisi">
+      ![Clustering manager](/assets/screens/training-lab-clustering-manager.png)
+    </Frame>
+  </Step>
+  <Step title="Data Cleanout veya Train'e gec">
+    Etiketler netlestikten sonra temizleme veya egitim adimina gecin.
+  </Step>
+</Steps>
 
 ## Kritik endpointler
 
@@ -56,25 +106,33 @@ flowchart TD
 
 ## Kullanici kontrol listesi
 
-1. Kaynak modunu dogru secin.
-2. Tile extraction parametrelerini degistirdiyseniz eski snapshot ile karistirmayin.
-3. UMAP cluster isimlerini kaydetmeden Train'e gecmeyin.
-4. Exclude edilen ornekleri Train oncesi tekrar kontrol edin.
-5. Model kaydindan sonra Data Platform lineage kaydinin olustugunu kontrol edin.
+<Check>Kaynak modu dogru secildi.</Check>
+<Check>Tile extraction parametreleri degistiyse eski snapshot ile karistirilmadi.</Check>
+<Check>UMAP cluster isimleri Train'den once kaydedildi.</Check>
+<Check>Exclude edilen ornekler Train oncesi tekrar kontrol edildi.</Check>
+<Check>Model kaydindan sonra Data Platform lineage kaydi olustu.</Check>
 
 ## Sik hatalar
 
-| Belirti | Muhtemel neden | Cozum |
-| --- | --- | --- |
-| UMAP bos | Embedding tamamlanmadi veya cache yok | Progress bitene kadar bekleyin, sonra Compute Plot. |
-| Tile snapshot yuklenmiyor | Snapshot READY degil veya composition baglantisi yok | Data Platform'da snapshot durumunu kontrol edin. |
-| Train modeli kaydetmiyor | Sinifler finalize edilmemis | Data Cleanout/Classes adimlarini tamamlayin. |
-| Test sonucu beklenenden farkli | Yanlis model veya yanlis trim/window parametresi | Registry metadata ve Settings degerlerini kontrol edin. |
+<AccordionGroup>
+  <Accordion title="UMAP bos" icon="triangle-alert">
+    **Neden:** Embedding tamamlanmadi veya cache yok.
 
-## Screenshot beklenenleri
+    **Cozum:** Progress bitene kadar bekleyin, sonra Compute Plot.
+  </Accordion>
+  <Accordion title="Tile snapshot yuklenmiyor" icon="triangle-alert">
+    **Neden:** Snapshot READY degil veya composition baglantisi yok.
 
-- Explorer source mode secimi.
-- UMAP cluster gorunumu.
-- Data Cleanout ornek temizleme.
-- Train loglari.
-- Test sonucu.
+    **Cozum:** Data Platform'da snapshot durumunu kontrol edin.
+  </Accordion>
+  <Accordion title="Train modeli kaydetmiyor" icon="triangle-alert">
+    **Neden:** Sinifler finalize edilmemis.
+
+    **Cozum:** Data Cleanout/Classes adimlarini tamamlayin.
+  </Accordion>
+  <Accordion title="Test sonucu beklenenden farkli" icon="triangle-alert">
+    **Neden:** Yanlis model veya yanlis trim/window parametresi.
+
+    **Cozum:** Registry metadata ve Settings degerlerini kontrol edin.
+  </Accordion>
+</AccordionGroup>

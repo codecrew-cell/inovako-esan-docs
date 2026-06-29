@@ -1,19 +1,20 @@
 ---
 title: "Settings Admin Guide"
 description: "Model, file, image processing, color analysis, Training Lab and Validate settings."
+icon: "settings"
 ---
-
-# Settings Admin Guide
 
 The Settings screen lets the admin and supervisor roles manage system behavior
 without changing code. The values on this screen affect the Run, Validate,
 Lithology and Training Lab flows.
 
-## Authorization
+<Info>
+  Only the `admin` or `supervisor` roles can access this screen (`/settings`).
+</Info>
 
-| Route | Guard |
-| --- | --- |
-| `/settings` | `admin` or `supervisor` |
+<Frame caption="Settings screen">
+  ![Settings](/assets/screens/settings.png)
+</Frame>
 
 ## Setting groups
 
@@ -36,9 +37,11 @@ The Settings API is served under the `/settings` prefix in `Api/settings_service
 | `GET /settings` | Returns the active settings and default values. |
 | `POST /settings` | Saves draft settings. |
 
-During save, some settings are synced with `colorChangeParams.json`. For this
-reason, when color/segmentation parameters change, the backend color-analysis
-behavior changes as well.
+<Note>
+  During save, some settings are synced with `colorChangeParams.json`. For this
+  reason, when color/segmentation parameters change, the backend color-analysis
+  behavior changes as well.
+</Note>
 
 ## Model selection standard
 
@@ -53,23 +56,28 @@ behavior changes as well.
 
 ## Before making changes
 
-- Verify the active model file exists on disk.
-- Test confidence/IoU changes on a test dataset.
-- After a color palette change, check the Export color output.
-- If a training parameter changes, record old vs new model performance separately.
+<Steps>
+  <Step title="Verify the model file">
+    Verify the active model file exists on disk.
+  </Step>
+  <Step title="Test the thresholds">
+    Test confidence/IoU changes on a test dataset.
+  </Step>
+  <Step title="Check the color output">
+    After a color palette change, check the Export color output.
+  </Step>
+  <Step title="Record performance">
+    If a training parameter changes, record old vs new model performance separately.
+  </Step>
+</Steps>
 
 ## Rollback
 
-If a wrong value is saved on the Settings screen:
+<Warning>
+  If a wrong value is saved on the Settings screen, apply the steps below.
+</Warning>
 
 1. Re-select the last working model and parameters.
 2. Save the page.
 3. Restart the backend if needed.
 4. Run a Run + Validate smoke test.
-
-## Expected screenshots
-
-- Model Management section.
-- Validate / Canvas color settings.
-- Lithology color settings.
-- Training Lab parameters.

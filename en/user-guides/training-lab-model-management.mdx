@@ -1,22 +1,39 @@
 ---
 title: "Training Lab Model Management"
 description: "Guide to saving, renaming, deleting, downloading models and tracking training history inside Training Lab."
+icon: "brain-circuit"
 ---
 
-## Purpose
+Training Lab is not just a class-editing screen; it is also the model management
+area where trained models are saved, downloaded, renamed and linked to data
+versions.
 
-Training Lab is not just a class-editing screen; it is also the model
-management area where trained models are saved, downloaded, renamed and linked
-to data versions.
+<Frame caption="Model training">
+  ![Model training](/assets/screens/training-lab-model-train-new.png)
+</Frame>
 
 ## Model lifecycle
 
-1. **Feature space is prepared:** A dataset, composition or tile snapshot is selected as the source.
-2. **Classes are cleaned:** Cluster names, lasso selections, exclude operations and merge decisions are applied.
-3. **Assignments are finalized:** The active label set is created via `/traininglab/finalize-assignments` or the related UI action.
-4. **Training is started:** The `/traininglab/train-stream` SSE stream provides live training progress.
-5. **Model is saved:** `/traininglab/save-model` creates the model artifact record.
-6. **Lineage is linked:** The model is recorded on the Data Versioning side with the snapshot or composition used.
+<Steps>
+  <Step title="Feature space is prepared">
+    A dataset, composition or tile snapshot is selected as the source.
+  </Step>
+  <Step title="Classes are cleaned">
+    Cluster names, lasso selections, exclude operations and merge decisions are applied.
+  </Step>
+  <Step title="Assignments are finalized">
+    The active label set is created via `/traininglab/finalize-assignments` or the related UI action.
+  </Step>
+  <Step title="Training is started">
+    The `/traininglab/train-stream` SSE stream provides live training progress.
+  </Step>
+  <Step title="Model is saved">
+    `/traininglab/save-model` creates the model artifact record.
+  </Step>
+  <Step title="Lineage is linked">
+    The model is recorded on the Data Versioning side with the snapshot or composition used.
+  </Step>
+</Steps>
 
 ## Model operations
 
@@ -33,21 +50,37 @@ to data versions.
 
 ## Pre-save quality check
 
-- Cluster names should not be left as defaults like `Cluster 0`, `Cluster 1`.
-- Excluded classes and samples should be checked one last time.
-- After merge operations, the class count should match the expected target class set.
-- The tile snapshot selection must be the correct version; if a draft tile is active, the main tile record should be finalized on the Data Cleanout side.
-- It is recommended that the model name include project, data version and date info.
+<Warning>
+  Do not save a model before completing the items below; missing info makes it
+  harder to later trace which data the model was trained on.
+</Warning>
+
+<Check>Cluster names are not left as defaults like `Cluster 0`, `Cluster 1`.</Check>
+<Check>Excluded classes and samples were checked one last time.</Check>
+<Check>After merges, the class count matches the target class set.</Check>
+<Check>The correct tile snapshot version is selected; if a draft tile is active, the main tile was finalized in Data Cleanout.</Check>
+<Check>The model name includes project, data version and date info.</Check>
 
 ## Best practice for lineage
 
 Before saving a model, check the active source info:
 
-| Source | Check |
-| --- | --- |
-| Folder | Dataset Key must be entered and the dataset snapshot record completed. |
-| Composition | The composition must be in committed state. |
-| Tiles | The correct tile snapshot version must be selected. |
+<CardGroup cols={3}>
+  <Card title="Folder" icon="folder-open">
+    Dataset Key must be entered and the dataset snapshot record completed.
+  </Card>
+  <Card title="Composition" icon="layers">
+    The composition must be in committed state.
+  </Card>
+  <Card title="Tiles" icon="grid-2x2">
+    The correct tile snapshot version must be selected.
+  </Card>
+</CardGroup>
 
-If this info is missing, even if the model file is produced, it becomes harder
-to later trace which data it was trained on.
+## Model testing
+
+The saved model is verified on a single sample or strip in the Test tab.
+
+<Frame caption="Model testing">
+  ![Model testing](/assets/screens/training-lab-model-test-new.png)
+</Frame>

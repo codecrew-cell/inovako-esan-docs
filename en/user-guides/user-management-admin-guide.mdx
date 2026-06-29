@@ -1,28 +1,34 @@
 ---
 title: "User Management Admin Guide"
 description: "Adding users, changing roles, activating/deactivating and deleting users."
+icon: "users"
 ---
 
-# User Management Admin Guide
+The User Management screen is for admin users only. Local user records, roles and
+activity status are managed here.
 
-The User Management screen is for admin users only. Local user records, roles
-and activity status are managed here.
+<Info>
+  Only the `admin` role can access this screen (`/user-management`). Mutating
+  endpoints check whether the user coming via the `X-Username` header is an admin.
+</Info>
 
-## Authorization
-
-| Route | Guard |
-| --- | --- |
-| `/user-management` | `admin` |
-
-Mutating endpoints check whether the user coming via the `X-Username` header is an admin.
+<Frame caption="User Management screen">
+  ![User management](/assets/screens/user-management.png)
+</Frame>
 
 ## Roles
 
-| Role | Typical user |
-| --- | --- |
-| `admin` | Authorized user who manages users and the system. |
-| `supervisor` | User who manages operation settings and the control process. |
-| `engineer` | User who works on the Run, Validate, Training Lab and Data flows. |
+<CardGroup cols={3}>
+  <Card title="admin" icon="shield">
+    Authorized user who manages users and the system.
+  </Card>
+  <Card title="supervisor" icon="user-cog">
+    User who manages operation settings and the control process.
+  </Card>
+  <Card title="engineer" icon="user">
+    User who works on the Run, Validate, Training Lab and Data flows.
+  </Card>
+</CardGroup>
 
 ## Operation list
 
@@ -36,22 +42,29 @@ Mutating endpoints check whether the user coming via the `X-Username` header is 
 
 ## Operation rules
 
-- Do not unnecessarily increase the number of admins.
-- Deactivating is a safer first step than deleting.
-- After a role change, the user's browser session should be refreshed.
-- Do not share a real user list or email addresses in public documentation.
+<Warning>
+  - Do not unnecessarily increase the number of admins.
+  - Deactivating is a safer first step than deleting.
+  - After a role change, the user's browser session should be refreshed.
+  - Do not share a real user list or email addresses in public documentation.
+</Warning>
 
 ## Error cases
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| 403/unauthorized | `X-Username` is not an admin | Log in with an active admin account. |
-| User not visible | `users.json` cannot be read or backend is in a different directory | Check the backend working directory. |
-| Role changed but menu did not | Frontend session state is stale | Logout/login or refresh the page. |
+<AccordionGroup>
+  <Accordion title="403 / unauthorized" icon="triangle-alert">
+    **Cause:** `X-Username` is not an admin.
 
-## Expected screenshots
+    **Fix:** Log in with an active admin account.
+  </Accordion>
+  <Accordion title="User not visible" icon="triangle-alert">
+    **Cause:** `users.json` cannot be read or the backend is in a different directory.
 
-- User table.
-- Role change control.
-- Active/passive toggle.
-- Add-user form.
+    **Fix:** Check the backend working directory.
+  </Accordion>
+  <Accordion title="Role changed but menu did not" icon="triangle-alert">
+    **Cause:** The frontend session state is stale.
+
+    **Fix:** Logout/login or refresh the page.
+  </Accordion>
+</AccordionGroup>

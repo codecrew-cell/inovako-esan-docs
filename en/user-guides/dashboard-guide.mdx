@@ -1,28 +1,46 @@
 ---
 title: "Dashboard and Login Guide"
 description: "Login flow, session creation, and dashboard KPI fields."
+icon: "gauge"
 ---
 
-# Dashboard and Login Guide
+The Dashboard is designed so that, after logging in, the user can see the platform
+status and recent analysis summaries on a single screen. The login screen
+validates the username, starts a new browser session and routes the user to the
+Run screen.
 
 ## Login flow
 
-1. Enter a username.
-2. The frontend calls `GET /ldap_auth/{username}`.
-3. On success, the browser creates a `login_session_id`.
-4. The frontend calls `POST /sessions/start`.
-5. The application clears stale analysis state and navigates to Run.
+<Steps>
+  <Step title="Enter a username">
+    Enter your username and log in.
 
-## Stored session values
+    <Frame caption="Login screen">
+      ![Login](/assets/screens/login.png)
+    </Frame>
+  </Step>
+  <Step title="Authentication">
+    The frontend calls `GET /ldap_auth/{username}` to validate the user.
+  </Step>
+  <Step title="Session creation">
+    On success, the browser creates a `login_session_id` and the session is
+    recorded on the backend via `POST /sessions/start`.
+  </Step>
+  <Step title="Navigate to Run">
+    The application clears stale analysis state and navigates to the Run screen.
+  </Step>
+</Steps>
 
-| Key | Purpose |
-| --- | --- |
-| `login_username` | Current authenticated user. |
-| `login_session_id` | Session correlation for performance, errors, and diagnostics. |
+<Note>
+  During login, the application stores `login_username` and `login_session_id` in
+  `sessionStorage`. These values are correlated with performance logs, the Gantt
+  view, error tracking and session recovery flows.
+</Note>
 
 ## Dashboard metrics
 
-`GET /dashboard/stats` powers the dashboard cards.
+`GET /dashboard/stats` powers the dashboard cards. If the backend does not
+respond, the screen opens with safe default values.
 
 | Field | Meaning |
 | --- | --- |
@@ -35,8 +53,19 @@ description: "Login flow, session creation, and dashboard KPI fields."
 | `system_status` | Backend/service status summary. |
 | `recent_scans` | Recent analysis records. |
 | `timeline_items` | Recent operational events. |
+| `map_sites` | Location cards and site map data. |
 
 ## Location behavior
 
-If the browser permits geolocation, the Dashboard attempts reverse geocoding through OpenStreetMap Nominatim. If not available, it falls back to `N/A` or default location data.
+<Tip>
+  If the browser permits geolocation, the Dashboard attempts reverse geocoding
+  through OpenStreetMap Nominatim. If not available, it falls back to `N/A` or
+  default location data.
+</Tip>
 
+## Operation notes
+
+- Repeated clicks on the login button are prevented; a new request is not started while one is active.
+- During login, the previous Redux analysis state and UI cache records are cleared.
+- If `BASE_URL` is not defined, the frontend defaults to `http://localhost:8002`.
+- Dashboard data is for decision support; for the definitive project record, rely on the outputs and export files from the relevant analysis screen.

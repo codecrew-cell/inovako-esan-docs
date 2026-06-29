@@ -1,20 +1,46 @@
 ---
 title: "Export Guide"
 description: "Exporting geotechnical, mineral and lithology output as files and images."
+icon: "download"
 ---
 
-# Export Guide
+The Export screen turns the data produced by the Validate and Lithology flows into
+reportable images and tables. The final files shared with users are obtained from
+this screen.
 
-The Export screen turns the data produced by the Validate and Lithology
-flows into reportable images and tables. The final files shared with users
-are obtained from this screen.
+<Note>
+  **Prerequisites:** Run must be completed, Validate changes saved, and mineral
+  maneuvers generated. If lithology is used, the Lithology editor output must be saved.
+</Note>
 
-## Prerequisites
+<Frame caption="Export screen overview">
+  ![Export overview](/assets/screens/export-overview.png)
+</Frame>
 
-- Run must be completed.
-- Validate changes must be saved.
-- Mineral maneuvers must be generated.
-- If lithology is used, the Lithology editor output must be saved.
+## Output views
+
+<Tabs>
+  <Tab title="Maneuvers">
+    <Frame caption="Maneuver preview">
+      ![Export maneuvers](/assets/screens/export-maneuvers-preview-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Maneuver Colors">
+    <Frame caption="Maneuver color profile">
+      ![Export maneuver colors](/assets/screens/export-maneuver-colors-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Classification">
+    <Frame caption="AI classification view">
+      ![Export classification](/assets/screens/export-classification.png)
+    </Frame>
+  </Tab>
+  <Tab title="Color Changes">
+    <Frame caption="Color change boundaries">
+      ![Export color changes](/assets/screens/export-color-changes-new.png)
+    </Frame>
+  </Tab>
+</Tabs>
 
 ## Main outputs
 
@@ -26,19 +52,37 @@ are obtained from this screen.
 | Color change image | Color analysis | Are the color transitions reasonable? |
 | ZIP download | Frontend JSZip | Are all expected files in the package? |
 
-## Flow
+## Table outputs
 
-```mermaid
-flowchart TD
-    A[Open Export] --> B[/get_mineral_maneuvers]
-    B --> C{Data exists?}
-    C -->|No| D[Regenerate via /mineral_from_changes]
-    C -->|Yes| E[Fetch maneuver images]
-    D --> E
-    E --> F[Preview check]
-    F --> G[Save maneuvers]
-    G --> H[Download ZIP]
-```
+<Tabs>
+  <Tab title="Geotechnical table">
+    <Frame caption="Geotechnical maneuver table">
+      ![Geotechnical maneuver table](/assets/screens/export-geotechnical-maneuver-table-new.png)
+    </Frame>
+  </Tab>
+  <Tab title="Lithological table">
+    <Frame caption="Lithological maneuver table">
+      ![Lithological maneuver table](/assets/screens/export-lithological-maneuver-table.png)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## Step by step
+
+<Steps>
+  <Step title="Prepare the maneuver data">
+    If `get_mineral_maneuvers` returns no data, it is regenerated via `mineral_from_changes`.
+  </Step>
+  <Step title="Check the preview">
+    Verify the maneuver images and table against the hole id / depth ranges.
+  </Step>
+  <Step title="Save the maneuvers">
+    Persist the output with `save_maneuvers`.
+  </Step>
+  <Step title="Download the ZIP">
+    All images and Excel tables are downloaded as a ZIP.
+  </Step>
+</Steps>
 
 ## Endpoints
 
@@ -54,25 +98,28 @@ flowchart TD
 
 ## User checklist
 
-1. Verify the hole id is correct.
-2. Check the maneuver start/end values.
-3. Make sure the geotechnical, mineral and lithology output belong to the same session.
-4. Check that the row order in combined images is intact.
-5. After downloading the ZIP, verify the file names and file count.
+<Check>The hole id is correct.</Check>
+<Check>Maneuver start/end values are consistent.</Check>
+<Check>Geotechnical, mineral and lithology output belong to the same session.</Check>
+<Check>The row order in combined images is intact.</Check>
+<Check>After downloading the ZIP, the file names and count are correct.</Check>
 
 ## Quality gate
 
-Since the Export screen is the report generation point, an error seen here
-usually comes from a previous step.
+Since the Export screen is the report generation point, an error seen here usually
+comes from a previous step.
 
-1. If export data is empty, go back to the Validate/Lithology flow and regenerate.
-2. If the depth range is wrong, return to the Validate table.
-3. If the lithology color/region is wrong, return to the Lithology editor.
-4. If no file is produced, check the backend `ManueverBlocks` and log folders.
-
-## Expected screenshots
-
-- Export main table.
-- Preview modal / image areas.
-- ZIP download action.
-- Color change and maneuver colors.
+<AccordionGroup>
+  <Accordion title="Export data is empty" icon="triangle-alert">
+    Go back to the Validate/Lithology flow and regenerate the maneuvers.
+  </Accordion>
+  <Accordion title="Depth range is wrong" icon="triangle-alert">
+    Return to the Validate table and correct the OCR/depth values.
+  </Accordion>
+  <Accordion title="Lithology color/region is wrong" icon="triangle-alert">
+    Return to the Lithology editor and correct the segments.
+  </Accordion>
+  <Accordion title="No file is produced" icon="triangle-alert">
+    Check the backend `ManueverBlocks` and log folders.
+  </Accordion>
+</AccordionGroup>

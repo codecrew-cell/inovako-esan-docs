@@ -1,21 +1,22 @@
 ---
 title: "Error Tracking Developer Guide"
 description: "Monitoring frontend/backend errors, grouping issues and session-based review."
+icon: "bug"
 ---
 
-# Error Tracking Developer Guide
-
 The Error Tracking screen provides operational error tracking for users with the
-developer role. Backend exceptions and errors reported by the frontend are kept
-in `errors.db`.
+developer role. Backend exceptions and errors reported by the frontend are kept in
+`errors.db`.
 
-## Authorization
+<Info>
+  Users with the `developer` role can access this screen (`/error-tracking`). On
+  the backend, the developer check depends on the `_check_developer` behavior in
+  `Api/dev_error_mixin.py`.
+</Info>
 
-| Route | Guard |
-| --- | --- |
-| `/error-tracking` | User with the `developer` role |
-
-On the backend, the developer check depends on the `_check_developer` behavior in `Api/dev_error_mixin.py`.
+<Frame caption="Error Tracking screen">
+  ![Error tracking](/assets/screens/error-tracking.png)
+</Frame>
 
 ## Data source
 
@@ -52,21 +53,25 @@ flowchart TD
 
 ## Review standard
 
-1. First check repeating fingerprints in the `Issues` view.
-2. Then in a single error detail, inspect the endpoint, stack trace, username and session id fields.
-3. For a backend error, find the related FastAPI endpoint.
-4. For a frontend error, check the route and component info.
-5. If resolved, update the status or clear the list after a release.
+<Steps>
+  <Step title="Check the issue view">
+    First check repeating fingerprints in the `Issues` view.
+  </Step>
+  <Step title="Inspect a single error">
+    In the error detail, inspect the endpoint, stack trace, username and session id fields.
+  </Step>
+  <Step title="Drill into the source">
+    For a backend error find the related FastAPI endpoint; for a frontend error check the route and component info.
+  </Step>
+  <Step title="Update the status">
+    If resolved, update the status or clear the list after a release.
+  </Step>
+</Steps>
 
 ## Retention policy
 
-`log/error_tracker.py` can automatically clean up old errors. By default,
-errors older than 30 days are deleted. Critical errors should be moved to the
-release notes or an issue tracker.
-
-## Expected screenshots
-
-- Error list.
-- Issue/fingerprint groups.
-- Error detail modal.
-- Session stats area.
+<Note>
+  `log/error_tracker.py` can automatically clean up old errors. By default, errors
+  older than 30 days are deleted. Critical errors should be moved to the release
+  notes or an issue tracker.
+</Note>

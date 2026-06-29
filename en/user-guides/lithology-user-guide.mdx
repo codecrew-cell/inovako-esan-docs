@@ -1,21 +1,47 @@
 ---
 title: "Lithology Editor Guide"
 description: "How to load lithology models, build maneuvers, edit regions, and save results."
+icon: "gem"
 ---
 
-# Lithology Editor Guide
+Lithology Editor is used to inspect and edit lithology regions on core imagery
+with model support. It can work through the integrated `/litho/*` API or the
+standalone editor's `/api/*` API during development.
 
-## Purpose
+<Frame caption="Lithology editor">
+  ![Lithology editor](/assets/screens/lithology-1.png)
+</Frame>
 
-Lithology Editor is used to inspect and edit lithology regions on core imagery. It can work through the integrated `/litho/*` API or the standalone editor API during development.
+## Step by step
 
-## Workflow
+<Steps>
+  <Step title="Select a model">
+    Available models are listed with `/litho/models`; select the model to use for
+    lithology prediction.
+  </Step>
+  <Step title="Load data">
+    Load a well folder with `/litho/load-well` or an existing analysis session with
+    `/litho/load-session`.
+  </Step>
+  <Step title="Build maneuvers">
+    Build maneuvers with `/litho/build-maneuvers` using the selected model and input images.
 
-1. List available models with `/litho/models`.
-2. Load a well folder with `/litho/load-well` or an existing session with `/litho/load-session`.
-3. Build maneuvers with `/litho/build-maneuvers`.
-4. Inspect images through `/litho/image`.
-5. Save edited regions through `/litho/save`.
+    <Frame caption="Lithology regions and maneuvers">
+      ![Lithology regions](/assets/screens/lithology-3.png)
+    </Frame>
+  </Step>
+  <Step title="Inspect and edit">
+    Adjust regions, classes and colors in the region editor; images are shown via
+    `/litho/image`.
+
+    <Frame caption="Region editing">
+      ![Lithology editing](/assets/screens/lithology-4.png)
+    </Frame>
+  </Step>
+  <Step title="Save">
+    User edits are saved through `/litho/save`.
+  </Step>
+</Steps>
 
 ## Controls
 
@@ -27,10 +53,34 @@ Lithology Editor is used to inspect and edit lithology regions on core imagery. 
 | Save | Persists edited lithology maneuvers. |
 | Preview | Confirms that regions align with the image. |
 
+## Integrated vs standalone service
+
+| Mode | Endpoint root | When it is used |
+| --- | --- | --- |
+| Integrated app | `/litho` | Normal frontend flow with the main backend. |
+| Standalone editor | `/api` | Testing the Lithology editor on its own or isolated development. |
+
 ## Checks
 
-- The selected model is correct for the project.
-- The loaded well/session is the intended data source.
-- Region colors and labels match reporting standards.
-- Saved results appear in downstream export or reporting screens.
+<Check>The correct model is selected.</Check>
+<Check>The loaded well/session is the intended project data.</Check>
+<Check>Auto-generated regions were reviewed visually before saving.</Check>
+<Check>Region colors and labels match the final reporting standard.</Check>
+<Check>Saved results appear in the downstream export/reporting screen.</Check>
 
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="Model list is empty" icon="triangle-alert">
+    Check the model files and the backend model directory.
+  </Accordion>
+  <Accordion title="Image does not open" icon="triangle-alert">
+    Check the path parameter and file access for `/litho/image`.
+  </Accordion>
+  <Accordion title="Save fails" icon="triangle-alert">
+    Validate the region coordinates and class names in the payload.
+  </Accordion>
+  <Accordion title="Session does not load" icon="triangle-alert">
+    Check the `session_id` value and whether the related output folder exists.
+  </Accordion>
+</AccordionGroup>
