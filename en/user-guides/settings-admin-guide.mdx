@@ -1,0 +1,75 @@
+---
+title: "Settings Admin Guide"
+description: "Model, file, image processing, color analysis, Training Lab and Validate settings."
+---
+
+# Settings Admin Guide
+
+The Settings screen lets the admin and supervisor roles manage system behavior
+without changing code. The values on this screen affect the Run, Validate,
+Lithology and Training Lab flows.
+
+## Authorization
+
+| Route | Guard |
+| --- | --- |
+| `/settings` | `admin` or `supervisor` |
+
+## Setting groups
+
+| Group | Purpose |
+| --- | --- |
+| Model Management | Main YOLO, spacer and classification model selections. |
+| Files & Folders | Export folder, file extensions, upload limits and folder validation. |
+| Image Processing | CLAHE, noise reduction, downscale, rotation correction and edge trim. |
+| Color Analysis | Color distance, segment height, smoothing, gap and palette colors. |
+| Training Lab | Epoch, learning rate, augmentation, train/val split, early stopping and checkpoint. |
+| Lithology | Lithology class colors, opacity, minimum region area, zoom and sliding window. |
+| Validate / Canvas | Detection box colors, default class visibility and canvas parameters. |
+
+## Backend behavior
+
+The Settings API is served under the `/settings` prefix in `Api/settings_service/router.py`.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /settings` | Returns the active settings and default values. |
+| `POST /settings` | Saves draft settings. |
+
+During save, some settings are synced with `colorChangeParams.json`. For this
+reason, when color/segmentation parameters change, the backend color-analysis
+behavior changes as well.
+
+## Model selection standard
+
+| Setting | Scope |
+| --- | --- |
+| `varsayilan_ana_model` | Main detection model on the Run screen. |
+| `varsayilan_takoz_modeli` | Spacer detection. |
+| `varsayilan_cls_modeli` | Selection after classification. |
+| `confidence` | Filtering of low-score detections. |
+| `iou` | NMS tolerance for overlapping detections. |
+| `batch_size` | Number of images processed at once. |
+
+## Before making changes
+
+- Verify the active model file exists on disk.
+- Test confidence/IoU changes on a test dataset.
+- After a color palette change, check the Export color output.
+- If a training parameter changes, record old vs new model performance separately.
+
+## Rollback
+
+If a wrong value is saved on the Settings screen:
+
+1. Re-select the last working model and parameters.
+2. Save the page.
+3. Restart the backend if needed.
+4. Run a Run + Validate smoke test.
+
+## Expected screenshots
+
+- Model Management section.
+- Validate / Canvas color settings.
+- Lithology color settings.
+- Training Lab parameters.

@@ -1,0 +1,78 @@
+---
+title: "Export Guide"
+description: "Exporting geotechnical, mineral and lithology output as files and images."
+---
+
+# Export Guide
+
+The Export screen turns the data produced by the Validate and Lithology
+flows into reportable images and tables. The final files shared with users
+are obtained from this screen.
+
+## Prerequisites
+
+- Run must be completed.
+- Validate changes must be saved.
+- Mineral maneuvers must be generated.
+- If lithology is used, the Lithology editor output must be saved.
+
+## Main outputs
+
+| Output | Source | Check |
+| --- | --- | --- |
+| Maneuver images | `ManueverBlocks` static folder | Are the hole id and depth ranges correct? |
+| Combined image of all files | Backend export folder | Are the image order and rows consistent? |
+| CLS combined image | Classification output | Are the class colors as expected? |
+| Color change image | Color analysis | Are the color transitions reasonable? |
+| ZIP download | Frontend JSZip | Are all expected files in the package? |
+
+## Flow
+
+```mermaid
+flowchart TD
+    A[Open Export] --> B[/get_mineral_maneuvers]
+    B --> C{Data exists?}
+    C -->|No| D[Regenerate via /mineral_from_changes]
+    C -->|Yes| E[Fetch maneuver images]
+    D --> E
+    E --> F[Preview check]
+    F --> G[Save maneuvers]
+    G --> H[Download ZIP]
+```
+
+## Endpoints
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /get_mineral_maneuvers/{session_id}` | Reads mineral maneuver data for export. |
+| `POST /mineral_from_changes/{session_id}` | Regenerates missing mineral maneuvers. |
+| `POST /getManueverImageNames` | Lists the maneuver images to download. |
+| `GET /download/{hole_id}/{file}` | Downloads a single image file. |
+| `GET /save_maneuvers/{session_id}` | Persists the maneuver output. |
+| `/ManueverBlocks/...` | Serves the combined export images statically. |
+| `GET /litho/image` | Serves the lithology source image for preview. |
+
+## User checklist
+
+1. Verify the hole id is correct.
+2. Check the maneuver start/end values.
+3. Make sure the geotechnical, mineral and lithology output belong to the same session.
+4. Check that the row order in combined images is intact.
+5. After downloading the ZIP, verify the file names and file count.
+
+## Quality gate
+
+Since the Export screen is the report generation point, an error seen here
+usually comes from a previous step.
+
+1. If export data is empty, go back to the Validate/Lithology flow and regenerate.
+2. If the depth range is wrong, return to the Validate table.
+3. If the lithology color/region is wrong, return to the Lithology editor.
+4. If no file is produced, check the backend `ManueverBlocks` and log folders.
+
+## Expected screenshots
+
+- Export main table.
+- Preview modal / image areas.
+- ZIP download action.
+- Color change and maneuver colors.

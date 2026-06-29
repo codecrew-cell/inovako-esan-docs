@@ -1,0 +1,57 @@
+---
+title: "User Management Admin Guide"
+description: "Adding users, changing roles, activating/deactivating and deleting users."
+---
+
+# User Management Admin Guide
+
+The User Management screen is for admin users only. Local user records, roles
+and activity status are managed here.
+
+## Authorization
+
+| Route | Guard |
+| --- | --- |
+| `/user-management` | `admin` |
+
+Mutating endpoints check whether the user coming via the `X-Username` header is an admin.
+
+## Roles
+
+| Role | Typical user |
+| --- | --- |
+| `admin` | Authorized user who manages users and the system. |
+| `supervisor` | User who manages operation settings and the control process. |
+| `engineer` | User who works on the Run, Validate, Training Lab and Data flows. |
+
+## Operation list
+
+| Operation | Endpoint | Note |
+| --- | --- | --- |
+| List users | `GET /users` | Lists all local users. |
+| Add user | `POST /users` | Saves username, role and activity info. |
+| Change role | `PATCH /users/{username}/role` | Requires admin check. |
+| Activate/deactivate | `PATCH /users/{username}/active` | A passive user must not pass the login flow. |
+| Delete user | `DELETE /users/{username}` | Undo requires a manual file restore. |
+
+## Operation rules
+
+- Do not unnecessarily increase the number of admins.
+- Deactivating is a safer first step than deleting.
+- After a role change, the user's browser session should be refreshed.
+- Do not share a real user list or email addresses in public documentation.
+
+## Error cases
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| 403/unauthorized | `X-Username` is not an admin | Log in with an active admin account. |
+| User not visible | `users.json` cannot be read or backend is in a different directory | Check the backend working directory. |
+| Role changed but menu did not | Frontend session state is stale | Logout/login or refresh the page. |
+
+## Expected screenshots
+
+- User table.
+- Role change control.
+- Active/passive toggle.
+- Add-user form.

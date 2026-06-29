@@ -180,8 +180,14 @@
                             "en/user-guides/dashboard-guide",
                             "en/user-guides/run-guide",
                             "en/user-guides/validate-guide",
+                            "en/user-guides/export-guide",
+                            "en/user-guides/lithology-user-guide",
                             "en/user-guides/training-lab-user-guide",
-                            "en/user-guides/lithology-user-guide"
+                            "en/user-guides/training-lab-model-management",
+                            "en/user-guides/settings-admin-guide",
+                            "en/user-guides/user-management-admin-guide",
+                            "en/user-guides/error-tracking-dev-guide",
+                            "en/user-guides/performance-gantt-guide"
                         ]
                     },
                     {
